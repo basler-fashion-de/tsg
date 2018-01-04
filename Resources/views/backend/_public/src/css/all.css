@@ -3,6 +3,7 @@
 html {
     box-sizing: border-box;
     font-family: Arial, Verdana, sans-serif;
+    color: #1d5987;
 }
 
 *, *:before, *:after {
@@ -11,6 +12,7 @@ html {
 
 #action-field {
     margin-bottom: 75px;
+    overflow: hidden;
 }
 
 #create-button {
@@ -23,6 +25,35 @@ html {
     text-align: center;
     display: block;
     cursor: pointer;
+    font-size: 10px;
+}
+
+#options-form label {
+    width: 25%;
+    display: inline-block
+}
+
+.two-cols {
+    float: left;
+    width: 49%;
+}
+
+.three-cols {
+    float: left;
+    width: 33%;
+}
+
+#one-click-system .alerts .ui-state-highlight,
+#one-click-system .alerts .ui-state-error {
+    padding: 10px;
+    display: none;
+}
+
+#one-click-system .alerts .ui-state-highlight .ui-icon,
+#one-click-system .alerts .ui-state-error .ui-icon{
+    float: left;
+    margin-top: 0px;
+    margin-right: 10px;
 }
 
 /* Jquery UI Anpassungen */

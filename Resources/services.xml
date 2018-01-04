@@ -3,6 +3,27 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--<services>
-</services>-->
+    <services>
+        <service id="blauband_one_click_system.system_validation"
+                 class="BlaubandOneClickSystem\Services\SystemValidation"
+                 public="false">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="models"/>
+        </service>
+
+        <service id="blauband_one_click_system.db_connection_service"
+                 class="BlaubandOneClickSystem\Services\DBConnectionService"
+                 public="false">
+            <argument type="service" id="snippets" />
+        </service>
+
+        <service id="blauband_one_click_system.local_system_service"
+                 class="BlaubandOneClickSystem\Services\System\Local">
+            <argument type="service" id="dbal_connection"/>
+            <argument type="service" id="blauband_one_click_system.db_connection_service"/>
+            <argument type="service" id="models"/>
+            <argument type="service" id="blauband_one_click_system.system_validation"/>
+            <argument>%kernel.root_dir%</argument>
+        </service>
+    </services>
 </container>

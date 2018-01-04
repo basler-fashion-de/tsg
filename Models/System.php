@@ -1,0 +1,161 @@
+<?php
+
+namespace BlaubandOneClickSystem\Models;
+
+use BlaubandOneClickSystem\Services\SystemServiceInterface;
+use Shopware\Components\Model\ModelEntity;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="blauband_ocs_systems")
+ * @ORM\HasLifecycleCallbacks
+ */
+class System extends ModelEntity
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var
+     * @ORM\Column(name="name", type="text")
+     */
+    private $name;
+
+    /**
+     * @var
+     * @ORM\Column(name="type", type="text")
+     */
+    private $type;
+
+    /**
+     * @var
+     * @ORM\Column(name="state", type="text")
+     */
+    private $state;
+
+    /**
+     * @var
+     * @ORM\Column(name="path", type="text")
+     */
+    private $path;
+
+    /**
+     * @var
+     * @ORM\Column(name="create_date", type="datetime")
+     */
+    private $createDate;
+
+    /**
+     * Gets triggered only on insert
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->createDate = new \DateTime("now");
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function preRemoveEvent()
+    {
+        /** @var SystemServiceInterface $service */
+        $service = Shopware()->Container()->get("blauband_one_click_system." . $this->type . "_system_service");
+        $service->deleteSystem($this->id);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param mixed $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreateDate()
+    {
+        return $this->createDate;
+    }
+}
