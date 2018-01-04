@@ -1,7 +1,33 @@
+/*{literal}*/
+
 html {
     box-sizing: border-box;
+    font-family: Arial, Verdana, sans-serif;
 }
 
 *, *:before, *:after {
     box-sizing: inherit;
 }
+
+#action-field {
+    margin-bottom: 75px;
+}
+
+#create-button {
+    width:100%;
+    margin: 10px 0;
+}
+
+#show-options-button {
+    width: 100%;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+}
+
+/* Jquery UI Anpassungen */
+.ui-widget {
+    font-size: 12px;
+}
+
+/*{/literal}*/

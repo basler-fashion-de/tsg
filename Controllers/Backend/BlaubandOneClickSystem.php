@@ -26,13 +26,24 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
     public function postDispatch()
     {
         $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
-        $this->View()->assign('publicFilePath', $pluginPath.'/Resources/views/backend/_public/');
+        $this->View()->assign('publicFilePath', $pluginPath . '/Resources/views/backend/_public/');
     }
 
     /**
      * Startseite
      */
     public function indexAction()
+    {
+        $this->View()->assign("systems", [
+            ['name' => 'Test-System 1', 'createDate' => '1.1.2018'],
+            ['name' => 'Test-System 2', 'createDate' => '2.1.2018']
+        ]);
+    }
+
+    /**
+     *  Ajax aufruf um System zu erstellen
+     */
+    public function createSystemAction()
     {
 
     }
