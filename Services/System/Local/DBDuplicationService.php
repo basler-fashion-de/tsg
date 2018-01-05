@@ -41,6 +41,9 @@ class DBDuplicationService
         foreach ($hostTableList as $table){
             $tableName = array_pop(array_values($table));
             $guestConnection->exec("DROP TABLE IF EXISTS `$guestDBName`.`$tableName`");
+
+
+            //das muss anders gemacht werden
             $guestConnection->exec("CREATE TABLE `$guestDBName`.`$tableName` LIKE `$hostDBName`.`$tableName`");
         }
     }

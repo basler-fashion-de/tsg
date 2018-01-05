@@ -2,6 +2,8 @@
 
 namespace BlaubandOneClickSystem\Services;
 
+use BlaubandOneClickSystem\Models\System;
+
 interface SystemServiceInterface
 {
     /**
@@ -15,5 +17,5 @@ interface SystemServiceInterface
     public function getType();
 
     public function createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite);
-    public function deleteSystem($id);
+    public function deleteSystem(System $system);
 }

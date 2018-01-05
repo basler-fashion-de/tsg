@@ -2,7 +2,8 @@
 
 use Shopware\Components\CSRFWhitelistAware;
 use BlaubandOneClickSystem\Services\SystemServiceInterface;
-use BlaubandOneClickSystem\Services\SystemService;
+use Shopware\Components\Model\ModelManager;
+use BlaubandOneClickSystem\Models\System;
 
 class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
@@ -10,7 +11,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
     {
         return [
             'index',
-            'createSystem'
+            'createSystem',
+            'deleteSystem'
         ];
     }
 
@@ -40,10 +42,17 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         /** @var \Doctrine\DBAL\Connection $connection */
         $connection = $this->container->get('dbal_connection');
 
-        $this->View()->assign("systems", [
+        /** @var ModelManager $modelManager */
+        $modelManager = $this->container->get('models');
+        $systemList = $modelManager->getRepository(System::class)->findAll();
+        $systemListArray = $modelManager->toArray($systemList);
+
+        /*$this->View()->assign("systems", [
             ['name' => 'Test-System 1', 'createDate' => '1.1.2018', 'path' => 'asd', 'state' => SystemService::SYSTEM_STATE_READY, 'type' => 'local'],
             ['name' => 'Test-System 2', 'createDate' => '2.1.2018', 'path' => 'asd', 'state' => SystemService::SYSTEM_STATE_READY, 'type' => 'local']
-        ]);
+        ]);*/
+
+        $this->View()->assign("systems", $systemListArray);
 
         $this->View()->assign('dbhost', $connection->getHost());
         $this->View()->assign('dbuser', $connection->getUsername());
@@ -85,6 +94,43 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
                 ]
             );
         }
+    }
+
+    /**
+     *  Ajax aufruf um System zu erstellen
+     */
+    public function deleteSystemAction()
+    {
+        try{
+            /** @var ModelManager $modelManager */
+            $modelManager = $this->container->get('models');
+            /** @var Enlight_Components_Snippet_Manager $snippets */
+            $snippets = $this->container->get('snippets');
+
+            $systemId = $this->Request()->getParam('id');
+
+            /** @var System $systemModel */
+            $systemModel = $modelManager->find(System::class, $systemId);
+            $systemName = $systemModel->getName();
+            $modelManager->remove($systemModel);
+            $modelManager->flush($systemModel);
+
+            $this->sendJsonResponse(
+                [
+                    'success' => true,
+                    'message' => $snippets->getNamespace('blaubandOneClickSystem')->get('deleteSystemSuccess', "Das System [$systemName] konnte erfolgreich gelöscht werden.")
+
+                ]
+            );
+        }catch (Exception $e){
+            $this->sendJsonResponse(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]
+            );
+        }
+
     }
 
     private function sendJsonResponse($data)

@@ -14,7 +14,8 @@
 <body>
 <div
         id="one-click-system"
-        data-createSystemUrl="{url action=createSystem}">
+        data-createSystemUrl="{url action=createSystem}"
+        data-deleteSystemUrl="{url action=deleteSystem}">
 
     <div class="alerts ui-widget">
         <div class="ui-state-error ui-corner-all">

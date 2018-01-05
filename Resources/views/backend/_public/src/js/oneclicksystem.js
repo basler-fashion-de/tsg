@@ -49,8 +49,32 @@ function registerEvents () {
           $('#one-click-system .alerts .ui-state-error').show();
         }
       }
-    })
-  })
+    });
+  });
+
+  $('.delete-button').on('click', function () {
+
+    $('#one-click-system .alerts .ui-state-error').hide();
+    $('#one-click-system .alerts .ui-state-highlight').hide();
+
+    var url = $('#one-click-system').data('deletesystemurl');
+    var params = {'id': $(this).data('id')};
+
+    $.ajax({
+      type: 'post',
+      url: url,
+      data: params,
+      success: function (response) {
+        if(response.success){
+          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message);
+          $('#one-click-system .alerts .ui-state-highlight').show();
+        }else{
+          $('#one-click-system .alerts .ui-state-error .content').text(response.error);
+          $('#one-click-system .alerts .ui-state-error').show();
+        }
+      }
+    });
+  });
 }
 
 //{/literal}

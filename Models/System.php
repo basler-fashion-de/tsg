@@ -48,6 +48,12 @@ class System extends ModelEntity
 
     /**
      * @var
+     * @ORM\Column(name="url", type="text")
+     */
+    private $url;
+
+    /**
+     * @var
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
@@ -68,7 +74,7 @@ class System extends ModelEntity
     {
         /** @var SystemServiceInterface $service */
         $service = Shopware()->Container()->get("blauband_one_click_system." . $this->type . "_system_service");
-        $service->deleteSystem($this->id);
+        $service->deleteSystem($this);
     }
 
     /**
@@ -149,6 +155,22 @@ class System extends ModelEntity
     public function setPath($path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 
     /**

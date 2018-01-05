@@ -74,14 +74,23 @@ class SystemValidation
         return true;
     }
 
-    public function validateDBData(Connection $connection, $dbName, $overwrite = false)
+    public function validateDBData(Connection $hostConnection, Connection $guestConnection, $dbName, $overwrite = false)
     {
         try {
-            $userName = $connection->getUsername();
-            $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
+            $userName = $guestConnection->getUsername();
+            $exists = $guestConnection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
+
+            if(
+                $hostConnection->getDatabase() == $guestConnection->getDatabase() &&
+                $hostConnection->getHost() == $guestConnection->getHost()
+            ){
+                throw new SystemDBException(
+                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('identicalDB', 'Der angegebene Datenbanken sind identisch.')
+                );
+            }
 
             try {
-                $grants = $connection->fetchAll("SELECT Create_priv FROM mysql.user WHERE user = '$userName'");
+                $grants = $guestConnection->fetchAll("SELECT Create_priv FROM mysql.user WHERE user = '$userName'");
             } catch (\Exception $e) {
                 throw new SystemDBException(
                     $this->snippets->getNamespace('blaubandOneClickSystem')->get('missingDBGrants', 'Der angegebene Datenbank User hat keine ausreichenden Berechtigung.')
@@ -89,7 +98,7 @@ class SystemValidation
             }
 
             if (!empty($exists)) {
-                $isEmpty = $connection->fetchAll("SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
+                $isEmpty = $guestConnection->fetchAll("SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
 
                 if (!empty($isEmpty) && !$overwrite) {
                     throw new SystemDBException(

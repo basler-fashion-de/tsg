@@ -7,7 +7,7 @@
         <label>{s name="type" namespace="blaubandOneClickSystem"}Typ{/s}:</label> {$system.type}<br/>
         <label>{s name="state" namespace="blaubandOneClickSystem"}Status{/s}:</label> {$system.state}<br/>
 
-        <button class="ui-button ui-corner-all">
+        <button class="delete-button ui-button ui-corner-all" data-id="{$system.id}">
             {s name="delete" namespace="blaubandOneClickSystem"}System entfernen{/s}
         </button>
     </div>

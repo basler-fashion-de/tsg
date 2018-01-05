@@ -45,26 +45,18 @@ class CodebaseDuplicationService
             }
         }
 
-        //$fileFolderList = scandir($sourcePath, SCANDIR_SORT_ASCENDING);
-        /*foreach ($fileFolderList as $fileFolder){
-            $sourceFileFolder = $sourcePath.'/'.$fileFolder;
-            $destinationFileFolder = $destinationPath.'/'.$fileFolder;
-            if(
-                $fileFolder != '.' &&
-                $fileFolder != '..' &&
-                $sourceFileFolder != $destinationPath
-            ){
-
-                if(!copy($sourceFileFolder, $destinationFileFolder)){
-                    @rmdir($destinationPath);
-
-                    throw new SystemFileSystemException(
-                        $this->snippets->getNamespace('blaubandOneClickSystem')->get('destinationFileNotCreated', "Der Pfad/Datei [$destinationFileFolder] konnte nicht erstellt werden. Überprüfen Sie die Berechtigungen")
-                    );
-                }
-            }
-        }*/
-
         return true;
+    }
+
+    public function removeDuplicatedCodebase($path){
+        $directoryIterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $item)
+        {
+            $todo = ($item->isDir() ? 'rmdir' : 'unlink');
+            $todo($item->getRealPath());
+        }
+
+        rmdir($path);
     }
 }
