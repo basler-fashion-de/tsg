@@ -2,10 +2,12 @@
 
 namespace BlaubandOneClickSystem\Services\System;
 
-use BlaubandOneClickSystem\Services\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
+use BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService;
+use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 use BlaubandOneClickSystem\Services\SystemService;
 use BlaubandOneClickSystem\Services\SystemServiceInterface;
-use BlaubandOneClickSystem\Services\SystemValidation;
 use Doctrine\DBAL\Connection;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
@@ -32,6 +34,16 @@ class Local extends SystemService implements SystemServiceInterface
     private $systemValidation;
 
     /**
+     * @var DBDuplicationService
+     */
+    private $dbDuplicationService;
+
+    /**
+     * @var CodebaseDuplicationService
+     */
+    private $codebaseDuplicationService;
+
+    /**
      * @var string
      */
     private $docRoot;
@@ -41,6 +53,8 @@ class Local extends SystemService implements SystemServiceInterface
         DBConnectionService $DBConnectionService,
         ModelManager $modelManager,
         SystemValidation $systemValidation,
+        DBDuplicationService $dbDuplicationService,
+        CodebaseDuplicationService $codebaseDuplicationService,
         $docRoot
     )
     {
@@ -48,6 +62,8 @@ class Local extends SystemService implements SystemServiceInterface
         $this->dbConnectionService = $DBConnectionService;
         $this->modelManager = $modelManager;
         $this->systemValidation = $systemValidation;
+        $this->dbDuplicationService = $dbDuplicationService;
+        $this->codebaseDuplicationService = $codebaseDuplicationService;
         $this->docRoot = $docRoot;
     }
 
@@ -59,13 +75,18 @@ class Local extends SystemService implements SystemServiceInterface
     public function createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite)
     {
         $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+        $destinationPath = $this->docRoot . '/' . strtolower($systemName);
         $this->systemValidation->validateSystemName($systemName);
         $this->systemValidation->validateDBData($guestConnection, $dbName, $dbOverwrite);
+        $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName);
-            $dbCreated = $this->duplicateDB($guestConnection, $systemModel, $dbName);
-            $codeBaseCreated = $this->duplicateCodeBase();
+            $systemModel = $this->createDBEntry($systemName, $destinationPath);
+            $dbCreated = $this->duplicateDB($systemModel, $guestConnection, $dbName);
+            $codebaseCreated = $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath);
+
+
+            $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
         } catch (\Exception $e) {
             //Rollback
             if (!empty($systemModel)) {
@@ -77,6 +98,10 @@ class Local extends SystemService implements SystemServiceInterface
                 $guestConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
             }
 
+            if ($codebaseCreated) {
+                @rmdir($destinationPath);
+            }
+
             throw $e;
         }
     }
@@ -85,11 +110,11 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName)
+    private function createDBEntry($systemName, $destinationPath)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
-        $systemModel->setPath($this->docRoot . '/' . $systemName);
+        $systemModel->setPath($destinationPath);
         $systemModel->setType($this->getType());
         $systemModel->setState(SystemService::SYSTEM_STATE_CREATING_HOST_DB_ENTRY);
 
@@ -98,17 +123,21 @@ class Local extends SystemService implements SystemServiceInterface
         return $systemModel;
     }
 
-    private function duplicateDB($guestConnection, $systemModel, $dbName)
+    private function duplicateDB($systemModel, $guestConnection, $dbName)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_DB);
-        $this->dbConnectionService->createDatabaseAndUse($guestConnection, $dbName);
-        $this->dbConnectionService->duplicateData($this->shopwareConnection, $guestConnection);
+        $this->dbDuplicationService->createDatabaseAndUse($guestConnection, $dbName);
+        $this->dbDuplicationService->duplicateData($this->shopwareConnection, $guestConnection);
 
         return true;
     }
 
-    private function duplicateCodeBase(){
+    private function duplicateCodeBase($systemModel, $sourcePath, $destinationPath)
+    {
+        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
+        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath, $destinationPath);
 
+        return true;
     }
 
     private function changeSystemState($systemModel, $state)

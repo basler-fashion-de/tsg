@@ -1,14 +1,15 @@
 <?php
 
 
-namespace BlaubandOneClickSystem\Services;
+namespace BlaubandOneClickSystem\Services\System\Local;
 
 
+use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
 use BlaubandOneClickSystem\Models\System;
-use Doctrine\DBAL\Connection;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
 use Shopware\Components\Model\ModelManager;
+use Doctrine\DBAL\Connection;
 
 class SystemValidation
 {
@@ -21,6 +22,21 @@ class SystemValidation
      * @var ModelManager
      */
     private $modelManager;
+
+    private $systemNameBlackList = [
+        'bin',
+        'custom',
+        'engine',
+        'files',
+        'media',
+        'recovery',
+        'scripts',
+        'statistik',
+        'themes',
+        'var',
+        'vendor',
+        'web'
+    ];
 
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, ModelManager $modelManager)
     {
@@ -39,11 +55,17 @@ class SystemValidation
             );
         }
 
+        if (in_array($name, $this->systemNameBlackList)) {
+            throw new SystemNameException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('blackListedName', 'Dieser Name kann leider nicht verwendet werden. Bitte verwendet Sie einen anderen.')
+            );
+        }
+
         //Überprüfen ob der Name bereits vergeben ist
         $repository = $this->modelManager->getRepository(System::class);
         $system = $repository->findOneBy(['name' => $name]);
 
-        if(!empty($system)){
+        if (!empty($system)) {
             throw new SystemNameException(
                 $this->snippets->getNamespace('blaubandOneClickSystem')->get('nameAlreadyInUse', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
             );
@@ -58,9 +80,9 @@ class SystemValidation
             $userName = $connection->getUsername();
             $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
 
-            try{
+            try {
                 $grants = $connection->fetchAll("SELECT Create_priv FROM mysql.user WHERE user = '$userName'");
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 throw new SystemDBException(
                     $this->snippets->getNamespace('blaubandOneClickSystem')->get('missingDBGrants', 'Der angegebene Datenbank User hat keine ausreichenden Berechtigung.')
                 );
@@ -86,5 +108,22 @@ class SystemValidation
         }
 
         return true;
+    }
+
+    public function validatePath($path)
+    {
+        $rootPath = substr($path, 0, strrpos($path, '/'));
+
+        if (is_dir($path)) {
+            throw new SystemFileSystemException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('pathExists', "Der Pfad [$path] existiert bereits. Bitte wählen Sie ein anderen Systemnamen")
+            );
+        }
+
+        if (!is_writable($rootPath)) {
+            throw new SystemFileSystemException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('pathNotWritable', "Der Pfad [$path] kann nicht erstellt werden. Stellen Sie sicher das alle benötigten Rechte vorhanden sind.")
+            );
+        }
     }
 }
