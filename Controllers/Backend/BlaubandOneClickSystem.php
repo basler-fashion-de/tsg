@@ -23,6 +23,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
     {
         $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
         $this->View()->addTemplateDir($pluginPath . '/Resources/views/');
+        $this->checkGuestSystem();
     }
 
     /**
@@ -46,11 +47,6 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $modelManager = $this->container->get('models');
         $systemList = $modelManager->getRepository(System::class)->findAll();
         $systemListArray = $modelManager->toArray($systemList);
-
-        /*$this->View()->assign("systems", [
-            ['name' => 'Test-System 1', 'createDate' => '1.1.2018', 'path' => 'asd', 'state' => SystemService::SYSTEM_STATE_READY, 'type' => 'local'],
-            ['name' => 'Test-System 2', 'createDate' => '2.1.2018', 'path' => 'asd', 'state' => SystemService::SYSTEM_STATE_READY, 'type' => 'local']
-        ]);*/
 
         $this->View()->assign("systems", $systemListArray);
 
@@ -101,7 +97,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
      */
     public function deleteSystemAction()
     {
-        try{
+        try {
             /** @var ModelManager $modelManager */
             $modelManager = $this->container->get('models');
             /** @var Enlight_Components_Snippet_Manager $snippets */
@@ -122,7 +118,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
 
                 ]
             );
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->sendJsonResponse(
                 [
                     'success' => false,
@@ -131,6 +127,30 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             );
         }
 
+    }
+
+    public function guestSystemErrorAction()
+    {
+
+    }
+
+    private function checkGuestSystem()
+    {
+        $configPath = Shopware()->DocPath() . "/config.php";
+        $config = include $configPath;
+
+        if (
+            isset($config['blauband']['ocs']['isGuest']) &&
+            $config['blauband']['ocs']['isGuest'] &&
+            $this->Request()->getActionName() != 'guestSystemError'
+        ) {
+            $redirect = array(
+                'module' => 'backend',
+                'controller' => 'BlaubandOneClickSystem',
+                'action' => 'guestSystemError',
+            );
+            $this->redirect($redirect);
+        }
     }
 
     private function sendJsonResponse($data)

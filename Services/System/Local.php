@@ -2,6 +2,7 @@
 
 namespace BlaubandOneClickSystem\Services\System;
 
+use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
 use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService;
@@ -45,6 +46,11 @@ class Local extends SystemService implements SystemServiceInterface
     private $codebaseDuplicationService;
 
     /**
+     * @var SetUpSystemService
+     */
+    private $setUpSystemService;
+
+    /**
      * @var string
      */
     private $docRoot;
@@ -56,6 +62,7 @@ class Local extends SystemService implements SystemServiceInterface
         SystemValidation $systemValidation,
         DBDuplicationService $dbDuplicationService,
         CodebaseDuplicationService $codebaseDuplicationService,
+        SetUpSystemService $setUpSystemService,
         $docRoot
     )
     {
@@ -65,6 +72,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation = $systemValidation;
         $this->dbDuplicationService = $dbDuplicationService;
         $this->codebaseDuplicationService = $codebaseDuplicationService;
+        $this->setUpSystemService = $setUpSystemService;
         $this->docRoot = $docRoot;
     }
 
@@ -138,27 +146,11 @@ class Local extends SystemService implements SystemServiceInterface
     private function setUpNewSystem(System $systemModel, Connection $guestConnection)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_HOST_SHOP);
+        $this->setUpSystemService->changeShopTitle($guestConnection, $systemModel);
+        $this->setUpSystemService->changeShopUrl($guestConnection, $systemModel);
+        $this->setUpSystemService->setUpConfigPhp($guestConnection, $systemModel);
 
-        //Title ändern
-        $shopTitlePostfix = $systemModel->getName() . ' - ';
-        $guestConnection->exec("UPDATE s_core_shops SET title = CONCAT('$shopTitlePostfix', title)");
-
-        //Url ändern
-        $urlPostfix = $systemModel->getUrl();
-        $guestConnection->exec("UPDATE s_core_shops SET base_path = CONCAT('$urlPostfix', base_path) WHERE base_path IS NOT NULL");
-        $guestConnection->exec("UPDATE s_core_shops SET base_url = CONCAT('$urlPostfix', base_url) WHERE base_url IS NOT NULL");
-        $guestConnection->exec("UPDATE s_core_shops SET secure_base_path = CONCAT('$urlPostfix', secure_base_path) WHERE secure_base_path IS NOT NULL");
-
-        //config.php ändern
-        $configPath = $systemModel->getPath() . "/config.php";
-        $config = include $configPath;
-        $config['db']['host'] = $guestConnection->getHost();
-        $config['db']['username'] = $guestConnection->getUsername();
-        $config['db']['password'] = $guestConnection->getPassword();
-        $config['db']['dbname'] = $guestConnection->getDatabase();
-
-
-        file_put_contents($configPath, "<?php\n\n return " . var_export($config, true) . ";");
+        return true;
     }
 
     private function duplicateCodeBase($systemModel, $sourcePath, $destinationPath)

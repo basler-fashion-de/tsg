@@ -12,6 +12,12 @@
         </service>
 
         <!-- local -->
+        <service id="blauband_one_click_system.set_up_system_service"
+                 class="BlaubandOneClickSystem\Services\System\Local\SetUpSystemService"
+                 public="false">
+            <argument type="service" id="snippets" />
+        </service>
+
         <service id="blauband_one_click_system.db_connection_service"
                  class="BlaubandOneClickSystem\Services\System\Local\DBConnectionService"
                  public="false">
@@ -38,6 +44,7 @@
             <argument type="service" id="blauband_one_click_system.system_validation"/>
             <argument type="service" id="blauband_one_click_system.db_duplication_service"/>
             <argument type="service" id="blauband_one_click_system.codebase_duplication_service"/>
+            <argument type="service" id="blauband_one_click_system.set_up_system_service"/>
             <argument>%kernel.root_dir%</argument>
         </service>
     </services>

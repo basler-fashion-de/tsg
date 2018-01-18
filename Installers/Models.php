@@ -40,7 +40,9 @@ class Models
      */
     public function install()
     {
-        $this->tool->createSchema($this->classes);
+        try{
+            $this->tool->createSchema($this->classes);
+        }catch (\Exception $e){}
     }
 
     /**
