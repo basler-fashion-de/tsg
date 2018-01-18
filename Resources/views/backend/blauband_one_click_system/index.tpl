@@ -8,7 +8,8 @@
 <div
         id="one-click-system"
         data-createSystemUrl="{url action=createSystem}"
-        data-deleteSystemUrl="{url action=deleteSystem}">
+        data-deleteSystemUrl="{url action=deleteSystem}"
+        data-systemListUrl="{url action=systemList}">
 
     <div class="alerts ui-widget">
         <div class="ui-state-error ui-corner-all">

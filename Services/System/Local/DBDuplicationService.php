@@ -12,6 +12,11 @@ class DBDuplicationService
      */
     private $snippets;
 
+    /**
+     * @var string
+     */
+    private $dumpName = "BlaubandOneClickSystemDBDump.sql";
+
     public function __construct(\Enlight_Components_Snippet_Manager $snippets)
     {
         $this->snippets = $snippets;
@@ -34,17 +39,30 @@ class DBDuplicationService
     }
 
     public function duplicateData(Connection $hostConnection, Connection $guestConnection){
-        $hostTableList = $hostConnection->fetchAll("SHOW TABLES FROM ".$hostConnection->getDatabase());
-        $hostDBName = $hostConnection->getDatabase();
-        $guestDBName = $guestConnection->getDatabase();
+        $hostUser = $hostConnection->getUsername();
+        $hostPass = $hostConnection->getPassword();
+        $hostDb = $hostConnection->getDatabase();
+        $exportCommand = "mysqldump -u$hostUser -p$hostPass $hostDb > $this->dumpName";
+        $output = shell_exec($exportCommand);
 
-        foreach ($hostTableList as $table){
-            $tableName = array_pop(array_values($table));
-            $guestConnection->exec("DROP TABLE IF EXISTS `$guestDBName`.`$tableName`");
-
-
-            //das muss anders gemacht werden
-            $guestConnection->exec("CREATE TABLE `$guestDBName`.`$tableName` LIKE `$hostDBName`.`$tableName`");
+        if($output !== null){
+            @unlink($this->dumpName);
+            throw new \SystemDBException($output);
         }
+
+        $guestUser = $guestConnection->getUsername();
+        $guestPass = $guestConnection->getPassword();
+        $guestDb = $guestConnection->getDatabase();
+        $importCommand = "mysql -u$guestUser -p$guestPass $guestDb < $this->dumpName";
+        $output = shell_exec($importCommand);
+
+        if($output !== null){
+            @unlink($this->dumpName);
+            throw new \SystemDBException($output);
+        }
+
+        @unlink($this->dumpName);
+
+        return true;
     }
 }

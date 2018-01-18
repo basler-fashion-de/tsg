@@ -12,7 +12,9 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         return [
             'index',
             'createSystem',
-            'deleteSystem'
+            'deleteSystem',
+            'systemList',
+            'guestSystemError'
         ];
     }
 
@@ -126,7 +128,37 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
                 ]
             );
         }
+    }
 
+    public function systemListAction()
+    {
+        try {
+            /** @var ModelManager $modelManager */
+            $modelManager = $this->container->get('models');
+            /** @var System[] $systemModels */
+            $systemModels = $modelManager->getRepository(System::class)->findAll();
+            $systemModelsArray = $modelManager->toArray($systemModels);
+
+            $this->View()->assign('systems', $systemModelsArray);
+            $html = $this->View()->fetch('backend/blauband_one_click_system/system_list.tpl');
+
+            echo $html;
+            die();
+
+            $this->sendJsonResponse(
+                [
+                    'success' => true,
+                    'html' => $html
+                ]
+            );
+        } catch (Exception $e) {
+            $this->sendJsonResponse(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]
+            );
+        }
     }
 
     public function guestSystemErrorAction()
