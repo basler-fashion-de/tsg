@@ -1,15 +1,15 @@
 <?php
 
-
 namespace BlaubandOneClickSystem\Services\System\Local;
 
-
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
+use BlaubandOneClickSystem\Exceptions\SystemNotFoundException;
 use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
-use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
+use BlaubandOneClickSystem\Services\SystemService;
 use Shopware\Components\Model\ModelManager;
+use BlaubandOneClickSystem\Models\System;
 use Doctrine\DBAL\Connection;
 
 class SystemValidation
@@ -138,12 +138,16 @@ class SystemValidation
     }
 
     public function validateDeleting(System $system){
-        if($system->getState() != SystemService::SYSTEM_STATE_READY){
-            throw new SystemNotReadyException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('system', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
+        if($system == null){
+            throw new SystemNotFoundException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotFound', 'Dieses System wurde nicht gefunden.')
             );
         }
 
-
+        if($system->getState() != SystemService::SYSTEM_STATE_READY){
+            throw new SystemNotReadyException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotDeletable', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
+            );
+        }
     }
 }

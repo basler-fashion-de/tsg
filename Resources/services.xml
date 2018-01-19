@@ -5,8 +5,7 @@
 
     <services>
         <service id="blauband_one_click_system.system_validation"
-                 class="BlaubandOneClickSystem\Services\System\Local\SystemValidation"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
             <argument type="service" id="snippets" />
             <argument type="service" id="models"/>
         </service>

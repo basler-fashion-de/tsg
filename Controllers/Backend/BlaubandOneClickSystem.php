@@ -4,6 +4,7 @@ use Shopware\Components\CSRFWhitelistAware;
 use BlaubandOneClickSystem\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
+use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 
 class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
@@ -114,11 +115,14 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $modelManager = $this->container->get('models');
             /** @var Enlight_Components_Snippet_Manager $snippets */
             $snippets = $this->container->get('snippets');
+            /** @var SystemValidation $validation */
+            $validation = $this->container->get('blauband_one_click_system.system_validation');
 
             $systemId = $this->Request()->getParam('id');
 
             /** @var System $systemModel */
             $systemModel = $modelManager->find(System::class, $systemId);
+            $validation->validateDeleting($systemModel);
             $systemName = $systemModel->getName();
             $modelManager->remove($systemModel);
             $modelManager->flush($systemModel);
