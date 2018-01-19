@@ -5,6 +5,7 @@ namespace BlaubandOneClickSystem\Services\System\Local;
 
 
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
+use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
 use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
@@ -134,5 +135,15 @@ class SystemValidation
                 $this->snippets->getNamespace('blaubandOneClickSystem')->get('pathNotWritable', "Der Pfad [$path] kann nicht erstellt werden. Stellen Sie sicher das alle benötigten Rechte vorhanden sind.")
             );
         }
+    }
+
+    public function validateDeleting(System $system){
+        if($system->getState() != SystemService::SYSTEM_STATE_READY){
+            throw new SystemNotReadyException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('system', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
+            );
+        }
+
+
     }
 }

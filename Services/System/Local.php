@@ -2,6 +2,7 @@
 
 namespace BlaubandOneClickSystem\Services\System;
 
+use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
 use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
@@ -51,6 +52,11 @@ class Local extends SystemService implements SystemServiceInterface
     private $setUpSystemService;
 
     /**
+     * @var HtAccessService
+     */
+    private $htAccessService;
+
+    /**
      * @var string
      */
     private $docRoot;
@@ -63,6 +69,7 @@ class Local extends SystemService implements SystemServiceInterface
         DBDuplicationService $dbDuplicationService,
         CodebaseDuplicationService $codebaseDuplicationService,
         SetUpSystemService $setUpSystemService,
+        HtAccessService $htAccessService,
         $docRoot
     )
     {
@@ -73,6 +80,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->dbDuplicationService = $dbDuplicationService;
         $this->codebaseDuplicationService = $codebaseDuplicationService;
         $this->setUpSystemService = $setUpSystemService;
+        $this->htAccessService = $htAccessService;
         $this->docRoot = $docRoot;
     }
 
@@ -81,7 +89,17 @@ class Local extends SystemService implements SystemServiceInterface
         return 'local';
     }
 
-    public function createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite)
+    public function createSystem
+    (
+        $systemName,
+        $dbHost,
+        $dbUser,
+        $dbPass,
+        $dbName,
+        $dbOverwrite,
+        $htpasswordName = null,
+        $htpasswordPass = null
+    )
     {
         $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
@@ -90,26 +108,20 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $destinationPath);
-            $dbCreated = $this->duplicateDB($systemModel, $guestConnection, $dbName);
-            $codebaseCreated = $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath);
+            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass);
 
+            $this->duplicateDB($systemModel, $guestConnection);
+            $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath);
             $this->setUpNewSystem($systemModel, $guestConnection);
+            $this->createHtPasswd($systemModel, $destinationPath);
 
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
         } catch (\Exception $e) {
             //Rollback
             if (!empty($systemModel)) {
+                //Falls der DB Eintrag gelöscht wird werden Gast-DB und Verzeichnis mit gelöscht
                 $this->modelManager->remove($systemModel);
                 $this->modelManager->flush($systemModel);
-            }
-
-            if ($dbCreated && !$dbOverwrite) {
-                $guestConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
-            }
-
-            if ($codebaseCreated) {
-                @rmdir($destinationPath);
             }
 
             throw $e;
@@ -120,7 +132,7 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName, $destinationPath)
+    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -129,16 +141,38 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setType($this->getType());
         $systemModel->setState(SystemService::SYSTEM_STATE_CREATING_HOST_DB_ENTRY);
 
+        $systemModel->setDbHost($dbHost);
+        $systemModel->setDbUsername($dbUser);
+        $systemModel->setDbPassword($dbPass);
+        $systemModel->setDbName($dbName);
+
+        $systemModel->setHtPasswdUsername($htpasswordName);
+        $systemModel->setHtPasswdPassword($htpasswordPass);
+
         $this->modelManager->persist($systemModel);
         $this->modelManager->flush($systemModel);
         return $systemModel;
     }
 
-    private function duplicateDB($systemModel, $guestConnection, $dbName)
+    private function duplicateDB(System $systemModel, Connection $guestConnection)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_DB);
-        $this->dbDuplicationService->createDatabaseAndUse($guestConnection, $dbName);
+        $this->dbDuplicationService->createDatabaseAndUse($guestConnection, $systemModel->getDbName());
         $this->dbDuplicationService->duplicateData($this->shopwareConnection, $guestConnection);
+
+        return true;
+    }
+
+    private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath)
+    {
+        $exceptions = [];
+        $systems = $this->modelManager->getRepository(System::class)->findAll();
+        foreach ($systems as $system) {
+            $exceptions[] = $system->getPath();
+        }
+
+        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
+        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath, $destinationPath, $exceptions);
 
         return true;
     }
@@ -153,12 +187,20 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function duplicateCodeBase($systemModel, $sourcePath, $destinationPath)
+    private function createHtPasswd(System $systemModel, $destinationPath)
     {
-        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
-        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath, $destinationPath);
+        if (
+            empty($systemModel->getHtPasswdUsername()) ||
+            empty($systemModel->getHtPasswdPassword())
+        ) {
+            return false;
+        }
 
-        return true;
+        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_HTACCESS_HTPASSWD);
+
+        $result = $this->htAccessService->createHtPass($destinationPath, [$systemModel->getHtPasswdUsername() => $systemModel->getHtPasswdPassword()]);
+
+        return $result;
     }
 
     private function changeSystemState($systemModel, $state)
@@ -169,17 +211,19 @@ class Local extends SystemService implements SystemServiceInterface
 
     public function deleteSystem(System $system)
     {
-        //DB löschen
-        $config = include $system->getPath() . "/config.php";
-        $dbName = $config['db']['dbname'];
-        $dbConnection = $this->dbConnectionService->createConnection($config['db']['host'], $config['db']['username'], $config['db']['password']);
+        $this->systemValidation->validateDeleting($system);
+
+        $dbName = $system->getDbName();
+        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
         $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
 
         //Verzeichniss löschen
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);
-        $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
+        try{
+            $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
+        }catch (\Exception $e){}
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
     }

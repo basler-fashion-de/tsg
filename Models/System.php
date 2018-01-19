@@ -54,6 +54,42 @@ class System extends ModelEntity
 
     /**
      * @var
+     * @ORM\Column(name="db_host", type="text")
+     */
+    private $dbHost;
+
+    /**
+     * @var
+     * @ORM\Column(name="db_user", type="text")
+     */
+    private $dbUsername;
+
+    /**
+     * @var
+     * @ORM\Column(name="db_pass", type="text")
+     */
+    private $dbPassword;
+
+    /**
+     * @var
+     * @ORM\Column(name="db_name", type="text")
+     */
+    private $dbName;
+
+    /**
+     * @var
+     * @ORM\Column(name="ht_passwd_username", type="text", nullable=true)
+     */
+    private $htPasswdUsername;
+
+    /**
+     * @var
+     * @ORM\Column(name="ht_passwd_password", type="text", nullable=true)
+     */
+    private $htPasswdPassword;
+
+    /**
+     * @var
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
@@ -171,6 +207,102 @@ class System extends ModelEntity
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbHost()
+    {
+        return $this->dbHost;
+    }
+
+    /**
+     * @param mixed $dbHost
+     */
+    public function setDbHost($dbHost)
+    {
+        $this->dbHost = $dbHost;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbUsername()
+    {
+        return $this->dbUsername;
+    }
+
+    /**
+     * @param mixed $dbUsername
+     */
+    public function setDbUsername($dbUsername)
+    {
+        $this->dbUsername = $dbUsername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbPassword()
+    {
+        return $this->dbPassword;
+    }
+
+    /**
+     * @param mixed $dbPassword
+     */
+    public function setDbPassword($dbPassword)
+    {
+        $this->dbPassword = $dbPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDbName()
+    {
+        return $this->dbName;
+    }
+
+    /**
+     * @param mixed $dbName
+     */
+    public function setDbName($dbName)
+    {
+        $this->dbName = $dbName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHtPasswdUsername()
+    {
+        return $this->htPasswdUsername;
+    }
+
+    /**
+     * @param mixed $htPasswdUsername
+     */
+    public function setHtPasswdUsername($htPasswdUsername)
+    {
+        $this->htPasswdUsername = $htPasswdUsername;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHtPasswdPassword()
+    {
+        return $this->htPasswdPassword;
+    }
+
+    /**
+     * @param mixed $htPasswdPassword
+     */
+    public function setHtPasswdPassword($htPasswdPassword)
+    {
+        $this->htPasswdPassword = $htPasswdPassword;
     }
 
     /**

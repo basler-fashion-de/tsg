@@ -43,6 +43,10 @@ html {
     width: 33%;
 }
 
+.three-cols label {
+    width: 40%;
+}
+
 #one-click-system .alerts .ui-state-highlight,
 #one-click-system .alerts .ui-state-error {
     padding: 10px;

@@ -1,13 +1,10 @@
 //{literal}
 
 $(function () {
-  $('#systems').accordion({
-    header: '.system-header',
-    collapsible: true,
-    active: false
-  });
+  activateAccordion()
+  $('button').button()
 
-  $( "#options input" ).controlgroup();
+  $('#options input').controlgroup()
 
   registerEvents()
 
@@ -28,10 +25,18 @@ function registerEvents () {
     $('#show-options-button').hide()
   })
 
-  $('#create-button').on('click', function () {
+  registerCreateButton()
 
-    $('#one-click-system .alerts .ui-state-error').hide();
-    $('#one-click-system .alerts .ui-state-highlight').hide();
+  registerDeleteButton()
+
+  startUpdateInterval()
+
+}
+
+function registerCreateButton () {
+  $('#create-button').on('click', function () {
+    $('#one-click-system .alerts .ui-state-error').hide()
+    $('#one-click-system .alerts .ui-state-highlight').hide()
 
     var url = $('#one-click-system').data('createsystemurl')
     var params = $('form#options-form').serialize()
@@ -41,40 +46,82 @@ function registerEvents () {
       url: url,
       data: params,
       success: function (response) {
-        if(response.success){
-          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message);
-          $('#one-click-system .alerts .ui-state-highlight').show();
-        }else{
-          $('#one-click-system .alerts .ui-state-error .content').text(response.error);
-          $('#one-click-system .alerts .ui-state-error').show();
+        if (response.success) {
+          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message)
+          $('#one-click-system .alerts .ui-state-highlight').show()
+        } else {
+          $('#one-click-system .alerts .ui-state-error .content').text(response.error)
+          $('#one-click-system .alerts .ui-state-error').show()
         }
       }
-    });
-  });
+    })
+  })
+}
 
+function registerDeleteButton () {
   $('.delete-button').on('click', function () {
+    loadSystemList()
 
-    $('#one-click-system .alerts .ui-state-error').hide();
-    $('#one-click-system .alerts .ui-state-highlight').hide();
+    $('#one-click-system .alerts .ui-state-error').hide()
+    $('#one-click-system .alerts .ui-state-highlight').hide()
 
-    var url = $('#one-click-system').data('deletesystemurl');
-    var params = {'id': $(this).data('id')};
+    var url = $('#one-click-system').data('deletesystemurl')
+    var params = {'id': $(this).data('id')}
 
     $.ajax({
       type: 'post',
       url: url,
       data: params,
       success: function (response) {
-        if(response.success){
-          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message);
-          $('#one-click-system .alerts .ui-state-highlight').show();
-        }else{
-          $('#one-click-system .alerts .ui-state-error .content').text(response.error);
-          $('#one-click-system .alerts .ui-state-error').show();
+        if (response.success) {
+          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message)
+          $('#one-click-system .alerts .ui-state-highlight').show()
+        } else {
+          $('#one-click-system .alerts .ui-state-error .content').text(response.error)
+          $('#one-click-system .alerts .ui-state-error').show()
         }
       }
-    });
-  });
+    })
+
+    $('.delete-button').remove()
+  })
+}
+
+function startUpdateInterval () {
+  var interval = setInterval(function () {
+    loadSystemList()
+  }, 5000)
+}
+
+function loadSystemList (callback) {
+  var url = $('#one-click-system').data('systemlisturl')
+
+  $.ajax({
+    type: 'post',
+    url: url,
+    success: function (response) {
+      if (response.success) {
+        var activeId = $('#systems').accordion('option', 'active')
+        $('#system-list').html(response.html)
+        activateAccordion()
+        $('#systems').accordion('option', 'active', activeId)
+        registerDeleteButton()
+      }
+
+      if(callback){
+        callback();
+      }
+    }
+  })
+}
+
+function activateAccordion () {
+  $('#systems').accordion({
+    header: '.system-header',
+    collapsible: true,
+    active: false,
+    animate: false
+  })
 }
 
 //{/literal}

@@ -26,7 +26,6 @@
     {include file="backend/blauband_one_click_system/action_field.tpl"}
 
     {if !empty($systems)}
-        <h3>{s name="existingSystems" namespace="blaubandOneClickSystem"}Bereits erstellte Systeme{/s}</h3>
         <div id="system-list">
             {include file="backend/blauband_one_click_system/system_list.tpl" systems=$systems}
         </div>

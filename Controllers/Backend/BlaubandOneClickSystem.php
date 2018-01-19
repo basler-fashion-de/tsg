@@ -73,10 +73,20 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $dbName = $this->Request()->getParam('dbname');
         $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
 
+        $htpasswordPass = $htpasswordName = null;
+        if(
+            $this->Request()->getParam('htpasswd') == 'on' &&
+            !empty($this->Request()->getParam('htpasswdusername')) &&
+            !empty($this->Request()->getParam('htpasswdpassword'))
+        ){
+            $htpasswordName = $this->Request()->getParam('htpasswdusername');
+            $htpasswordPass = $this->Request()->getParam('htpasswdpassword');
+        }
+
         try {
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
-            $systemService->createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite);
+            $systemService->createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite, $htpasswordName, $htpasswordPass);
             $this->sendJsonResponse(
                 [
                     'success' => true,
@@ -139,11 +149,12 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $systemModels = $modelManager->getRepository(System::class)->findAll();
             $systemModelsArray = $modelManager->toArray($systemModels);
 
-            $this->View()->assign('systems', $systemModelsArray);
-            $html = $this->View()->fetch('backend/blauband_one_click_system/system_list.tpl');
-
-            echo $html;
-            die();
+            if(!empty($systemModelsArray)){
+                $this->View()->assign('systems', $systemModelsArray);
+                $html = $this->View()->fetch('backend/blauband_one_click_system/system_list.tpl');
+            }else{
+                $html = '';
+            }
 
             $this->sendJsonResponse(
                 [

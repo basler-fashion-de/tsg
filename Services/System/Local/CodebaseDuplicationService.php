@@ -17,7 +17,7 @@ class CodebaseDuplicationService
         $this->snippets = $snippets;
     }
 
-    public function duplicateCodeBase($sourcePath, $destinationPath)
+    public function duplicateCodeBase($sourcePath, $destinationPath, $exceptions = [])
     {
         if (!@mkdir($destinationPath) && !is_dir($destinationPath)) {
             throw new SystemFileSystemException(
@@ -29,10 +29,17 @@ class CodebaseDuplicationService
 
         $directoryIterator = new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS);
         $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        /** @var SplFileInfo $item */
         foreach ($iterator as $item)
         {
             if(strpos($item->getPathname(), $destinationPath) !== false){
                 continue;
+            }
+
+            foreach ($exceptions as $exception){
+                if(strpos($item->getPathname(), $exception) !== false){
+                    continue 2;
+                }
             }
 
             if ($item->isDir())
