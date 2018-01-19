@@ -74,6 +74,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $dbName = $this->Request()->getParam('dbname');
         $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
 
+        $preventMail = $this->Request()->getParam('preventmail') == 'on';
+
         $htpasswordPass = $htpasswordName = null;
         if(
             $this->Request()->getParam('htpasswd') == 'on' &&
@@ -87,7 +89,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         try {
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
-            $systemService->createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite, $htpasswordName, $htpasswordPass);
+            $systemService->createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite, $preventMail, $htpasswordName, $htpasswordPass);
             $this->sendJsonResponse(
                 [
                     'success' => true,

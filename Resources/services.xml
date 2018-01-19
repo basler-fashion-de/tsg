@@ -11,9 +11,16 @@
         </service>
 
         <!-- local -->
+        <service id="blauband_one_click_system.mail_service"
+                 class="BlaubandOneClickSystem\Services\System\Local\MailService"
+                 public="false">
+            <argument type="service" id="snippets" />
+        </service>
+
         <service id="blauband_one_click_system.ht_access_service"
                  class="BlaubandOneClickSystem\Services\System\Local\HtAccessService"
                  public="false">
+            <argument type="service" id="snippets" />
         </service>
 
         <service id="blauband_one_click_system.set_up_system_service"
@@ -50,6 +57,7 @@
             <argument type="service" id="blauband_one_click_system.codebase_duplication_service"/>
             <argument type="service" id="blauband_one_click_system.set_up_system_service"/>
             <argument type="service" id="blauband_one_click_system.ht_access_service"/>
+            <argument type="service" id="blauband_one_click_system.mail_service"/>
             <argument>%kernel.root_dir%</argument>
         </service>
     </services>

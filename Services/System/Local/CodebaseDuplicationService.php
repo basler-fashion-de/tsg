@@ -25,6 +25,44 @@ class CodebaseDuplicationService
             );
         }
 
+        $this->copyWithTar($sourcePath, $destinationPath, $exceptions);
+        //$this->copyWithFileSystem($sourcePath, $destinationPath, $exceptions);
+
+
+        return true;
+    }
+
+    public function removeDuplicatedCodebase($path){
+        exec("rm -r $path");
+
+        $directoryIterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $item)
+        {
+            $todo = ($item->isDir() ? 'rmdir' : 'unlink');
+            $todo($item->getRealPath());
+        }
+
+        @rmdir($path);
+    }
+
+    private function copyWithTar($sourcePath, $destinationPath, $exceptions){
+        if(!empty($exceptions)){
+            $exceptionsString = ' --exclude='.implode(' --exclude=', $exceptions);
+            $exceptionsString = str_replace($sourcePath.'/', '', $exceptionsString);
+        }else{
+            $exceptionsString = '';
+        }
+
+        $command = "tar cf - $exceptionsString . | (cd $destinationPath && tar xvf - )";
+        $result = exec($command);
+    }
+
+    private function copyWithRsync(){
+
+    }
+
+    private function copyWithFileSystem($sourcePath, $destinationPath, $exceptions){
         $fileSystem = new Filesystem();
 
         $directoryIterator = new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS);
@@ -51,19 +89,5 @@ class CodebaseDuplicationService
                 $fileSystem->copy($item, $destinationPath . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
             }
         }
-
-        return true;
-    }
-
-    public function removeDuplicatedCodebase($path){
-        $directoryIterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($iterator as $item)
-        {
-            $todo = ($item->isDir() ? 'rmdir' : 'unlink');
-            $todo($item->getRealPath());
-        }
-
-        rmdir($path);
     }
 }

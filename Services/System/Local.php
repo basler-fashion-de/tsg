@@ -3,6 +3,7 @@
 namespace BlaubandOneClickSystem\Services\System;
 
 use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
+use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
 use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
@@ -57,6 +58,10 @@ class Local extends SystemService implements SystemServiceInterface
     private $htAccessService;
 
     /**
+     * @var MailService
+     */
+    private $mailService;
+    /**
      * @var string
      */
     private $docRoot;
@@ -70,6 +75,7 @@ class Local extends SystemService implements SystemServiceInterface
         CodebaseDuplicationService $codebaseDuplicationService,
         SetUpSystemService $setUpSystemService,
         HtAccessService $htAccessService,
+        MailService $mailService,
         $docRoot
     )
     {
@@ -81,6 +87,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->codebaseDuplicationService = $codebaseDuplicationService;
         $this->setUpSystemService = $setUpSystemService;
         $this->htAccessService = $htAccessService;
+        $this->mailService = $mailService;
         $this->docRoot = $docRoot;
     }
 
@@ -97,6 +104,7 @@ class Local extends SystemService implements SystemServiceInterface
         $dbPass,
         $dbName,
         $dbOverwrite,
+        $preventMail,
         $htpasswordName = null,
         $htpasswordPass = null
     )
@@ -114,6 +122,7 @@ class Local extends SystemService implements SystemServiceInterface
             $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath);
             $this->setUpNewSystem($systemModel, $guestConnection);
             $this->createHtPasswd($systemModel, $destinationPath);
+            $this->preventMail($systemModel, $preventMail);
 
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
         } catch (\Exception $e) {
@@ -197,10 +206,17 @@ class Local extends SystemService implements SystemServiceInterface
         }
 
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_HTACCESS_HTPASSWD);
+        $this->htAccessService->createHtPass($destinationPath, [$systemModel->getHtPasswdUsername() => $systemModel->getHtPasswdPassword()]);
 
-        $result = $this->htAccessService->createHtPass($destinationPath, [$systemModel->getHtPasswdUsername() => $systemModel->getHtPasswdPassword()]);
+    }
 
-        return $result;
+    private function preventMail(System $system, $preventMail){
+        if(!$preventMail){
+            return true;
+        }
+
+        $this->changeSystemState($system, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_MAILING);
+        $this->mailService->preventMail($system);
     }
 
     private function changeSystemState($systemModel, $state)

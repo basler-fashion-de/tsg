@@ -26,7 +26,13 @@
                         <option value="local"
                                 selected="selected">{s name="typeLocal" namespace="blaubandOneClickSystem"}Lokal{/s}</option>
                         <option disabled>Amazon EC2</option>
-                    </select>
+                    </select></br>
+
+                    <label for="preventmail">
+                        {s name="preventmail" namespace="blaubandOneClickSystem"}Email Versand unterbinden{/s}:
+                    </label>
+                    <input type="checkbox" name="preventmail" id="preventmail"></br>
+
                 </div>
                 <div class="three-cols">
                     <h4>

@@ -46,7 +46,10 @@ class HtAccessService
         $fp = fopen($file, "w+");
         if (!$fp) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei $file konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte.")
+                sprintf(
+                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei %s konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
+                    $file
+                )
             );
         }
 
@@ -60,8 +63,10 @@ class HtAccessService
         $fp = fopen($file, "r+");
         if (!$fp) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei $file konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte.")
-            );
+                sprintf(
+                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei $file konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
+                    $file
+                ));
         }
 
         return [$fp, $file];

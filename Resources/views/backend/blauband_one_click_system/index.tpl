@@ -25,11 +25,11 @@
 
     {include file="backend/blauband_one_click_system/action_field.tpl"}
 
-    {if !empty($systems)}
-        <div id="system-list">
+    <div id="system-list">
+        {if !empty($systems)}
             {include file="backend/blauband_one_click_system/system_list.tpl" systems=$systems}
-        </div>
-    {/if}
+        {/if}
+    </div>
 
 </div>
 
