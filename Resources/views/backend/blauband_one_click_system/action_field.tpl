@@ -33,6 +33,11 @@
                     </label>
                     <input type="checkbox" name="preventmail" id="preventmail"></br>
 
+                    <label for="skipmedia">
+                        {s name="skipmedia" namespace="blaubandOneClickSystem"}Medienordner nicht kopieren{/s}:
+                    </label>
+                    <input type="checkbox" name="skipmedia" id="skipmedia"></br>
+
                 </div>
                 <div class="three-cols">
                     <h4>

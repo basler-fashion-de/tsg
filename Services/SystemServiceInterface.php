@@ -16,6 +16,6 @@ interface SystemServiceInterface
      */
     public function getType();
 
-    public function createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite, $preventMail, $htpasswordName, $htpasswordPass);
+    public function createSystem($systemName, $parameters);
     public function deleteSystem(System $system);
 }

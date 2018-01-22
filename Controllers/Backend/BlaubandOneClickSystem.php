@@ -75,21 +75,33 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
 
         $preventMail = $this->Request()->getParam('preventmail') == 'on';
+        $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
 
         $htpasswordPass = $htpasswordName = null;
-        if(
+        if (
             $this->Request()->getParam('htpasswd') == 'on' &&
             !empty($this->Request()->getParam('htpasswdusername')) &&
             !empty($this->Request()->getParam('htpasswdpassword'))
-        ){
+        ) {
             $htpasswordName = $this->Request()->getParam('htpasswdusername');
             $htpasswordPass = $this->Request()->getParam('htpasswdpassword');
         }
 
         try {
+            $para = [
+                'dbHost' => $dbHost,
+                'dbUser' => $dbUser,
+                'dbPass' => $dbPass,
+                'dbName' => $dbName,
+                'dbOverwrite' => $dbOverwrite,
+                'preventMail' => $preventMail,
+                'skipMedia' => $skipMedia,
+                'htpasswordName' => $htpasswordName,
+                'htpasswordPass' => $htpasswordPass
+            ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
-            $systemService->createSystem($systemName, $dbHost, $dbUser, $dbPass, $dbName, $dbOverwrite, $preventMail, $htpasswordName, $htpasswordPass);
+            $systemService->createSystem($systemName, $para);
             $this->sendJsonResponse(
                 [
                     'success' => true,
@@ -155,10 +167,10 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $systemModels = $modelManager->getRepository(System::class)->findAll();
             $systemModelsArray = $modelManager->toArray($systemModels);
 
-            if(!empty($systemModelsArray)){
+            if (!empty($systemModelsArray)) {
                 $this->View()->assign('systems', $systemModelsArray);
                 $html = $this->View()->fetch('backend/blauband_one_click_system/system_list.tpl');
-            }else{
+            } else {
                 $html = '';
             }
 

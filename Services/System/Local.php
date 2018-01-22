@@ -96,19 +96,18 @@ class Local extends SystemService implements SystemServiceInterface
         return 'local';
     }
 
-    public function createSystem
-    (
-        $systemName,
-        $dbHost,
-        $dbUser,
-        $dbPass,
-        $dbName,
-        $dbOverwrite,
-        $preventMail,
-        $htpasswordName = null,
-        $htpasswordPass = null
-    )
+    public function createSystem($systemName, $parameters)
     {
+        $dbHost = $parameters['dbHost'];
+        $dbUser = $parameters['dbUser'];
+        $dbPass = $parameters['dbPass'];
+        $dbName = $parameters['dbName'];
+        $dbOverwrite = $parameters['dbOverwrite'];
+        $preventMail = $parameters['preventMail'];
+        $skipMedia = $parameters['skipMedia'];
+        $htpasswordName = $parameters['htpasswordName'];
+        $htpasswordPass = $parameters['htpasswordPass'];
+
         $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
         $this->systemValidation->validateSystemName($systemName);
@@ -117,9 +116,8 @@ class Local extends SystemService implements SystemServiceInterface
 
         try {
             $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass);
-
             $this->duplicateDB($systemModel, $guestConnection);
-            $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath);
+            $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath, $skipMedia);
             $this->setUpNewSystem($systemModel, $guestConnection);
             $this->createHtPasswd($systemModel, $destinationPath);
             $this->preventMail($systemModel, $preventMail);
@@ -172,12 +170,20 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath)
+    private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath, $skipMedia)
     {
         $exceptions = [];
         $systems = $this->modelManager->getRepository(System::class)->findAll();
         foreach ($systems as $system) {
             $exceptions[] = $system->getPath();
+        }
+
+        if($skipMedia === true){
+            $mediaFolders = array_filter(glob($this->docRoot.'/media/*/*'), 'is_dir');
+            if(!empty($mediaFolders)){
+                $exceptions = array_merge($exceptions, $mediaFolders);
+            }
+
         }
 
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
@@ -210,8 +216,9 @@ class Local extends SystemService implements SystemServiceInterface
 
     }
 
-    private function preventMail(System $system, $preventMail){
-        if(!$preventMail){
+    private function preventMail(System $system, $preventMail)
+    {
+        if (!$preventMail) {
             return true;
         }
 
@@ -237,9 +244,10 @@ class Local extends SystemService implements SystemServiceInterface
 
         //Verzeichniss löschen
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);
-        try{
+        try {
             $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
-        }catch (\Exception $e){}
+        } catch (\Exception $e) {
+        }
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
     }
