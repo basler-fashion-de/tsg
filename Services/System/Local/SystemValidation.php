@@ -7,7 +7,9 @@ use BlaubandOneClickSystem\Exceptions\SystemNotFoundException;
 use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
+use BlaubandOneClickSystem\Exceptions\SystemProcessException;
 use BlaubandOneClickSystem\Services\SystemService;
+use Doctrine\Common\Collections\Criteria;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 use Doctrine\DBAL\Connection;
@@ -39,10 +41,26 @@ class SystemValidation
         'web'
     ];
 
+    private $maxProcess = 1;
+
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, ModelManager $modelManager)
     {
         $this->snippets = $snippets;
         $this->modelManager = $modelManager;
+    }
+
+    public function validateCurrentProcesses(){
+
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->neq('state', SystemService::SYSTEM_STATE_READY));
+        $repository = $this->modelManager->getRepository(System::class);
+        $runningSystems = $repository->matching($criteria);
+
+        if(count($runningSystems) >= $this->maxProcess){
+            throw new SystemProcessException(
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('tooManyProcesses', 'Es laufen bereits die maximale Anzahl der Prozesse. Bitte warten Sie bis mind. einer fertig ist.')
+            );
+        }
     }
 
     public function validateSystemName($name)
@@ -144,9 +162,13 @@ class SystemValidation
             );
         }
 
-        if($system->getState() != SystemService::SYSTEM_STATE_READY){
+        if(
+            $system->getState() == SystemService::SYSTEM_STATE_DELETING_GUEST_DB ||
+            $system->getState() == SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE ||
+            $system->getState() == SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY
+        ){
             throw new SystemNotReadyException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotDeletable', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
+                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotDeletable', 'Dieses System wird bereits bearbeitet. Löschen ist aktuell nicht möglich.')
             );
         }
     }

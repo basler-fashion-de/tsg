@@ -15,7 +15,7 @@ class DBDuplicationService
     /**
      * @var string
      */
-    private $dumpName = "BlaubandOneClickSystemDBDump.sql";
+    private $dumpPrefix = "BlaubandOneClickSystemDBDump";
 
     public function __construct(\Enlight_Components_Snippet_Manager $snippets)
     {
@@ -42,26 +42,27 @@ class DBDuplicationService
         $hostUser = $hostConnection->getUsername();
         $hostPass = $hostConnection->getPassword();
         $hostDb = $hostConnection->getDatabase();
-        $exportCommand = "mysqldump -u$hostUser -p$hostPass $hostDb > $this->dumpName";
+        $dumpName = uniqid($this->dumpPrefix, false).".sql";
+        $exportCommand = "mysqldump -u$hostUser -p$hostPass $hostDb > $dumpName";
         $output = shell_exec($exportCommand);
 
         if($output !== null){
-            @unlink($this->dumpName);
+            @unlink($dumpName);
             throw new \SystemDBException($output);
         }
 
         $guestUser = $guestConnection->getUsername();
         $guestPass = $guestConnection->getPassword();
         $guestDb = $guestConnection->getDatabase();
-        $importCommand = "mysql -u$guestUser -p$guestPass $guestDb < $this->dumpName";
+        $importCommand = "mysql -u$guestUser -p$guestPass $guestDb < $dumpName";
         $output = shell_exec($importCommand);
 
         if($output !== null){
-            @unlink($this->dumpName);
+            @unlink($dumpName);
             throw new \SystemDBException($output);
         }
 
-        @unlink($this->dumpName);
+        @unlink($dumpName);
 
         return true;
     }

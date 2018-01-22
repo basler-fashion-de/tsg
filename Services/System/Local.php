@@ -20,7 +20,7 @@ class Local extends SystemService implements SystemServiceInterface
     /**
      * @var Connection
      */
-    private $shopwareConnection;
+    private $hostConnection;
 
     /**
      * @var DBConnectionService
@@ -67,7 +67,7 @@ class Local extends SystemService implements SystemServiceInterface
     private $docRoot;
 
     public function __construct(
-        Connection $shopwareConnection,
+        Connection $hostConnection,
         DBConnectionService $DBConnectionService,
         ModelManager $modelManager,
         SystemValidation $systemValidation,
@@ -79,7 +79,7 @@ class Local extends SystemService implements SystemServiceInterface
         $docRoot
     )
     {
-        $this->shopwareConnection = $shopwareConnection;
+        $this->hostConnection = $hostConnection;
         $this->dbConnectionService = $DBConnectionService;
         $this->modelManager = $modelManager;
         $this->systemValidation = $systemValidation;
@@ -110,8 +110,9 @@ class Local extends SystemService implements SystemServiceInterface
 
         $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
+        $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
-        $this->systemValidation->validateDBData($this->shopwareConnection, $guestConnection, $dbName, $dbOverwrite);
+        $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
         $this->systemValidation->validatePath($destinationPath);
 
         try {
@@ -165,21 +166,21 @@ class Local extends SystemService implements SystemServiceInterface
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_DB);
         $this->dbDuplicationService->createDatabaseAndUse($guestConnection, $systemModel->getDbName());
-        $this->dbDuplicationService->duplicateData($this->shopwareConnection, $guestConnection);
+        $this->dbDuplicationService->duplicateData($this->hostConnection, $guestConnection);
 
         return true;
     }
 
     private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath, $skipMedia)
     {
-        $exceptions = [];
+        $exceptions = ['.git'];
         $systems = $this->modelManager->getRepository(System::class)->findAll();
         foreach ($systems as $system) {
             $exceptions[] = $system->getPath();
         }
 
         if($skipMedia === true){
-            $mediaFolders = array_filter(glob($this->docRoot.'/media/*/*'), 'is_dir');
+            $mediaFolders = glob($this->docRoot.'/media/*/*', GLOB_ONLYDIR);
             if(!empty($mediaFolders)){
                 $exceptions = array_merge($exceptions, $mediaFolders);
             }

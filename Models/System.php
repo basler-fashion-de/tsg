@@ -24,7 +24,7 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="name", type="text")
+     * @ORM\Column(name="name", type="text", unique=true)
      */
     private $name;
 
@@ -42,13 +42,13 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="path", type="text")
+     * @ORM\Column(name="path", type="text", unique=true)
      */
     private $path;
 
     /**
      * @var
-     * @ORM\Column(name="url", type="text")
+     * @ORM\Column(name="url", type="text", unique=true)
      */
     private $url;
 

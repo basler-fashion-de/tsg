@@ -2,7 +2,7 @@
 
 $(function () {
   activateAccordion()
-  $('button').button()
+  $('button').button();
 
   $('#options input').controlgroup()
 
@@ -19,24 +19,30 @@ $(function () {
 })
 
 function registerEvents () {
-  //Erweiterte Einstellungen anzeigen
+  registerShowButton()
+  registerCreateButton()
+  registerDeleteButton()
+  startUpdateInterval()
+}
+
+function registerShowButton(){
   $('#show-options-button').on('click', function () {
     $('#options').show()
     $('#show-options-button').hide()
   })
-
-  registerCreateButton()
-
-  registerDeleteButton()
-
-  startUpdateInterval()
-
 }
 
 function registerCreateButton () {
   $('#create-button').on('click', function () {
-    $('#one-click-system .alerts .ui-state-error').hide()
-    $('#one-click-system .alerts .ui-state-highlight').hide()
+
+    //Kurzer Timeout für den create Button um doppel Klicks besser abzufangen.
+    $( "#create-button" ).button( "option", "disabled", true );
+    setTimeout(function () {
+      $( "#create-button" ).button( "option", "disabled", false );
+    }, 2000);
+
+    hideErrorPanel()
+    hideInfoPanel()
 
     var url = $('#one-click-system').data('createsystemurl')
     var params = $('form#options-form').serialize()
@@ -47,26 +53,26 @@ function registerCreateButton () {
       data: params,
       success: function (response) {
         if (response.success) {
-          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message)
-          $('#one-click-system .alerts .ui-state-highlight').show()
+          showInfoPanel(response.message);
         } else {
-          $('#one-click-system .alerts .ui-state-error .content').text(response.error)
-          $('#one-click-system .alerts .ui-state-error').show()
+          showErrorPanel(response.error);
         }
       }
-    })
+    });
+
+    loadSystemList();
   })
 }
 
 function registerDeleteButton () {
   $('.delete-button').on('click', function () {
-    loadSystemList()
+    $(this).button( "option", "disabled", true );
 
-    $('#one-click-system .alerts .ui-state-error').hide()
-    $('#one-click-system .alerts .ui-state-highlight').hide()
+    hideErrorPanel();
+    hideInfoPanel();
 
-    var url = $('#one-click-system').data('deletesystemurl')
-    var params = {'id': $(this).data('id')}
+    var url = $('#one-click-system').data('deletesystemurl');
+    var params = {'id': $(this).data('id')};
 
     $.ajax({
       type: 'post',
@@ -74,16 +80,14 @@ function registerDeleteButton () {
       data: params,
       success: function (response) {
         if (response.success) {
-          $('#one-click-system .alerts .ui-state-highlight .content').text(response.message)
-          $('#one-click-system .alerts .ui-state-highlight').show()
+          showInfoPanel(response.message);
         } else {
-          $('#one-click-system .alerts .ui-state-error .content').text(response.error)
-          $('#one-click-system .alerts .ui-state-error').show()
+          showErrorPanel(response.error);
         }
       }
-    })
+    });
 
-    $('.delete-button').remove()
+    loadSystemList();
   })
 }
 
@@ -105,14 +109,39 @@ function loadSystemList (callback) {
         $('#system-list').html(response.html)
         activateAccordion()
         $('#systems').accordion('option', 'active', activeId)
-        registerDeleteButton()
+        registerDeleteButton();
+        $('button').button();
       }
 
-      if(callback){
-        callback();
+      if (callback) {
+        callback()
       }
     }
   })
+}
+
+function hideErrorPanel () {
+  $('#one-click-system .alerts .ui-state-error').hide()
+  $('#one-click-system .alerts .ui-state-error .content').text('')
+}
+
+function hideInfoPanel () {
+  $('#one-click-system .alerts .ui-state-highlight').hide()
+  $('#one-click-system .alerts .ui-state-highlight .content').text('')
+}
+
+function showErrorPanel (text) {
+  if (text !== '') {
+    $('#one-click-system .alerts .ui-state-error .content').text(text)
+    $('#one-click-system .alerts .ui-state-error').show()
+  }
+}
+
+function showInfoPanel (text) {
+  if (text !== '') {
+    $('#one-click-system .alerts .ui-state-highlight .content').text(text)
+    $('#one-click-system .alerts .ui-state-highlight').show()
+  }
 }
 
 function activateAccordion () {

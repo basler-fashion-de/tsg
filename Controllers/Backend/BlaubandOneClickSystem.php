@@ -136,6 +136,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
 
             /** @var System $systemModel */
             $systemModel = $modelManager->find(System::class, $systemId);
+            $validation->validateCurrentProcesses();
             $validation->validateDeleting($systemModel);
             $systemName = $systemModel->getName();
             $modelManager->remove($systemModel);

@@ -28,22 +28,11 @@ class CodebaseDuplicationService
         $this->copyWithTar($sourcePath, $destinationPath, $exceptions);
         //$this->copyWithFileSystem($sourcePath, $destinationPath, $exceptions);
 
-
         return true;
     }
 
     public function removeDuplicatedCodebase($path){
-        exec("rm -r $path");
-
-        $directoryIterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($iterator as $item)
-        {
-            $todo = ($item->isDir() ? 'rmdir' : 'unlink');
-            $todo($item->getRealPath());
-        }
-
-        @rmdir($path);
+        exec("rm -r -d -f $path", $output, $return);
     }
 
     private function copyWithTar($sourcePath, $destinationPath, $exceptions){
@@ -56,10 +45,6 @@ class CodebaseDuplicationService
 
         $command = "tar cf - $exceptionsString . | (cd $destinationPath && tar xvf - )";
         $result = exec($command);
-    }
-
-    private function copyWithRsync(){
-
     }
 
     private function copyWithFileSystem($sourcePath, $destinationPath, $exceptions){
