@@ -42,9 +42,7 @@ class Models
     {
         try{
             $this->tool->createSchema($this->classes);
-        }catch (\Exception $e){
-            var_export($e->getMessage());
-        }
+        }catch (\Exception $e){}
     }
 
     /**
