@@ -63,7 +63,9 @@ function registerCreateButton () {
       }
     })
 
-    loadSystemList()
+    setTimeout(function () {
+      loadSystemList()
+    }, 1000)
   })
 }
 
@@ -95,7 +97,7 @@ function registerDeleteButton () {
 }
 
 function startUpdateInterval () {
-  var interval = setInterval(function () {
+  setInterval(function () {
     loadSystemList()
   }, 5000)
 }
@@ -108,12 +110,7 @@ function loadSystemList (callback) {
     url: url,
     success: function (response) {
       if (response.success) {
-        var activeId = $('#systems').accordion('option', 'active')
-        $('#system-list').html(response.html)
-        activateAccordion()
-        $('#systems').accordion('option', 'active', activeId)
-        registerDeleteButton()
-        $('button').button()
+        handleSystemLoadListResponse(response);
       }
 
       if (callback) {
@@ -121,6 +118,27 @@ function loadSystemList (callback) {
       }
     }
   })
+}
+
+function handleSystemLoadListResponse(response){
+  var activeId = $('#systems').accordion('option', 'active')
+  var disabledStates = []
+  $('button.delete-button').each(
+    function () {
+      disabledStates.push({id:$(this).data('id'), state:$(this).button('option', 'disabled')});
+    }
+  );
+
+  $('#system-list').html(response.html);
+
+  activateAccordion()
+  $('#systems').accordion('option', 'active', activeId)
+
+  registerDeleteButton()
+  $('button').button()
+  $.each(disabledStates, function(key, value){
+      $($('.delete-button[data-id='+value.id+']')).button('option', 'disabled', value.state);
+  });
 }
 
 function hideErrorPanel () {
