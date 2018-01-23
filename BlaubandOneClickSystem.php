@@ -59,6 +59,8 @@ class BlaubandOneClickSystem extends Plugin
             },
         ];
 
+
+
         foreach ($versions as $version => $callback) {
             if ($oldVersion === null || (version_compare($oldVersion, $version, '<') && version_compare($version, $newVersion, '<='))) {
                 if (!$callback($this)) {

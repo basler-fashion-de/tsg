@@ -24,7 +24,7 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="name", type="text", unique=true)
+     * @ORM\Column(name="name", type="string", unique=true)
      */
     private $name;
 
@@ -42,13 +42,13 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="path", type="text", unique=true)
+     * @ORM\Column(name="path", type="string", unique=true)
      */
     private $path;
 
     /**
      * @var
-     * @ORM\Column(name="url", type="text", unique=true)
+     * @ORM\Column(name="url", type="string", unique=true)
      */
     private $url;
 
@@ -87,6 +87,18 @@ class System extends ModelEntity
      * @ORM\Column(name="ht_passwd_password", type="text", nullable=true)
      */
     private $htPasswdPassword;
+
+    /**
+     * @var
+     * @ORM\Column(name="prevent_mail", type="boolean")
+     */
+    private $preventMail;
+
+    /**
+     * @var
+     * @ORM\Column(name="skip_media", type="boolean")
+     */
+    private $skipMedia;
 
     /**
      * @var
@@ -303,6 +315,38 @@ class System extends ModelEntity
     public function setHtPasswdPassword($htPasswdPassword)
     {
         $this->htPasswdPassword = $htPasswdPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPreventMail()
+    {
+        return $this->preventMail;
+    }
+
+    /**
+     * @param mixed $preventMail
+     */
+    public function setPreventMail($preventMail)
+    {
+        $this->preventMail = $preventMail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkipMedia()
+    {
+        return $this->skipMedia;
+    }
+
+    /**
+     * @param mixed $skipMedia
+     */
+    public function setSkipMedia($skipMedia)
+    {
+        $this->skipMedia = $skipMedia;
     }
 
     /**

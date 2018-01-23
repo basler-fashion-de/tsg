@@ -1,5 +1,7 @@
 <div id="action-field">
-    <button id="create-button" class="ui-button ui-corner-all ui-widget">
+    <button id="create-button" class="ui-button ui-corner-all ui-widget"
+            data-activeText="{s name="create" namespace="blaubandOneClickSystem"}System erstellen{/s}"
+            data-disabledText="{s name="createDisabled" namespace="blaubandOneClickSystem"}Anfrage wird bearbeitet{/s}">
         {s name="create" namespace="blaubandOneClickSystem"}System erstellen{/s}
     </button>
 
@@ -37,7 +39,6 @@
                         {s name="skipmedia" namespace="blaubandOneClickSystem"}Medienordner nicht kopieren{/s}:
                     </label>
                     <input type="checkbox" name="skipmedia" id="skipmedia"></br>
-
                 </div>
                 <div class="three-cols">
                     <h4>
@@ -68,7 +69,6 @@
                     </label>
                     <input type="checkbox" name="dboverwrite" id="dboverwrite"></br>
                 </div>
-
                 <div class="three-cols">
                     <h4>
                         {s name="security" namespace="blaubandOneClickSystem"}Sicherheit{/s}
@@ -89,7 +89,6 @@
                     <input name="htpasswdpassword" id="htpasswdpassword" type="password"></br>
 
                 </div>
-
             </div>
         </form>
     </div>

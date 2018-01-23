@@ -116,7 +116,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass);
+            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia);
             $this->duplicateDB($systemModel, $guestConnection);
             $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath, $skipMedia);
             $this->setUpNewSystem($systemModel, $guestConnection);
@@ -140,7 +140,7 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass)
+    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -156,6 +156,9 @@ class Local extends SystemService implements SystemServiceInterface
 
         $systemModel->setHtPasswdUsername($htpasswordName);
         $systemModel->setHtPasswdPassword($htpasswordPass);
+
+        $systemModel->setPreventMail($preventMail);
+        $systemModel->setSkipMedia($skipMedia);
 
         $this->modelManager->persist($systemModel);
         $this->modelManager->flush($systemModel);

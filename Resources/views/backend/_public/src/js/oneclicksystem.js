@@ -2,7 +2,7 @@
 
 $(function () {
   activateAccordion()
-  $('button').button();
+  $('button').button()
 
   $('#options input').controlgroup()
 
@@ -25,7 +25,7 @@ function registerEvents () {
   startUpdateInterval()
 }
 
-function registerShowButton(){
+function registerShowButton () {
   $('#show-options-button').on('click', function () {
     $('#options').show()
     $('#show-options-button').hide()
@@ -36,10 +36,13 @@ function registerCreateButton () {
   $('#create-button').on('click', function () {
 
     //Kurzer Timeout für den create Button um doppel Klicks besser abzufangen.
-    $( "#create-button" ).button( "option", "disabled", true );
+    var btn = $(this)
+    btn.button('option', 'disabled', true)
+    btn.html(btn.data('disabledtext'))
     setTimeout(function () {
-      $( "#create-button" ).button( "option", "disabled", false );
-    }, 2000);
+      btn.button('option', 'disabled', false)
+      btn.html(btn.data('activetext'))
+    }, 5000)
 
     hideErrorPanel()
     hideInfoPanel()
@@ -53,26 +56,26 @@ function registerCreateButton () {
       data: params,
       success: function (response) {
         if (response.success) {
-          showInfoPanel(response.message);
+          showInfoPanel(response.message)
         } else {
-          showErrorPanel(response.error);
+          showErrorPanel(response.error)
         }
       }
-    });
+    })
 
-    loadSystemList();
+    loadSystemList()
   })
 }
 
 function registerDeleteButton () {
   $('.delete-button').on('click', function () {
-    $(this).button( "option", "disabled", true );
+    $(this).button('option', 'disabled', true)
 
-    hideErrorPanel();
-    hideInfoPanel();
+    hideErrorPanel()
+    hideInfoPanel()
 
-    var url = $('#one-click-system').data('deletesystemurl');
-    var params = {'id': $(this).data('id')};
+    var url = $('#one-click-system').data('deletesystemurl')
+    var params = {'id': $(this).data('id')}
 
     $.ajax({
       type: 'post',
@@ -80,14 +83,14 @@ function registerDeleteButton () {
       data: params,
       success: function (response) {
         if (response.success) {
-          showInfoPanel(response.message);
+          showInfoPanel(response.message)
         } else {
-          showErrorPanel(response.error);
+          showErrorPanel(response.error)
         }
       }
-    });
+    })
 
-    loadSystemList();
+    loadSystemList()
   })
 }
 
@@ -109,8 +112,8 @@ function loadSystemList (callback) {
         $('#system-list').html(response.html)
         activateAccordion()
         $('#systems').accordion('option', 'active', activeId)
-        registerDeleteButton();
-        $('button').button();
+        registerDeleteButton()
+        $('button').button()
       }
 
       if (callback) {
