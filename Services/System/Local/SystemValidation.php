@@ -8,7 +8,7 @@ use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
 use BlaubandOneClickSystem\Exceptions\SystemProcessException;
-use BlaubandOneClickSystem\Services\SystemService;
+use BlaubandOneClickSystem\Services\System\SystemService;
 use Doctrine\Common\Collections\Criteria;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
