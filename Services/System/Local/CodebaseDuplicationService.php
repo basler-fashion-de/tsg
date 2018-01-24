@@ -21,7 +21,7 @@ class CodebaseDuplicationService
     {
         if (!@mkdir($destinationPath) && !is_dir($destinationPath)) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('destinationPathNotCreated', "Der Pfad [$destinationPath] konnte nicht erstellt werden. Überprüfen Sie die Berechtigungen")
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('destinationPathNotCreated'), $destinationPath)
             );
         }
 

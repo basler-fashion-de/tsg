@@ -22,12 +22,7 @@ class MailService
         $mailPath = $system->getPath() . '/mail';
         if (!@mkdir($mailPath) && !is_dir($mailPath)) {
             throw new SystemFileSystemException(
-                sprintf(
-                    $this->snippets
-                        ->getNamespace('blaubandOneClickSystem')
-                        ->get('pathCanNotCreate', "Der Pfad %s konnte nicht erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
-                    $mailPath
-                )
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathCanNotCreate'), $mailPath)
             );
         }
 

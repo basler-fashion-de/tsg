@@ -105,7 +105,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => $snippets->getNamespace('blaubandOneClickSystem')->get('duplicateSuccess', "Ihr System [$systemName] konnte erfolgreich eingerichtet werden.")
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName)
 
                 ]
             );
@@ -145,8 +145,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => $snippets->getNamespace('blaubandOneClickSystem')->get('deleteSystemSuccess', "Das System [$systemName] konnte erfolgreich gelöscht werden.")
-
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('deleteSystemSuccess'), $systemName)
                 ]
             );
         } catch (Exception $e) {

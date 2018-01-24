@@ -22,7 +22,7 @@ class DBConnectionService
             return new Connection(['host' => $dbHost, 'user' => $dbUser, 'password' => $dbPass], new Driver());
         }catch (\Exception $e){
             throw new \SystemDBException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('unableToConnect', 'Es konnte keine Datenbank verbindung hergestellt werden.')
+                $this->snippets->getNamespace('blauband/ocs')->get('unableToConnect')
             );
         }
     }

@@ -28,7 +28,7 @@ class DBDuplicationService
 
             if($result === 0){
                 throw new \SystemDBException(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('unableToCreateDatabase', "Es konnte die Datenbank [$dbName] nicht erstellt werden.")
+                    sprintf($this->snippets->getNamespace('blauband/ocs')->get('unableToCreateDatabase'), $dbName)
                 );
             }
 

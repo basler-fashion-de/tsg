@@ -58,7 +58,7 @@ class SystemValidation
 
         if(count($runningSystems) >= $this->maxProcess){
             throw new SystemProcessException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('tooManyProcesses', 'Es laufen bereits die maximale Anzahl der Prozesse. Bitte warten Sie bis mind. einer fertig ist.')
+                $this->snippets->getNamespace('blauband/ocs')->get('tooManyProcesses')
             );
         }
     }
@@ -70,13 +70,13 @@ class SystemValidation
 
         if (empty($matches)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('invalidName', 'Dieser Name ist invalide, bitte starten Sie Ihren Namen mit einem Buchstaben und verwenden nur große und kleine Buchstaben, Zahlen und die Zeichen \'-\', \'_\'. ')
+                $this->snippets->getNamespace('blauband/ocs')->get('invalidName')
             );
         }
 
         if (in_array($name, $this->systemNameBlackList)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('blackListedName', 'Dieser Name kann leider nicht verwendet werden. Bitte verwendet Sie einen anderen.')
+                $this->snippets->getNamespace('blauband/ocs')->get('blackListedName')
             );
         }
 
@@ -86,7 +86,7 @@ class SystemValidation
 
         if (!empty($system)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('nameAlreadyInUse', 'Dieser Name wird bereits verwendet. Bitte wählen Sie einen anderen.')
+                $this->snippets->getNamespace('blauband/ocs')->get('nameAlreadyInUse')
             );
         }
 
@@ -104,7 +104,7 @@ class SystemValidation
                 $hostConnection->getHost() == $guestConnection->getHost()
             ){
                 throw new SystemDBException(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('identicalDB', 'Der angegebene Datenbanken sind identisch.')
+                    $this->snippets->getNamespace('blauband/ocs')->get('identicalDB')
                 );
             }
 
@@ -112,7 +112,7 @@ class SystemValidation
                 $grants = $guestConnection->fetchAll("SELECT Create_priv FROM mysql.user WHERE user = '$userName'");
             } catch (\Exception $e) {
                 throw new SystemDBException(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('missingDBGrants', 'Der angegebene Datenbank User hat keine ausreichenden Berechtigung.')
+                    $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrants')
                 );
             }
 
@@ -121,13 +121,13 @@ class SystemValidation
 
                 if (!empty($isEmpty) && !$overwrite) {
                     throw new SystemDBException(
-                        $this->snippets->getNamespace('blaubandOneClickSystem')->get('dbAlreadyExists', 'Datenbank besteht bereits und es befinden sich Daten in dieser Datenbank. Bitte stellen Sie sicher dass die Datenbank leer ist.')
+                        $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
                     );
                 }
             } else {
                 if (empty($grants) || $grants[0]['Create_priv'] !== "Y") {
                     throw new SystemDBException(
-                        $this->snippets->getNamespace('blaubandOneClickSystem')->get('missingDBGrantsCreate', 'Der angegebene Datenbank User hat keine ausreichenden Berechtigung um eine Datenbank zu erstellen.')
+                        $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrantsCreate')
                     );
                 }
             }
@@ -144,13 +144,13 @@ class SystemValidation
 
         if (is_dir($path)) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('pathExists', "Der Pfad [$path] existiert bereits. Bitte wählen Sie ein anderen Systemnamen")
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathExists'), $path)
             );
         }
 
         if (!is_writable($rootPath)) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('pathNotWritable', "Der Pfad [$path] kann nicht erstellt werden. Stellen Sie sicher das alle benötigten Rechte vorhanden sind.")
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathNotWritable'), $path)
             );
         }
     }
@@ -158,7 +158,7 @@ class SystemValidation
     public function validateDeleting(System $system){
         if($system == null){
             throw new SystemNotFoundException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotFound', 'Dieses System wurde nicht gefunden.')
+                $this->snippets->getNamespace('blauband/ocs')->get('systemNotFound')
             );
         }
 
@@ -168,7 +168,7 @@ class SystemValidation
             $system->getState() == SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY
         ){
             throw new SystemNotReadyException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('systemNotDeletable', 'Dieses System wird bereits bearbeitet. Löschen ist aktuell nicht möglich.')
+                $this->snippets->getNamespace('blauband/ocs')->get('systemNotDeletable')
             );
         }
     }
