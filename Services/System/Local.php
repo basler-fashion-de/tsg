@@ -176,7 +176,7 @@ class Local extends SystemService implements SystemServiceInterface
 
     private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath, $skipMedia)
     {
-        $exceptions = ['.git'];
+        $exceptions = [];
         $systems = $this->modelManager->getRepository(System::class)->findAll();
         foreach ($systems as $system) {
             $exceptions[] = $system->getPath();

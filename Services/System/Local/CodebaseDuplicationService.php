@@ -12,6 +12,12 @@ class CodebaseDuplicationService
      */
     private $snippets;
 
+    private $blackList = [
+        '.svn', //SVN
+        '.git', //Git
+        '.idea' //PHPStorm
+    ];
+
     public function __construct(\Enlight_Components_Snippet_Manager $snippets)
     {
         $this->snippets = $snippets;
@@ -19,6 +25,8 @@ class CodebaseDuplicationService
 
     public function duplicateCodeBase($sourcePath, $destinationPath, $exceptions = [])
     {
+        $exceptions = array_merge($this->blackList, $exceptions);
+
         if (!@mkdir($destinationPath) && !is_dir($destinationPath)) {
             throw new SystemFileSystemException(
                 sprintf($this->snippets->getNamespace('blauband/ocs')->get('destinationPathNotCreated'), $destinationPath)
