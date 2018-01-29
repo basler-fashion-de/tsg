@@ -96,7 +96,6 @@ class SystemValidation
     public function validateDBData(Connection $hostConnection, Connection $guestConnection, $dbName, $overwrite = false)
     {
         try {
-            $userName = $guestConnection->getUsername();
             $exists = $guestConnection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
 
             if(
@@ -108,26 +107,12 @@ class SystemValidation
                 );
             }
 
-            try {
-                $grants = $guestConnection->fetchAll("SELECT Create_priv FROM mysql.user WHERE user = '$userName'");
-            } catch (\Exception $e) {
-                throw new SystemDBException(
-                    $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrants')
-                );
-            }
-
             if (!empty($exists)) {
                 $isEmpty = $guestConnection->fetchAll("SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
 
                 if (!empty($isEmpty) && !$overwrite) {
                     throw new SystemDBException(
                         $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
-                    );
-                }
-            } else {
-                if (empty($grants) || $grants[0]['Create_priv'] !== "Y") {
-                    throw new SystemDBException(
-                        $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrantsCreate')
                     );
                 }
             }

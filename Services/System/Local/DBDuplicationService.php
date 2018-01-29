@@ -24,14 +24,18 @@ class DBDuplicationService
 
     public function createDatabaseAndUse(Connection $connection, $dbName){
         try{
-            $result = $connection->exec("CREATE DATABASE IF NOT EXISTS `$dbName`");
-
-            if($result === 0){
-                throw new \SystemDBException(
-                    sprintf($this->snippets->getNamespace('blauband/ocs')->get('unableToCreateDatabase'), $dbName)
-                );
+            $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
+            
+            if (empty($exists)) {
+                $connection->exec("CREATE DATABASE `$dbName`");
             }
+        }catch (\Exception $e){
+            throw new SystemDBException(
+                $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrantsCreate')
+            );
+        }
 
+        try{
             $connection->exec("USE `$dbName`");
         }catch (\Exception $e){
             throw new SystemDBException($e->getMessage());

@@ -182,9 +182,9 @@ class Local extends SystemService implements SystemServiceInterface
             $exceptions[] = $system->getPath();
         }
 
-        if($skipMedia === true){
-            $mediaFolders = glob($this->docRoot.'/media/*/*', GLOB_ONLYDIR);
-            if(!empty($mediaFolders)){
+        if ($skipMedia === true) {
+            $mediaFolders = glob($this->docRoot . '/media/*/*', GLOB_ONLYDIR);
+            if (!empty($mediaFolders)) {
                 $exceptions = array_merge($exceptions, $mediaFolders);
             }
 
@@ -244,7 +244,10 @@ class Local extends SystemService implements SystemServiceInterface
         $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
-        $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
+        try {
+            $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
+        } catch (\Exception $e) {
+        }
 
         //Verzeichniss löschen
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);
