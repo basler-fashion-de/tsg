@@ -16,7 +16,10 @@
                     {s name="pathsUrls" namespace="blauband/ocs"}{/s}
                 </h4>
                 <label>{s name="path" namespace="blauband/ocs"}{/s}:</label> {$system.path}<br/>
-                <label>{s name="url" namespace="blauband/ocs"}{/s}:</label> <a href="{$smarty.server.HTTP_ORIGIN}{$system.url}" target="_blank">{$smarty.server.HTTP_HOST}{$system.url}</a><br/>
+
+                {if $system.state == 'ready'}
+                    <label>{s name="url" namespace="blauband/ocs"}{/s}:</label> <a href="{$smarty.server.HTTP_ORIGIN}{$system.url}" target="_blank">{$smarty.server.HTTP_HOST}{$system.url}</a><br/>
+                {/if}
             </div>
             <div class="three-cols">
                 <h4>
