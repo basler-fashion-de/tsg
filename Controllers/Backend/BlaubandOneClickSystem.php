@@ -73,6 +73,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $dbPass = $this->Request()->getParam('dbpass');
         $dbName = $this->Request()->getParam('dbname');
         $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
+        $dbRemote = $this->Request()->getParam('dbremote') == 'on';
 
         $preventMail = $this->Request()->getParam('preventmail') == 'on';
         $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
@@ -94,6 +95,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
                 'dbPass' => $dbPass,
                 'dbName' => $dbName,
                 'dbOverwrite' => $dbOverwrite,
+                'dbRemote' => $dbRemote,
                 'preventMail' => $preventMail,
                 'skipMedia' => $skipMedia,
                 'htpasswordName' => $htpasswordName,

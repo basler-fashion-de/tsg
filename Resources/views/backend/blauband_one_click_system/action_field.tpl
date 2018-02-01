@@ -44,30 +44,36 @@
                     <h4>
                         {s name="database" namespace="blauband/ocs"}{/s}
                     </h4>
-                    <label for="dbhost">
+
+                    <label for="dbremote" title="{s name="dbremoteinfo" namespace="blauband/ocs"}{/s}">
+                        {s name="dbremote" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input type="checkbox" name="dbremote" id="dbremote" title="{s name="dbremoteinfo" namespace="blauband/ocs"}{/s}"></br>
+
+                    <label for="dbhost" class="dblocal">
                         {s name="dbhost" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbhost" id="dbhost" value="{$dbhost}"></br>
+                    <input name="dbhost" id="dbhost" value="{$dbhost}" class="dblocal"></br>
 
-                    <label for="dbuser">
+                    <label for="dbuser" class="dblocal">
                         {s name="dbuser" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbuser" id="dbuser" value="{$dbuser}"></br>
+                    <input name="dbuser" id="dbuser" value="{$dbuser}" class="dblocal"></br>
 
-                    <label for="dbpass">
+                    <label for="dbpass" class="dblocal">
                         {s name="dbpass" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbpass" type="password" id="dbpass" value="{$dbpass}"></br>
+                    <input name="dbpass" type="password" id="dbpass" value="{$dbpass}" class="dblocal"></br>
 
-                    <label for="dbname">
+                    <label for="dbname" class="dblocal">
                         {s name="dbname" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbname" id="dbname"></br>
+                    <input name="dbname" id="dbname" class="dblocal"></br>
 
-                    <label for="dboverwrite">
+                    <label for="dboverwrite" class="dblocal">
                         {s name="dboverwrite" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input type="checkbox" name="dboverwrite" id="dboverwrite"></br>
+                    <input type="checkbox" name="dboverwrite" id="dboverwrite" class="dblocal"></br>
                 </div>
                 <div class="three-cols">
                     <h4>

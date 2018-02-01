@@ -10,6 +10,20 @@
             <argument type="service" id="models"/>
         </service>
 
+        <!-- common -->
+        <service id="blauband_one_click_system.amazon_rds_service"
+                 class="BlaubandOneClickSystem\Services\System\Common\AmazonRDSService"
+                 public="false">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="blauband_one_click_system.db_connection_service"/>
+        </service>
+
+        <service id="blauband_one_click_system.db_connection_service"
+                 class="BlaubandOneClickSystem\Services\System\Common\DBConnectionService"
+                 public="false">
+            <argument type="service" id="snippets" />
+        </service>
+
         <!-- local -->
         <service id="blauband_one_click_system.mail_service"
                  class="BlaubandOneClickSystem\Services\System\Local\MailService"
@@ -29,16 +43,10 @@
             <argument type="service" id="snippets" />
         </service>
 
-        <service id="blauband_one_click_system.db_connection_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\DBConnectionService"
-                 public="false">
-            <argument type="service" id="snippets" />
-        </service>
-
         <service id="blauband_one_click_system.db_duplication_service"
                  class="BlaubandOneClickSystem\Services\System\Local\DBDuplicationService"
                  public="false">
-            <argument type="service" id="snippets" />
+            <argument   type="service" id="snippets" />
         </service>
 
         <service id="blauband_one_click_system.codebase_duplication_service"
@@ -58,6 +66,7 @@
             <argument type="service" id="blauband_one_click_system.set_up_system_service"/>
             <argument type="service" id="blauband_one_click_system.ht_access_service"/>
             <argument type="service" id="blauband_one_click_system.mail_service"/>
+            <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
             <argument>%kernel.root_dir%</argument>
         </service>
     </services>

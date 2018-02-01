@@ -1,10 +1,12 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandOneClickSystem\Services\System\Common;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use BlaubandOneClickSystem\Exceptions\SystemDBException;
 
+//Verschlüsseln
 class DBConnectionService
 {
     /**
@@ -17,11 +19,11 @@ class DBConnectionService
         $this->snippets = $snippets;
     }
 
-    public function createConnection($dbHost, $dbUser, $dbPass){
+    public function createConnection($dbHost, $dbUser, $dbPass, $dbName){
         try{
             return new Connection(['host' => $dbHost, 'user' => $dbUser, 'password' => $dbPass], new Driver());
         }catch (\Exception $e){
-            throw new \SystemDBException(
+            throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/ocs')->get('unableToConnect')
             );
         }

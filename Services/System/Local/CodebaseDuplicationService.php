@@ -52,7 +52,8 @@ class CodebaseDuplicationService
         }
 
         $command = "tar cf - $exceptionsString . | (cd $destinationPath && tar xvf - )";
-        $result = exec($command);
+        exec($command);
+        exec("chmod 0755 $destinationPath");
     }
 
     private function copyWithFileSystem($sourcePath, $destinationPath, $exceptions){

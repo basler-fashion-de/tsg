@@ -5,7 +5,8 @@ namespace BlaubandOneClickSystem\Services\System;
 use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
 use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
-use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\AmazonRDSService;
 use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
@@ -61,6 +62,12 @@ class Local extends SystemService implements SystemServiceInterface
      * @var MailService
      */
     private $mailService;
+
+    /**
+     * @var AmazonRDSService
+     */
+    private $amazonRDSService;
+
     /**
      * @var string
      */
@@ -76,6 +83,7 @@ class Local extends SystemService implements SystemServiceInterface
         SetUpSystemService $setUpSystemService,
         HtAccessService $htAccessService,
         MailService $mailService,
+        AmazonRDSService $amazonRDSService,
         $docRoot
     )
     {
@@ -88,6 +96,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->setUpSystemService = $setUpSystemService;
         $this->htAccessService = $htAccessService;
         $this->mailService = $mailService;
+        $this->amazonRDSService = $amazonRDSService;
         $this->docRoot = $docRoot;
     }
 
@@ -103,12 +112,22 @@ class Local extends SystemService implements SystemServiceInterface
         $dbPass = $parameters['dbPass'];
         $dbName = $parameters['dbName'];
         $dbOverwrite = $parameters['dbOverwrite'];
+        $dbRemote = $parameters['dbRemote'];
         $preventMail = $parameters['preventMail'];
         $skipMedia = $parameters['skipMedia'];
         $htpasswordName = $parameters['htpasswordName'];
         $htpasswordPass = $parameters['htpasswordPass'];
 
-        $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+        if($dbRemote){
+            $dbName = uniqid('', false);
+            $dbUser = $dbName;
+            $dbPass = $dbName;
+            $dbHost = $this->amazonRDSService->host;
+            $guestConnection = $this->amazonRDSService->createConnection($dbUser, $dbPass, $dbName);
+        }else{
+            $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+        }
+
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);

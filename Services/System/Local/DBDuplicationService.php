@@ -43,11 +43,12 @@ class DBDuplicationService
     }
 
     public function duplicateData(Connection $hostConnection, Connection $guestConnection){
+        $hostHost = $hostConnection->getHost();
         $hostUser = $hostConnection->getUsername();
         $hostPass = $hostConnection->getPassword();
         $hostDb = $hostConnection->getDatabase();
         $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $exportCommand = "mysqldump -u$hostUser -p$hostPass $hostDb > $dumpName";
+        $exportCommand = "mysqldump -h$hostHost -u$hostUser -p$hostPass $hostDb > $dumpName";
         $output = shell_exec($exportCommand);
 
         if($output !== null){
@@ -55,10 +56,11 @@ class DBDuplicationService
             throw new \SystemDBException($output);
         }
 
+        $guestHost = $guestConnection->getHost();
         $guestUser = $guestConnection->getUsername();
         $guestPass = $guestConnection->getPassword();
         $guestDb = $guestConnection->getDatabase();
-        $importCommand = "mysql -u$guestUser -p$guestPass $guestDb < $dumpName";
+        $importCommand = "mysql -h$guestHost -u$guestUser -p$guestPass $guestDb < $dumpName";
         $output = shell_exec($importCommand);
 
         if($output !== null){
