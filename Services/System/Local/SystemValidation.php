@@ -108,9 +108,9 @@ class SystemValidation
             }
 
             if (!empty($exists)) {
-                $isEmpty = $guestConnection->fetchAll("SELECT COUNT(DISTINCT `table_name`) FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
+                $isEmpty = $guestConnection->fetchColumn("SELECT COUNT(DISTINCT `table_name`) AS count FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
 
-                if (!empty($isEmpty) && !$overwrite) {
+                if ($isEmpty !== '0' && !$overwrite) {
                     throw new SystemDBException(
                         $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
                     );
