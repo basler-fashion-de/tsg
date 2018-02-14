@@ -12,6 +12,12 @@ class CodebaseDuplicationService
      */
     private $snippets;
 
+    private $blackList = [
+        '.svn', //SVN
+        '.git', //Git
+        '.idea' //PHPStorm
+    ];
+
     public function __construct(\Enlight_Components_Snippet_Manager $snippets)
     {
         $this->snippets = $snippets;
@@ -19,9 +25,11 @@ class CodebaseDuplicationService
 
     public function duplicateCodeBase($sourcePath, $destinationPath, $exceptions = [])
     {
+        $exceptions = array_merge($this->blackList, $exceptions);
+
         if (!@mkdir($destinationPath) && !is_dir($destinationPath)) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blaubandOneClickSystem')->get('destinationPathNotCreated', "Der Pfad [$destinationPath] konnte nicht erstellt werden. Überprüfen Sie die Berechtigungen")
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('destinationPathNotCreated'), $destinationPath)
             );
         }
 
@@ -44,7 +52,8 @@ class CodebaseDuplicationService
         }
 
         $command = "tar cf - $exceptionsString . | (cd $destinationPath && tar xvf - )";
-        $result = exec($command);
+        exec($command);
+        exec("chmod 0755 $destinationPath");
     }
 
     private function copyWithFileSystem($sourcePath, $destinationPath, $exceptions){

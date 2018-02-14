@@ -73,9 +73,12 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $dbPass = $this->Request()->getParam('dbpass');
         $dbName = $this->Request()->getParam('dbname');
         $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
+        $dbRemote = $this->Request()->getParam('dbremote') == 'on';
 
         $preventMail = $this->Request()->getParam('preventmail') == 'on';
         $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
+
+        $shopOwnerMail = $this->Request()->getParam('shopowner');
 
         $htpasswordPass = $htpasswordName = null;
         if (
@@ -94,10 +97,12 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
                 'dbPass' => $dbPass,
                 'dbName' => $dbName,
                 'dbOverwrite' => $dbOverwrite,
+                'dbRemote' => $dbRemote,
                 'preventMail' => $preventMail,
                 'skipMedia' => $skipMedia,
                 'htpasswordName' => $htpasswordName,
-                'htpasswordPass' => $htpasswordPass
+                'htpasswordPass' => $htpasswordPass,
+                'shopOwnerMail' => $shopOwnerMail
             ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
@@ -105,7 +110,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => $snippets->getNamespace('blaubandOneClickSystem')->get('duplicateSuccess', "Ihr System [$systemName] konnte erfolgreich eingerichtet werden.")
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName)
 
                 ]
             );
@@ -145,8 +150,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => $snippets->getNamespace('blaubandOneClickSystem')->get('deleteSystemSuccess', "Das System [$systemName] konnte erfolgreich gelöscht werden.")
-
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('deleteSystemSuccess'), $systemName)
                 ]
             );
         } catch (Exception $e) {

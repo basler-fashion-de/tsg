@@ -11,7 +11,7 @@
             <div class="ui-state-error ui-corner-all">
                 <span class="ui-icon ui-icon-alert"></span>
                 <div class="content">
-                    {s name="guest_system_error" namespace="blaubandOneClickSystem"}Sie befinden sich bereits in einem Gast-System. Um weitere System zu erstellen müssen Sie dieses im Host-System machen.{/s}
+                    {s name="guest_system_error" namespace="blauband/ocs"}{/s}
                 </div>
             </div>
         </div>

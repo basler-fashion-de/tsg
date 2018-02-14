@@ -24,14 +24,18 @@ class DBDuplicationService
 
     public function createDatabaseAndUse(Connection $connection, $dbName){
         try{
-            $result = $connection->exec("CREATE DATABASE IF NOT EXISTS `$dbName`");
-
-            if($result === 0){
-                throw new \SystemDBException(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('unableToCreateDatabase', "Es konnte die Datenbank [$dbName] nicht erstellt werden.")
-                );
+            $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
+            
+            if (empty($exists)) {
+                $connection->exec("CREATE DATABASE `$dbName`");
             }
+        }catch (\Exception $e){
+            throw new SystemDBException(
+                $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrantsCreate')
+            );
+        }
 
+        try{
             $connection->exec("USE `$dbName`");
         }catch (\Exception $e){
             throw new SystemDBException($e->getMessage());
@@ -39,11 +43,12 @@ class DBDuplicationService
     }
 
     public function duplicateData(Connection $hostConnection, Connection $guestConnection){
+        $hostHost = $hostConnection->getHost();
         $hostUser = $hostConnection->getUsername();
         $hostPass = $hostConnection->getPassword();
         $hostDb = $hostConnection->getDatabase();
         $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $exportCommand = "mysqldump -u$hostUser -p$hostPass $hostDb > $dumpName";
+        $exportCommand = "mysqldump -h$hostHost -u$hostUser -p$hostPass $hostDb > $dumpName";
         $output = shell_exec($exportCommand);
 
         if($output !== null){
@@ -51,10 +56,11 @@ class DBDuplicationService
             throw new \SystemDBException($output);
         }
 
+        $guestHost = $guestConnection->getHost();
         $guestUser = $guestConnection->getUsername();
         $guestPass = $guestConnection->getPassword();
         $guestDb = $guestConnection->getDatabase();
-        $importCommand = "mysql -u$guestUser -p$guestPass $guestDb < $dumpName";
+        $importCommand = "mysql -h$guestHost -u$guestUser -p$guestPass $guestDb < $dumpName";
         $output = shell_exec($importCommand);
 
         if($output !== null){

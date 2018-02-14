@@ -3,6 +3,7 @@
 $(function () {
   activateAccordion()
   $('button').button()
+  $(document).tooltip()
 
   $('#options input').controlgroup()
 
@@ -22,6 +23,7 @@ function registerEvents () {
   registerShowButton()
   registerCreateButton()
   registerDeleteButton()
+  registerRemoteDbCheckbox()
   startUpdateInterval()
 }
 
@@ -96,6 +98,12 @@ function registerDeleteButton () {
   })
 }
 
+function registerRemoteDbCheckbox () {
+  $('#dbremote').on('change', function () {
+    $('.dblocal').toggle($(this).val())
+  })
+}
+
 function startUpdateInterval () {
   setInterval(function () {
     loadSystemList()
@@ -110,7 +118,7 @@ function loadSystemList (callback) {
     url: url,
     success: function (response) {
       if (response.success) {
-        handleSystemLoadListResponse(response);
+        handleSystemLoadListResponse(response)
       }
 
       if (callback) {
@@ -120,25 +128,25 @@ function loadSystemList (callback) {
   })
 }
 
-function handleSystemLoadListResponse(response){
+function handleSystemLoadListResponse (response) {
   var activeId = $('#systems').accordion('option', 'active')
   var disabledStates = []
   $('button.delete-button').each(
     function () {
-      disabledStates.push({id:$(this).data('id'), state:$(this).button('option', 'disabled')});
+      disabledStates.push({id: $(this).data('id'), state: $(this).button('option', 'disabled')})
     }
-  );
+  )
 
-  $('#system-list').html(response.html);
+  $('#system-list').html(response.html)
 
   activateAccordion()
   $('#systems').accordion('option', 'active', activeId)
 
   registerDeleteButton()
   $('button').button()
-  $.each(disabledStates, function(key, value){
-      $($('.delete-button[data-id='+value.id+']')).button('option', 'disabled', value.state);
-  });
+  $.each(disabledStates, function (key, value) {
+    $($('.delete-button[data-id=' + value.id + ']')).button('option', 'disabled', value.state)
+  })
 }
 
 function hideErrorPanel () {

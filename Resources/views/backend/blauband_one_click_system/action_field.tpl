@@ -1,12 +1,12 @@
 <div id="action-field">
     <button id="create-button" class="ui-button ui-corner-all ui-widget"
-            data-activeText="{s name="create" namespace="blaubandOneClickSystem"}System erstellen{/s}"
-            data-disabledText="{s name="createDisabled" namespace="blaubandOneClickSystem"}Anfrage wird bearbeitet{/s}">
-        {s name="create" namespace="blaubandOneClickSystem"}System erstellen{/s}
+            data-activeText="{s name="create" namespace="blauband/ocs"}{/s}"
+            data-disabledText="{s name="createDisabled" namespace="blauband/ocs"}{/s}">
+        {s name="create" namespace="blauband/ocs"}{/s}
     </button>
 
     <a id="show-options-button" class="">
-        {s name="showOptions" namespace="blaubandOneClickSystem"}Einstellungen anzeigen{/s}
+        {s name="showOptions" namespace="blauband/ocs"}{/s}
     </a>
 
     <div id="options" style="display: none">
@@ -14,79 +14,94 @@
             <div class="ui-widget">
                 <div class="three-cols">
                     <h4>
-                        {s name="generel" namespace="blaubandOneClickSystem"}Allgemein{/s}
+                        {s name="generel" namespace="blauband/ocs"}{/s}
                     </h4>
                     <label for="name">
-                        {s name="name" namespace="blaubandOneClickSystem"}Name{/s}:
+                        {s name="name" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input name="name" id="name"></br>
 
                     <label for="type">
-                        {s name="type" namespace="blaubandOneClickSystem"}Type{/s}:
+                        {s name="type" namespace="blauband/ocs"}{/s}:
                     </label>
                     <select name="type" id="type">
                         <option value="local"
-                                selected="selected">{s name="typeLocal" namespace="blaubandOneClickSystem"}Lokal{/s}</option>
-                        <option disabled>Amazon EC2</option>
+                                selected="selected">{s name="typeLocal" namespace="blauband/ocs"}{/s}</option>
+                        <option disabled>{s name="typeAmazon" namespace="blauband/ocs"}{/s}</option>
                     </select></br>
 
                     <label for="preventmail">
-                        {s name="preventmail" namespace="blaubandOneClickSystem"}Email Versand unterbinden{/s}:
+                        {s name="preventmail" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input type="checkbox" name="preventmail" id="preventmail"></br>
 
                     <label for="skipmedia">
-                        {s name="skipmedia" namespace="blaubandOneClickSystem"}Medienordner nicht kopieren{/s}:
+                        {s name="skipmedia" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input type="checkbox" name="skipmedia" id="skipmedia"></br>
                 </div>
                 <div class="three-cols">
                     <h4>
-                        {s name="database" namespace="blaubandOneClickSystem"}Datenbank{/s}
+                        {s name="database" namespace="blauband/ocs"}{/s}
                     </h4>
-                    <label for="dbhost">
-                        {s name="dbhost" namespace="blaubandOneClickSystem"}Datenbank Host{/s}:
-                    </label>
-                    <input name="dbhost" id="dbhost" value="{$dbhost}"></br>
 
-                    <label for="dbuser">
-                        {s name="dbuser" namespace="blaubandOneClickSystem"}Datenbank Benutzername{/s}:
+                    <label for="dbremote" title="{s name="dbremoteinfo" namespace="blauband/ocs"}{/s}">
+                        {s name="dbremote" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbuser" id="dbuser" value="{$dbuser}"></br>
+                    <input type="checkbox" name="dbremote" id="dbremote" title="{s name="dbremoteinfo" namespace="blauband/ocs"}{/s}"></br>
 
-                    <label for="dbpass">
-                        {s name="dbpass" namespace="blaubandOneClickSystem"}Datenbank Passwort{/s}:
+                    <label for="dbhost" class="dblocal">
+                        {s name="dbhost" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbpass" type="password" id="dbpass" value="{$dbpass}"></br>
+                    <input name="dbhost" id="dbhost" value="{$dbhost}" class="dblocal"></br>
 
-                    <label for="dbname">
-                        {s name="dbname" namespace="blaubandOneClickSystem"}Datenbank Name{/s}:
+                    <label for="dbuser" class="dblocal">
+                        {s name="dbuser" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input name="dbname" id="dbname"></br>
+                    <input name="dbuser" id="dbuser" value="{$dbuser}" class="dblocal"></br>
 
-                    <label for="dboverwrite">
-                        {s name="dboverwrite" namespace="blaubandOneClickSystem"}Datenbank Überschreiben{/s}:
+                    <label for="dbpass" class="dblocal">
+                        {s name="dbpass" namespace="blauband/ocs"}{/s}:
                     </label>
-                    <input type="checkbox" name="dboverwrite" id="dboverwrite"></br>
+                    <input name="dbpass" type="password" id="dbpass" value="{$dbpass}" class="dblocal"></br>
+
+                    <label for="dbname" class="dblocal">
+                        {s name="dbname" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input name="dbname" id="dbname" class="dblocal"></br>
+
+                    <label for="dboverwrite" class="dblocal">
+                        {s name="dboverwrite" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input type="checkbox" name="dboverwrite" id="dboverwrite" class="dblocal"></br>
                 </div>
                 <div class="three-cols">
                     <h4>
-                        {s name="security" namespace="blaubandOneClickSystem"}Sicherheit{/s}
+                        {s name="security" namespace="blauband/ocs"}{/s}
                     </h4>
                     <label for="htpasswd">
-                        {s name="htpasswd" namespace="blaubandOneClickSystem"}.htpasswd erstelllen{/s}:
+                        {s name="htpasswd" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input type="checkbox" name="htpasswd" id="htpasswd"></br>
 
                     <label for="htpasswdusername">
-                        {s name="htpasswdusername" namespace="blaubandOneClickSystem"}.htpasswd Benutzername{/s}:
+                        {s name="htpasswdusername" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input name="htpasswdusername" id="htpasswdusername"></br>
 
                     <label for="htpasswdpassword">
-                        {s name="htpasswdpassword" namespace="blaubandOneClickSystem"}.htpasswd Passwort{/s}:
+                        {s name="htpasswdpassword" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input name="htpasswdpassword" id="htpasswdpassword" type="password"></br>
+
+
+                    <h4>
+                        {s name="options" namespace="blauband/ocs"}{/s}
+                    </h4>
+                    <label for="shopowner">
+                        {s name="shopowner" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input name="shopowner" id="shopowner"></br>
 
                 </div>
             </div>

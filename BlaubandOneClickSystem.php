@@ -57,6 +57,11 @@ class BlaubandOneClickSystem extends Plugin
                 (new Models($this->container->get('models')))->install();
                 return true;
             },
+
+            '1.0.1' => function () {
+                (new Models($this->container->get('models')))->update();
+                return true;
+            },
         ];
 
         foreach ($versions as $version => $callback) {

@@ -39,7 +39,18 @@ class SetUpSystemService
         $config['db']['password'] = $guestConnection->getPassword();
         $config['db']['dbname'] = $guestConnection->getDatabase();
         $config['blauband']['ocs']['isGuest'] = true;
+        $configData = "<?php\n\n return " . var_export($config, true) . ";";
+        $result = file_put_contents($configPath, $configData);
 
-        file_put_contents($configPath, "<?php\n\n return " . var_export($config, true) . ";");
+        if($result === false){
+            throw new SystemFileSystemException(
+                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+            );
+        }
+    }
+
+    public function changeShopOwner(Connection $guestConnection, $shopOwnerEmail){
+        $serialEMailAddress = serialize($shopOwnerEmail);
+        $guestConnection->exec("UPDATE s_core_config_values AS val JOIN s_core_config_elements AS ele ON (val.element_id = ele.id AND ele.name = 'mail') SET val.value = '$serialEMailAddress'");
     }
 }

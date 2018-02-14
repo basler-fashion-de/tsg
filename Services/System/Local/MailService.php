@@ -22,12 +22,7 @@ class MailService
         $mailPath = $system->getPath() . '/mail';
         if (!@mkdir($mailPath) && !is_dir($mailPath)) {
             throw new SystemFileSystemException(
-                sprintf(
-                    $this->snippets
-                        ->getNamespace('blaubandOneClickSystem')
-                        ->get('pathCanNotCreate', "Der Pfad %s konnte nicht erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
-                    $mailPath
-                )
+                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathCanNotCreate'), $mailPath)
             );
         }
 
@@ -35,7 +30,14 @@ class MailService
         $config = include $configPath;
         $config['mail']['type'] = 'file';
         $config['mail']['path'] = $mailPath;
-        file_put_contents($configPath, "<?php\n\n return " . var_export($config, true) . ";");
+        $configData = "<?php\n\n return " . var_export($config, true) . ";";
+        $result = file_put_contents($configPath, $configData);
+
+        if($result === false){
+            throw new SystemFileSystemException(
+                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+            );
+        }
 
         return true;
     }

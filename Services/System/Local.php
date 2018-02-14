@@ -5,7 +5,8 @@ namespace BlaubandOneClickSystem\Services\System;
 use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
 use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
-use BlaubandOneClickSystem\Services\System\Local\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\AmazonRDSService;
 use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
@@ -59,6 +60,12 @@ class Local extends SystemService implements SystemServiceInterface
      * @var MailService
      */
     private $mailService;
+
+    /**
+     * @var AmazonRDSService
+     */
+    private $amazonRDSService;
+
     /**
      * @var string
      */
@@ -74,6 +81,7 @@ class Local extends SystemService implements SystemServiceInterface
         SetUpSystemService $setUpSystemService,
         HtAccessService $htAccessService,
         MailService $mailService,
+        AmazonRDSService $amazonRDSService,
         $docRoot
     )
     {
@@ -86,6 +94,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->setUpSystemService = $setUpSystemService;
         $this->htAccessService = $htAccessService;
         $this->mailService = $mailService;
+        $this->amazonRDSService = $amazonRDSService;
         $this->docRoot = $docRoot;
     }
 
@@ -101,23 +110,35 @@ class Local extends SystemService implements SystemServiceInterface
         $dbPass = $parameters['dbPass'];
         $dbName = $parameters['dbName'];
         $dbOverwrite = $parameters['dbOverwrite'];
+        $dbRemote = $parameters['dbRemote'];
         $preventMail = $parameters['preventMail'];
         $skipMedia = $parameters['skipMedia'];
         $htpasswordName = $parameters['htpasswordName'];
         $htpasswordPass = $parameters['htpasswordPass'];
+        $shopOwnerMail = $parameters['shopOwnerMail'];
 
-        $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+        if($dbRemote){
+            $dbName = $this->amazonRDSService->getUniqDatabaseName();
+            $dbUser = $dbName;
+            $dbPass = $dbName;
+            $dbHost = $this->amazonRDSService->host;
+            $guestConnection = $this->amazonRDSService->createConnection($dbUser, $dbPass, $dbName);
+        }else{
+            $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+        }
+
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
+        $this->systemValidation->validateEmailAddress($shopOwnerMail, true);
         $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia);
+            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerMail   );
             $this->duplicateDB($systemModel, $guestConnection);
             $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath, $skipMedia);
-            $this->setUpNewSystem($systemModel, $guestConnection);
+            $this->setUpNewSystem($systemModel, $guestConnection, $shopOwnerMail);
             $this->createHtPasswd($systemModel, $destinationPath);
             $this->preventMail($systemModel, $preventMail);
 
@@ -138,7 +159,7 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia)
+    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerEmailAddress)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -157,6 +178,7 @@ class Local extends SystemService implements SystemServiceInterface
 
         $systemModel->setPreventMail($preventMail);
         $systemModel->setSkipMedia($skipMedia);
+        $systemModel->setNewShopOwner($shopOwnerEmailAddress);
 
         $this->modelManager->persist($systemModel);
         $this->modelManager->flush($systemModel);
@@ -174,15 +196,15 @@ class Local extends SystemService implements SystemServiceInterface
 
     private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath, $skipMedia)
     {
-        $exceptions = ['.git'];
+        $exceptions = [];
         $systems = $this->modelManager->getRepository(System::class)->findAll();
         foreach ($systems as $system) {
             $exceptions[] = $system->getPath();
         }
 
-        if($skipMedia === true){
-            $mediaFolders = glob($this->docRoot.'/media/*/*', GLOB_ONLYDIR);
-            if(!empty($mediaFolders)){
+        if ($skipMedia === true) {
+            $mediaFolders = glob($this->docRoot . '/media/*/*', GLOB_ONLYDIR);
+            if (!empty($mediaFolders)) {
                 $exceptions = array_merge($exceptions, $mediaFolders);
             }
 
@@ -194,12 +216,16 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function setUpNewSystem(System $systemModel, Connection $guestConnection)
+    private function setUpNewSystem(System $systemModel, Connection $guestConnection, $shopOwnerMail)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_HOST_SHOP);
         $this->setUpSystemService->changeShopTitle($guestConnection, $systemModel);
         $this->setUpSystemService->changeShopUrl($guestConnection, $systemModel);
         $this->setUpSystemService->setUpConfigPhp($guestConnection, $systemModel);
+
+        if(!empty($shopOwnerMail)){
+            $this->setUpSystemService->changeShopOwner($guestConnection, $shopOwnerMail);
+        }
 
         return true;
     }
@@ -242,7 +268,10 @@ class Local extends SystemService implements SystemServiceInterface
         $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
-        $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
+        try {
+            $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
+        } catch (\Exception $e) {
+        }
 
         //Verzeichniss löschen
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);

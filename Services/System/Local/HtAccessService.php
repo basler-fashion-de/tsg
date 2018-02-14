@@ -47,7 +47,7 @@ class HtAccessService
         if (!$fp) {
             throw new SystemFileSystemException(
                 sprintf(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei %s konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
+                    $this->snippets->getNamespace('blauband/ocs')->get('fileNotFoundOrCreated'),
                     $file
                 )
             );
@@ -64,7 +64,7 @@ class HtAccessService
         if (!$fp) {
             throw new SystemFileSystemException(
                 sprintf(
-                    $this->snippets->getNamespace('blaubandOneClickSystem')->get('fileNotFoundOrCreated', "Die Datei $file konnte nicht bearbeitet oder erstellt werden. Überprüfen Sie bitte Ihre Rechte."),
+                    $this->snippets->getNamespace('blauband/ocs')->get('fileNotFoundOrCreated'),
                     $file
                 ));
         }

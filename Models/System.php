@@ -102,6 +102,12 @@ class System extends ModelEntity
 
     /**
      * @var
+     * @ORM\Column(name="new_shop_owner", type="text", nullable=true)
+     */
+    private $newShopOwner;
+
+    /**
+     * @var
      * @ORM\Column(name="create_date", type="datetime")
      */
     private $createDate;
@@ -347,6 +353,22 @@ class System extends ModelEntity
     public function setSkipMedia($skipMedia)
     {
         $this->skipMedia = $skipMedia;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNewShopOwner()
+    {
+        return $this->newShopOwner;
+    }
+
+    /**
+     * @param mixed $newShopOwner
+     */
+    public function setNewShopOwner($newShopOwner)
+    {
+        $this->newShopOwner = $newShopOwner;
     }
 
     /**
