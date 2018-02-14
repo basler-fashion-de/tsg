@@ -94,6 +94,15 @@
                     </label>
                     <input name="htpasswdpassword" id="htpasswdpassword" type="password"></br>
 
+
+                    <h4>
+                        {s name="options" namespace="blauband/ocs"}{/s}
+                    </h4>
+                    <label for="shopowner">
+                        {s name="shopowner" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input name="shopowner" id="shopowner"></br>
+
                 </div>
             </div>
         </form>

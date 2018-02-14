@@ -117,9 +117,10 @@ class Local extends SystemService implements SystemServiceInterface
         $skipMedia = $parameters['skipMedia'];
         $htpasswordName = $parameters['htpasswordName'];
         $htpasswordPass = $parameters['htpasswordPass'];
+        $shopOwnerMail = $parameters['shopOwnerMail'];
 
         if($dbRemote){
-            $dbName = uniqid('', false);
+            $dbName = $this->amazonRDSService->getUniqDatabaseName();
             $dbUser = $dbName;
             $dbPass = $dbName;
             $dbHost = $this->amazonRDSService->host;
@@ -131,14 +132,15 @@ class Local extends SystemService implements SystemServiceInterface
         $destinationPath = $this->docRoot . '/' . strtolower($systemName);
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
+        $this->systemValidation->validateEmailAddress($shopOwnerMail, true);
         $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia);
+            $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerMail   );
             $this->duplicateDB($systemModel, $guestConnection);
             $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath, $skipMedia);
-            $this->setUpNewSystem($systemModel, $guestConnection);
+            $this->setUpNewSystem($systemModel, $guestConnection, $shopOwnerMail);
             $this->createHtPasswd($systemModel, $destinationPath);
             $this->preventMail($systemModel, $preventMail);
 
@@ -159,7 +161,7 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia)
+    private function createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerEmailAddress)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -178,6 +180,7 @@ class Local extends SystemService implements SystemServiceInterface
 
         $systemModel->setPreventMail($preventMail);
         $systemModel->setSkipMedia($skipMedia);
+        $systemModel->setNewShopOwner($shopOwnerEmailAddress);
 
         $this->modelManager->persist($systemModel);
         $this->modelManager->flush($systemModel);
@@ -215,12 +218,16 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function setUpNewSystem(System $systemModel, Connection $guestConnection)
+    private function setUpNewSystem(System $systemModel, Connection $guestConnection, $shopOwnerMail)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_HOST_SHOP);
         $this->setUpSystemService->changeShopTitle($guestConnection, $systemModel);
         $this->setUpSystemService->changeShopUrl($guestConnection, $systemModel);
         $this->setUpSystemService->setUpConfigPhp($guestConnection, $systemModel);
+
+        if(!empty($shopOwnerMail)){
+            $this->setUpSystemService->changeShopOwner($guestConnection, $shopOwnerMail);
+        }
 
         return true;
     }

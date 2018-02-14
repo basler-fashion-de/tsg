@@ -2,6 +2,7 @@
 
 namespace BlaubandOneClickSystem\Services\System\Local;
 
+use BlaubandOneClickSystem\Exceptions\EMailAddressInvalidException;
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
 use BlaubandOneClickSystem\Exceptions\SystemNotFoundException;
 use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
@@ -91,6 +92,24 @@ class SystemValidation
         }
 
         return true;
+    }
+
+    public function validateEmailAddress($eMailAddress, $exceptNull = false){
+        if(empty($eMailAddress) && $exceptNull){
+            return true;
+        }
+
+        if(empty($eMailAddress)){
+            throw new EMailAddressInvalidException(
+                $this->snippets->getNamespace('blauband/ocs')->get('invalidEMailAddress')
+            );
+        }
+
+        if (!filter_var($eMailAddress, FILTER_VALIDATE_EMAIL)) {
+            throw new EMailAddressInvalidException(
+                $this->snippets->getNamespace('blauband/ocs')->get('invalidEMailAddress')
+            );
+        }
     }
 
     public function validateDBData(Connection $hostConnection, Connection $guestConnection, $dbName, $overwrite = false)

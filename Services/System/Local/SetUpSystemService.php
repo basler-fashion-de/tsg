@@ -48,4 +48,9 @@ class SetUpSystemService
             );
         }
     }
+
+    public function changeShopOwner(Connection $guestConnection, $shopOwnerEmail){
+        $serialEMailAddress = serialize($shopOwnerEmail);
+        $guestConnection->exec("UPDATE s_core_config_values AS val JOIN s_core_config_elements AS ele ON (val.element_id = ele.id AND ele.name = 'mail') SET val.value = '$serialEMailAddress'");
+    }
 }

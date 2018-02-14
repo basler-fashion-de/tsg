@@ -78,6 +78,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
         $preventMail = $this->Request()->getParam('preventmail') == 'on';
         $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
 
+        $shopOwnerMail = $this->Request()->getParam('shopowner');
+
         $htpasswordPass = $htpasswordName = null;
         if (
             $this->Request()->getParam('htpasswd') == 'on' &&
@@ -99,7 +101,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
                 'preventMail' => $preventMail,
                 'skipMedia' => $skipMedia,
                 'htpasswordName' => $htpasswordName,
-                'htpasswordPass' => $htpasswordPass
+                'htpasswordPass' => $htpasswordPass,
+                'shopOwnerMail' => $shopOwnerMail
             ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");

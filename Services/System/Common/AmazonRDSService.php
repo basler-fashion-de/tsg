@@ -57,4 +57,8 @@ class AmazonRDSService
 
         return $this->connectionService->createConnection($this->host, $dbUser, $dbPass);
     }
+
+    public function getUniqDatabaseName(){
+        return date("ymd").'_'.substr(uniqid('', false), -4);
+    }
 }
