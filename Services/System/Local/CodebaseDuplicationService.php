@@ -51,7 +51,7 @@ class CodebaseDuplicationService
             $exceptionsString = '';
         }
 
-        $command = "tar cf - $exceptionsString . | (cd $destinationPath && tar xvf - )";
+        $command = "(cd $sourcePath && tar cf - $exceptionsString .) | (cd $destinationPath && tar xvf - )";
         exec($command);
         exec("chmod 0755 $destinationPath");
     }

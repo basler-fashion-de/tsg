@@ -122,7 +122,7 @@ class Local extends SystemService implements SystemServiceInterface
             $dbUser = $dbName;
             $dbPass = $dbName;
             $dbHost = $this->amazonRDSService->host;
-            $guestConnection = $this->amazonRDSService->createConnection($dbUser, $dbPass, $dbName);
+            $guestConnection = $this->amazonRDSService->createDatabase($dbUser, $dbPass, $dbName);
         }else{
             $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         }
@@ -136,13 +136,7 @@ class Local extends SystemService implements SystemServiceInterface
 
         try {
             $systemModel = $this->createDBEntry($systemName, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerMail   );
-            $this->duplicateDB($systemModel, $guestConnection);
-            $this->duplicateCodeBase($systemModel, $this->docRoot, $destinationPath, $skipMedia);
-            $this->setUpNewSystem($systemModel, $guestConnection, $shopOwnerMail);
-            $this->createHtPasswd($systemModel, $destinationPath);
-            $this->preventMail($systemModel, $preventMail);
-
-            $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
+            $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
         } catch (\Exception $e) {
             //Rollback
             if (!empty($systemModel)) {
@@ -152,6 +146,38 @@ class Local extends SystemService implements SystemServiceInterface
             }
 
             throw $e;
+        }
+    }
+
+
+    public function executeCreateSystem(){
+        $systemList = $this->modelManager->getRepository(System::class)->findAll();
+
+        /** @var System $systemModel */
+        foreach ($systemList as $systemModel){
+            if($systemModel->getState() === SystemService::SYSTEM_STATE_CREATING_WAITING){
+                try {
+                    $guestConnection = $this->dbConnectionService->createConnection(
+                        $systemModel->getDbHost(),
+                        $systemModel->getDbUsername(),
+                        $systemModel->getDbPassword(),
+                        $systemModel->getDbName()
+                    );
+
+                    $this->duplicateDB($systemModel, $guestConnection);
+                    $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath(), $systemModel->getSkipMedia());
+                    $this->setUpNewSystem($systemModel, $guestConnection, $systemModel->getNewShopOwner());
+                    $this->createHtPasswd($systemModel, $systemModel->getPath());
+                    $this->preventMail($systemModel, $systemModel->getPreventMail());
+
+                    $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
+                } catch (\Exception $e) {
+                    $this->modelManager->remove($systemModel);
+                    $this->modelManager->flush($systemModel);
+
+                    throw $e;
+                }
+            }
         }
     }
 

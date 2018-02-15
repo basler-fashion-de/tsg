@@ -26,7 +26,7 @@ class AmazonRDSService
         $this->connectionService = $connectionService;
     }
 
-    public function createConnection($dbUser, $dbPass, $dbName){
+    public function createDatabase($dbUser, $dbPass, $dbName){
         try{
             $rootConnection = $this->connectionService->createConnection($this->host, $this->user, $this->password);
         }catch (Exception $e){
