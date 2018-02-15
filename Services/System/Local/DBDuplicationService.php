@@ -27,7 +27,7 @@ class DBDuplicationService
             $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
             
             if (empty($exists)) {
-                $connection->exec("CREATE DATABASE `$dbName`");
+                $connection->exec("CREATE DATABASE `$dbName` DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;");
             }
         }catch (\Exception $e){
             throw new SystemDBException(

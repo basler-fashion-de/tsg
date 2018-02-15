@@ -19,13 +19,19 @@ class DBConnectionService
         $this->snippets = $snippets;
     }
 
-    public function createConnection($dbHost, $dbUser, $dbPass, $dbName){
+    public function createConnection($dbHost, $dbUser, $dbPass, $dbName = null){
         try{
-            return new Connection(['host' => $dbHost, 'user' => $dbUser, 'password' => $dbPass], new Driver());
+            $connection = new Connection(['host' => $dbHost, 'user' => $dbUser, 'password' => $dbPass], new Driver());
+
+            if(!empty($dbName)){
+                $connection->exec("USE `$dbName`");
+            }
         }catch (\Exception $e){
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/ocs')->get('unableToConnect')
             );
         }
+
+        return $connection;
     }
 }

@@ -36,7 +36,7 @@ class AmazonRDSService
         }
 
         try{
-            $rootConnection->exec("CREATE DATABASE `$dbName`");
+            $rootConnection->exec("CREATE DATABASE `$dbName` DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;");
         }catch (Exception $e){
             throw new SystemDBException(
                 sprintf($this->snippets->getNamespace('blauband/ocs')->get('unableToCreateDatabase'), $dbName)

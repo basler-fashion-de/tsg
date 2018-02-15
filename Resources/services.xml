@@ -4,6 +4,12 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Plugin -->
+        <service id="blauband_one_click_system.config_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%blauband_one_click_system.plugin_dir%/compare.xml</argument>
+        </service>
+
         <service id="blauband_one_click_system.system_validation"
                  class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
             <argument type="service" id="snippets" />
@@ -19,8 +25,7 @@
         </service>
 
         <service id="blauband_one_click_system.db_connection_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\DBConnectionService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Common\DBConnectionService">
             <argument type="service" id="snippets" />
         </service>
 
@@ -68,6 +73,12 @@
             <argument type="service" id="blauband_one_click_system.mail_service"/>
             <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
             <argument>%kernel.root_dir%</argument>
+        </service>
+
+
+        <!-- compare db -->
+        <service id="blauband_one_click_system.db_compare_service"
+                 class="BlaubandOneClickSystem\Services\DBCompare\DBCompareService">
         </service>
     </services>
 </container>
