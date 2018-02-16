@@ -6,6 +6,7 @@ class SystemService
 {
     const SYSTEM_STATE_READY = 'ready';
 
+    const SYSTEM_STATE_CREATING_WAITING = 'waiting';
     const SYSTEM_STATE_CREATING_HOST_DB_ENTRY = 'creating_host_db_entry';
     const SYSTEM_STATE_CREATING_GUEST_DB = 'create_guest_db';
     const SYSTEM_STATE_CREATING_GUEST_CODEBASE = 'create_guest_codebase';

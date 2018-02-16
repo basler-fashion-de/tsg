@@ -23,6 +23,8 @@ function registerEvents () {
   registerShowButton()
   registerCreateButton()
   registerDeleteButton()
+  registerCompareButton()
+  registerCommitButton()
   registerRemoteDbCheckbox()
   startUpdateInterval()
 }
@@ -98,6 +100,26 @@ function registerDeleteButton () {
   })
 }
 
+function registerCompareButton () {
+  $('.compare-button').on('click', function () {
+    openNewIframe(
+      $(this).data('title'),
+      'BlaubandCompare',
+      'index',
+      {'id': $(this).data('id'), 'group': $(this).data('group')}
+    )
+  })
+}
+
+function registerCommitButton () {
+  $('.commit-button').on('click', function () {
+    $(this).button('option', 'disabled', true)
+
+    var url = $(this).data('url')
+    window.location.replace(url)
+  })
+}
+
 function registerRemoteDbCheckbox () {
   $('#dbremote').on('change', function () {
     $('.dblocal').toggle($(this).val())
@@ -143,6 +165,8 @@ function handleSystemLoadListResponse (response) {
   $('#systems').accordion('option', 'active', activeId)
 
   registerDeleteButton()
+  registerCompareButton()
+
   $('button').button()
   $.each(disabledStates, function (key, value) {
     $($('.delete-button[data-id=' + value.id + ']')).button('option', 'disabled', value.state)
@@ -180,6 +204,17 @@ function activateAccordion () {
     active: false,
     animate: false
   })
+}
+
+function openNewIframe (title, controller, action, params) {
+  var values = {
+    width: 1000,
+    height: 800,
+    component: 'customSubWindow',
+    url: controller + '/' + action + '?' + jQuery.param(params),
+    title: title
+  }
+  postMessageApi.createSubWindow(values)
 }
 
 //{/literal}

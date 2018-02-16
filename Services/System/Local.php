@@ -7,7 +7,7 @@ use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
 use BlaubandOneClickSystem\Services\System\Common\AmazonRDSService;
-use BlaubandOneClickSystem\Services\System\Local\DBDuplicationService;
+use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 use Doctrine\DBAL\Connection;

@@ -5,8 +5,9 @@ use BlaubandOneClickSystem\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
+use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
 
-class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Controller_Action implements CSRFWhitelistAware
+class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
     public function getWhitelistedCSRFActions()
     {
@@ -24,18 +25,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
      */
     public function preDispatch()
     {
-        $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
-        $this->View()->addTemplateDir($pluginPath . '/Resources/views/');
+        parent::preDispatch();
         $this->checkGuestSystem();
-    }
-
-    /**
-     * Post dispatch method
-     */
-    public function postDispatch()
-    {
-        $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
-        $this->View()->assign('publicFilePath', $pluginPath . '/Resources/views/backend/_public/');
     }
 
     /**
@@ -217,12 +208,5 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends Enlight_Contro
             );
             $this->redirect($redirect);
         }
-    }
-
-    private function sendJsonResponse($data)
-    {
-        $this->Front()->Plugins()->ViewRenderer()->setNoRender();
-        $this->Response()->setBody(json_encode($data));
-        $this->Response()->setHeader('Content-type', 'application/json', true);
     }
 }

@@ -3,7 +3,7 @@
     <compare>
         <article>
             <tables>s_addon_premiums</tables>
-            <!--<tables>s_articles</tables>-->
+            <tables>s_articles</tables>
             <tables>s_articles_also_bought_ro</tables>
             <tables>s_articles_attributes</tables>
             <tables>s_articles_avoid_customergroups</tables>
@@ -47,5 +47,16 @@
             <tables>s_article_img_mapping_rules</tables>
             <tables>s_filter_articles</tables>
         </article>
+
+        <emotion>
+            <tables>s_emotion</tables>
+            <tables>s_emotion_attributes</tables>
+            <tables>s_emotion_categories</tables>
+            <tables>s_emotion_element</tables>
+            <tables>s_emotion_element_value</tables>
+        </emotion>
+
+
+
     </compare>
 </config>

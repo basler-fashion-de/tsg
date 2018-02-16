@@ -5,8 +5,7 @@
 </head>
 
 <body>
-<div id="one-click-system">
-    <div>
+<div id="one-click-system" class="error-page">
         <div class="alerts ui-widget">
             <div class="ui-state-error ui-corner-all">
                 <span class="ui-icon ui-icon-alert"></span>
@@ -15,7 +14,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 </body>
 </html>

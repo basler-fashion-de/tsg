@@ -2,6 +2,7 @@
 
 namespace BlaubandOneClickSystem;
 
+use BlaubandOneClickSystem\Installers\CronJob;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UninstallContext;
 use Shopware\Components\Plugin\Context\InstallContext;
@@ -27,6 +28,11 @@ class BlaubandOneClickSystem extends Plugin
     {
         $this->setup(null, $context->getCurrentVersion());
         parent::install($context);
+
+        (new CronJob(
+            $this->container->get('dbal_connection'),
+            $this->getPath()
+        ))->fixCronTab();
     }
 
     public function update(UpdateContext $context)

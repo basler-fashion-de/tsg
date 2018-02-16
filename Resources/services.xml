@@ -10,6 +10,11 @@
             <argument>%blauband_one_click_system.plugin_dir%/Resources/compare.xml</argument>
         </service>
 
+        <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
+            <argument type="service" id="service_container"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
         <service id="blauband_one_click_system.system_validation"
                  class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
             <argument type="service" id="snippets"/>
@@ -49,8 +54,7 @@
         </service>
 
         <service id="blauband_one_click_system.db_duplication_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\DBDuplicationService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Common\DBDuplicationService">
             <argument type="service" id="snippets"/>
         </service>
 

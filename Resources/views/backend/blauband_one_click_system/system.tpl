@@ -37,6 +37,16 @@
                     {s name="delete" namespace="blauband/ocs"}{/s}
                 </button>
             </div>
+
+            <div class="compare-article-button-wrapper">
+                <button class="compare-article-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="article"  data-title="{s name="compareArticle" namespace="blauband/ocs"}{/s}">
+                    {s name="compareArticle" namespace="blauband/ocs"}{/s}
+                </button>
+
+                <button class="compare-emotion-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="emotion"  data-title="{s name="compareEmotion" namespace="blauband/ocs"}{/s}">
+                    {s name="compareEmotion" namespace="blauband/ocs"}{/s}
+                </button>
+            </div>
         {/if}
     </div>
 </div>

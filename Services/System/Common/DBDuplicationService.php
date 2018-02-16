@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandOneClickSystem\Services\System\Common;
 
 use Doctrine\DBAL\Connection;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
@@ -42,13 +42,14 @@ class DBDuplicationService
         }
     }
 
-    public function duplicateData(Connection $hostConnection, Connection $guestConnection){
-        $hostHost = $hostConnection->getHost();
-        $hostUser = $hostConnection->getUsername();
-        $hostPass = $hostConnection->getPassword();
-        $hostDb = $hostConnection->getDatabase();
+    public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = []){
+        $sourceHost = $sourceConnection->getHost();
+        $sourceUser = $sourceConnection->getUsername();
+        $sourcePass = $sourceConnection->getPassword();
+        $sourceDb = $sourceConnection->getDatabase();
+        $sourceTables = implode(' ', $tables);
         $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $exportCommand = "mysqldump -h$hostHost -u$hostUser -p$hostPass $hostDb > $dumpName";
+        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser -p$sourcePass --default-character-set=utf8 $sourceDb $sourceTables > $dumpName";
         $output = shell_exec($exportCommand);
 
         if($output !== null){
@@ -56,11 +57,11 @@ class DBDuplicationService
             throw new \SystemDBException($output);
         }
 
-        $guestHost = $guestConnection->getHost();
-        $guestUser = $guestConnection->getUsername();
-        $guestPass = $guestConnection->getPassword();
-        $guestDb = $guestConnection->getDatabase();
-        $importCommand = "mysql -h$guestHost -u$guestUser -p$guestPass $guestDb < $dumpName";
+        $destinationHost = $destinationConnection->getHost();
+        $destinationUser = $destinationConnection->getUsername();
+        $destinationPass = $destinationConnection->getPassword();
+        $destinationDb = $destinationConnection->getDatabase();
+        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumpName";
         $output = shell_exec($importCommand);
 
         if($output !== null){

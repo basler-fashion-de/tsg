@@ -19,9 +19,15 @@ class DBConnectionService
         $this->snippets = $snippets;
     }
 
-    public function createConnection($dbHost, $dbUser, $dbPass, $dbName = null){
+    public function createConnection($dbHost, $dbUser, $dbPass, $dbName = null, $dbPort = 3306, $dbCharset = 'utf8'){
         try{
-            $connection = new Connection(['host' => $dbHost, 'user' => $dbUser, 'password' => $dbPass], new Driver());
+            $connection = new Connection([
+                'host' => $dbHost,
+                'user' => $dbUser,
+                'password' => $dbPass,
+                'port' => $dbPort,
+                'charset' => $dbCharset
+            ], new Driver());
 
             if(!empty($dbName)){
                 $connection->exec("USE `$dbName`");

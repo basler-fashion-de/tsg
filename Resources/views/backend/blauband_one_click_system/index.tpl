@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {include file="backend/blauband_one_click_system/header.tpl"}
+    {include file="backend/blauband_common/header.tpl"}
 </head>
 
 <body>

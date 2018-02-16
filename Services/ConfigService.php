@@ -2,8 +2,6 @@
 
 namespace BlaubandOneClickSystem\Services;
 
-use SimpleXMLElement;
-
 class ConfigService
 {
     private $data;
