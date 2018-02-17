@@ -10,6 +10,11 @@
             <argument>%blauband_one_click_system.plugin_dir%/Resources/compare.xml</argument>
         </service>
 
+        <service id="blauband_one_click_system.file_config_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%blauband_one_click_system.plugin_dir%/Resources/files.xml</argument>
+        </service>
+
         <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
@@ -61,6 +66,7 @@
         <service id="blauband_one_click_system.codebase_duplication_service"
                  class="BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService">
             <argument type="service" id="snippets"/>
+            <argument type="service" id="blauband_one_click_system.file_config_service"/>
         </service>
 
         <service id="blauband_one_click_system.local_system_service"
@@ -87,6 +93,8 @@
         <!-- compare folder -->
         <service id="blauband_one_click_system.folder_compare_service"
                  class="BlaubandOneClickSystem\Services\FolderCompare\FolderCompareService">
+            <argument type="service" id="snippets"/>
+            <argument type="service" id="blauband_one_click_system.file_config_service"/>
         </service>
     </services>
 </container>

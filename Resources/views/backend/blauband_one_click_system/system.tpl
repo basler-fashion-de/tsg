@@ -38,17 +38,25 @@
                 </button>
             </div>
 
-            <div class="compare-article-button-wrapper">
-                <button class="compare-article-button compare-button ui-button ui-corner-all" data-type="db" data-id="{$system.id}" data-group="article"  data-title="{s name="compareArticle" namespace="blauband/ocs"}{/s}">
+            <div class="compare-button-wrapper">
+                <button class="compare-article-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="article"  data-title="{s name="compareArticle" namespace="blauband/ocs"}{/s}">
                     {s name="compareArticle" namespace="blauband/ocs"}{/s}
                 </button>
 
-                <button class="compare-emotion-button compare-button ui-button ui-corner-all" data-type="db" data-id="{$system.id}" data-group="emotion"  data-title="{s name="compareEmotion" namespace="blauband/ocs"}{/s}">
+                <button class="compare-emotion-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="emotion"  data-title="{s name="compareEmotion" namespace="blauband/ocs"}{/s}">
                     {s name="compareEmotion" namespace="blauband/ocs"}{/s}
                 </button>
 
-                <button class="compare-theme-button compare-button ui-button ui-corner-all" data-type="folder" data-id="{$system.id}" data-group="theme"  data-title="{s name="compareTheme" namespace="blauband/ocs"}{/s}">
+                <button class="compare-snippets-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="snippets"  data-title="{s name="compareSnippets" namespace="blauband/ocs"}{/s}">
+                    {s name="compareSnippets" namespace="blauband/ocs"}{/s}
+                </button>
+
+                <button class="compare-theme-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="theme"  data-title="{s name="compareTheme" namespace="blauband/ocs"}{/s}">
                     {s name="compareTheme" namespace="blauband/ocs"}{/s}
+                </button>
+
+                <button class="compare-plugin-button compare-button ui-button ui-corner-all" data-id="{$system.id}" data-group="plugins"  data-title="{s name="comparePlugin" namespace="blauband/ocs"}{/s}">
+                    {s name="comparePlugin" namespace="blauband/ocs"}{/s}
                 </button>
             </div>
         {/if}

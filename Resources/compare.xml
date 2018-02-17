@@ -56,9 +56,24 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
+        <snippets>
+            <tables>s_core_snippets</tables>
+        </snippets>
+
         <theme>
-            <folder>themes</folder>
+            <folders>themes</folders>
+            <tables>s_core_templates</tables>
+            <tables>s_core_templates_config_elements</tables>
+            <tables>s_core_templates_config_layout</tables>
+            <tables>s_core_templates_config_set</tables>
+            <tables>s_core_templates_config_values</tables>
         </theme>
+
+        <plugins commit="false">
+            <folders>custom/plugins</folders>
+            <folders>engine/Shopware/Plugins</folders>
+            <tables>s_core_plugins</tables>
+        </plugins>
 
     </compare>
 </config>

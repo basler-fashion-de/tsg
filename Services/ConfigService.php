@@ -20,10 +20,13 @@ class ConfigService
                 $result = $result[$step];
             }
 
+            if(!is_array($result) && !empty($result)){
+                $result = [$result];
+            }
+
             return $result;
         }catch (\Exception $e){
             return null;
         }
-
     }
 }

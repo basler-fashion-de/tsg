@@ -36,7 +36,7 @@ html {
 }
 
 .delete-button-wrapper,
-.compare-article-button-wrapper {
+.compare-button-wrapper {
     display: block;
     float: left;
     width: 100%;
@@ -76,8 +76,8 @@ html {
     display: none;
 }
 
-#one-click-system.error-page .alerts .ui-state-highlight,
-#one-click-system.error-page .alerts .ui-state-error {
+#one-click-system .alerts.shown .ui-state-highlight,
+#one-click-system .alerts.shown .ui-state-error {
     display: block;
 }
 

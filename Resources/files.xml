@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <files>
+        <blacklist>
+            <file>.svn</file>
+            <file>.git</file>
+            <file>.idea</file>
+            <file>.DS_Store</file>
+        </blacklist>
+    </files>
+</config>

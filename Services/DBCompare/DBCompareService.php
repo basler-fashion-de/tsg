@@ -8,7 +8,7 @@ class DBCompareService
 {
     public function compareTables($tableNames, Connection $hostConnection, Connection $guestConnection)
     {
-        if (!is_array($tableNames)) {
+        if (!is_array($tableNames) && !empty($tableNames)) {
             $tableNames = [$tableNames];
         }
 

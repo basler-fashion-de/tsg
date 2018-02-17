@@ -102,21 +102,9 @@ function registerDeleteButton () {
 
 function registerCompareButton () {
   $('.compare-button').on('click', function () {
-    var controller = null
-    var type = $(this).data('type')
-
-    switch (type) {
-      case 'db': {
-        controller = 'BlaubandDBCompare'
-      }
-      case 'folder': {
-        controller = 'BlaubandFolderCompare'
-      }
-    }
-
     openNewIframe(
       $(this).data('title'),
-      controller,
+      'BlaubandCompare',
       'index',
       {'id': $(this).data('id'), 'group': $(this).data('group')}
     )

@@ -3,6 +3,7 @@
 namespace BlaubandOneClickSystem\Services\System\Common;
 
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
+use BlaubandOneClickSystem\Services\ConfigService;
 
 class CodebaseDuplicationService
 {
@@ -11,15 +12,12 @@ class CodebaseDuplicationService
      */
     private $snippets;
 
-    private $blackList = [
-        '.svn', //SVN
-        '.git', //Git
-        '.idea' //PHPStorm
-    ];
+    private $blackList;
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets)
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, ConfigService $filesConfigService)
     {
         $this->snippets = $snippets;
+        $this->blackList = $filesConfigService->get('files.blacklist.file');
     }
 
     public function duplicateCodeBase($sourcePath, $destinationPath, $exceptions = [])

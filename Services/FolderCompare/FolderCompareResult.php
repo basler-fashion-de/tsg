@@ -59,11 +59,15 @@ class FolderCompareResultItem
     const IDENTICAL = 2;
     const CHANGED = 3;
 
+    const MAX_FILE_SIZE = 1024 * 1024 * 2; //2MB
+
     public $left;
 
     public $right;
 
     public $state;
+
+    public $maxSize = false;
 
     public function __construct($left, $right, $state)
     {
@@ -71,10 +75,13 @@ class FolderCompareResultItem
         $this->right = $right;
         $this->state = $state;
 
-        if ($state !== self::IDENTICAL) {
+        if ($left['size'] > self::MAX_FILE_SIZE || $right['size'] > self::MAX_FILE_SIZE) {
+            $this->html = '';
+            $this->maxSize = true;
+        } elseif ($state !== self::IDENTICAL) {
             $this->html = \Diff::toTable(\Diff::compareFiles($left['path'], $right['path']));
-            $this->html = str_replace('   ','&nbsp;&nbsp;&nbsp;&nbsp;',$this->html);
-            $this->html = str_replace('\t','&nbsp;&nbsp;&nbsp;&nbsp;',$this->html);
+            $this->html = str_replace('   ', '&nbsp;&nbsp;&nbsp;&nbsp;', $this->html);
+            $this->html = str_replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;', $this->html);
         } else {
             $this->html = '';
         }
@@ -86,7 +93,8 @@ class FolderCompareResultItem
             'left' => $this->left,
             'right' => $this->right,
             'state' => $this->state,
-            'html' => $this->html
+            'html' => $this->html,
+            'maxSize' => $this->maxSize
         ];
     }
 }
