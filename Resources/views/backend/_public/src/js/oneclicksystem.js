@@ -102,9 +102,21 @@ function registerDeleteButton () {
 
 function registerCompareButton () {
   $('.compare-button').on('click', function () {
+    var controller = null
+    var type = $(this).data('type')
+
+    switch (type) {
+      case 'db': {
+        controller = 'BlaubandDBCompare'
+      }
+      case 'folder': {
+        controller = 'BlaubandFolderCompare'
+      }
+    }
+
     openNewIframe(
       $(this).data('title'),
-      'BlaubandCompare',
+      controller,
       'index',
       {'id': $(this).data('id'), 'group': $(this).data('group')}
     )
@@ -208,7 +220,7 @@ function activateAccordion () {
 
 function openNewIframe (title, controller, action, params) {
   var values = {
-    width: 1000,
+    width: 1600,
     height: 800,
     component: 'customSubWindow',
     url: controller + '/' + action + '?' + jQuery.param(params),

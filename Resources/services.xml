@@ -59,8 +59,7 @@
         </service>
 
         <service id="blauband_one_click_system.codebase_duplication_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\CodebaseDuplicationService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService">
             <argument type="service" id="snippets"/>
         </service>
 
@@ -83,6 +82,11 @@
         <!-- compare db -->
         <service id="blauband_one_click_system.db_compare_service"
                  class="BlaubandOneClickSystem\Services\DBCompare\DBCompareService">
+        </service>
+
+        <!-- compare folder -->
+        <service id="blauband_one_click_system.folder_compare_service"
+                 class="BlaubandOneClickSystem\Services\FolderCompare\FolderCompareService">
         </service>
     </services>
 </container>

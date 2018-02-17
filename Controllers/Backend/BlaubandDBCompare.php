@@ -9,7 +9,7 @@ use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
 use BlaubandOneClickSystem\Exceptions\MissingParameterException;
 use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
 
-class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
+class Shopware_Controllers_Backend_BlaubandDBCompare extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
     /** @var ModelManager $modelManager */
     private $modelManager;

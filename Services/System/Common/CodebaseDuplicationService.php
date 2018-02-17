@@ -1,9 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandOneClickSystem\Services\System\Common;
 
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
-use Symfony\Component\Filesystem\Filesystem;
 
 class CodebaseDuplicationService
 {
@@ -34,7 +33,6 @@ class CodebaseDuplicationService
         }
 
         $this->copyWithTar($sourcePath, $destinationPath, $exceptions);
-        //$this->copyWithFileSystem($sourcePath, $destinationPath, $exceptions);
 
         return true;
     }
@@ -54,34 +52,5 @@ class CodebaseDuplicationService
         $command = "(cd $sourcePath && tar cmf - $exceptionsString .) | (cd $destinationPath && tar xvmf - )";
         exec($command);
         exec("chmod 0755 $destinationPath");
-    }
-
-    private function copyWithFileSystem($sourcePath, $destinationPath, $exceptions){
-        $fileSystem = new Filesystem();
-
-        $directoryIterator = new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
-        /** @var SplFileInfo $item */
-        foreach ($iterator as $item)
-        {
-            if(strpos($item->getPathname(), $destinationPath) !== false){
-                continue;
-            }
-
-            foreach ($exceptions as $exception){
-                if(strpos($item->getPathname(), $exception) !== false){
-                    continue 2;
-                }
-            }
-
-            if ($item->isDir())
-            {
-                $fileSystem->mkdir($destinationPath . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-            }
-            else
-            {
-                $fileSystem->copy($item, $destinationPath . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-            }
-        }
     }
 }

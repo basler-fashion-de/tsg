@@ -19,9 +19,9 @@
 
     <div id="compare">
         {foreach $result as $compare}
-            {if !$compare.empty_table && $compare.state != 2}
+            {if $compare.state != 2}
                 {assign 'notEmptyResult' true}
-                {include file="backend/blauband_compare/compare_table.tpl" compare=$compare }
+                {include file="backend/blauband_folder_compare/compare_folder.tpl" compare=$compare }
             {/if}
         {/foreach}
     </div>
@@ -29,7 +29,7 @@
     {if $notEmptyResult == 'true'}
         <div class="commit-button-wrapper">
             <button class="commit-button ui-button ui-corner-all"
-                    data-url="{url controller="BlaubandCompare" action="commit" id=$id group=$group}">
+                    data-url="{url controller="BlaubandFolderCompare" action="commit" id=$id group=$group}">
                 {s name="commitToLive" namespace="blauband/ocs"}{/s}
             </button>
         </div>

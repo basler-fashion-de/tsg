@@ -56,7 +56,9 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
-
+        <theme>
+            <folder>themes</folder>
+        </theme>
 
     </compare>
 </config>

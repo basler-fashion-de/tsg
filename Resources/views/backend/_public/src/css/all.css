@@ -11,6 +11,7 @@ html {
     box-sizing: inherit;
 }
 
+.diffInserted,
 .green {
     background-color: greenyellow;
 }
@@ -19,6 +20,7 @@ html {
     background-color: yellow;
 }
 
+.diffDeleted,
 .red {
     background-color: lightpink;
 }
@@ -92,6 +94,7 @@ html {
 }
 
 /* Compare */
+/* Table */
 #compare table {
     width: 100%;
     border:solid 1px #333333;
@@ -113,6 +116,15 @@ html {
 
 .commit-button-wrapper {
     margin-top: 20px;
+}
+
+/* Folder */
+#compare .file_compare table.diff{
+    margin-bottom: 50px;
+}
+
+#compare .file_compare td{
+    width: 50%;
 }
 
 /*{/literal}*/
