@@ -17,6 +17,7 @@
 
     {if $dbResult || $folderResult}
         {assign 'notEmptyResult' false}
+
         <div id="compare">
             {if $dbResult}
                 <h3>{s name="dbChanges" namespace="blauband/ocs"}{/s}</h3>
@@ -39,6 +40,7 @@
                 {/foreach}
             {/if}
         </div>
+
         {if $notEmptyResult == 'true' && $commit}
             <div class="commit-button-wrapper">
                 <button class="commit-button ui-button ui-corner-all"
@@ -46,7 +48,9 @@
                     {s name="commitToLive" namespace="blauband/ocs"}{/s}
                 </button>
             </div>
-        {else}
+        {/if}
+
+        {if $notEmptyResult == 'false'}
             {s name="systemsItendical" namespace="blauband/ocs"}{/s}
         {/if}
     {/if}

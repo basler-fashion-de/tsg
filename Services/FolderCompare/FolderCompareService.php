@@ -15,10 +15,16 @@ class FolderCompareService
 
     private $blackList;
 
+    public $skipHidden;
+
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, ConfigService $filesConfigService)
     {
         $this->snippets = $snippets;
         $this->blackList = $filesConfigService->get('files.blacklist.file');
+        $this->skipHidden = (
+            isset($filesConfigService->get('files.blacklist.@attributes')['hiddenFiles']) &&
+            $filesConfigService->get('files.blacklist.@attributes')['hiddenFiles'] === 'true'
+        );
     }
 
     public function compareFolder(array $sourcePaths, array $destinationPaths)
@@ -29,13 +35,19 @@ class FolderCompareService
         $this->validation($sourcePaths, $destinationPaths);
 
         foreach ($sourcePaths as $sourcePath) {
+            if ($this->skipHidden) {
+                $sourceIterator = new \RecursiveIteratorIterator(
+                    new HiddenFilesAndFolderFilterIterator(
+                        new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS)
+                    )
+                );
+            } else {
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS)
+                );
+            }
 
-            foreach (new \RecursiveIteratorIterator(
-                         new HiddenFilesAndFolderFilterIterator(
-                             new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS)
-                         )
-                     )
-                     as $filename) {
+            foreach ($sourceIterator as $filename) {
                 if (in_array($filename->getFilename(), $this->blackList, false)) {
                     continue;
                 }
@@ -49,12 +61,19 @@ class FolderCompareService
         }
 
         foreach ($destinationPaths as $destinationPath) {
-            foreach (new \RecursiveIteratorIterator(
-                         new HiddenFilesAndFolderFilterIterator(
-                             new \RecursiveDirectoryIterator($destinationPath, \RecursiveDirectoryIterator::SKIP_DOTS)
-                         )
-                     )
-                     as $filename) {
+            if ($this->skipHidden) {
+                $destinationIterator = new \RecursiveIteratorIterator(
+                    new HiddenFilesAndFolderFilterIterator(
+                        new \RecursiveDirectoryIterator($destinationPath, \RecursiveDirectoryIterator::SKIP_DOTS)
+                    )
+                );
+            } else {
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($destinationPath, \RecursiveDirectoryIterator::SKIP_DOTS)
+                );
+            }
+
+            foreach ($destinationIterator as $filename) {
                 if (in_array($filename->getFilename(), $this->blackList, false)) {
                     continue;
                 }

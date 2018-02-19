@@ -204,6 +204,13 @@ function activateAccordion () {
     active: false,
     animate: false
   })
+
+  $('.file_compare, .table_compare').accordion({
+    header: '.title',
+    collapsible: true,
+    active: false,
+    animate: false
+  })
 }
 
 function openNewIframe (title, controller, action, params) {

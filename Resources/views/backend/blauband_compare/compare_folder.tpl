@@ -1,18 +1,13 @@
 <div class="file_compare">
-    <table class="title">
-        <tr>
-            <td>{$compare.left.path}</td>
-            <td>{$compare.right.path}</td>
-        </tr>
+    <div class="title">
+        {$compare.title}
+    </div>
 
-        {if $compare.maxSize}
-            <tr>
-                <td colspan="2">
-                    {s name="maxFileSize" namespace="blauband/ocs"}{/s}
-                </td>
-            </tr>
-        {/if}
-    </table>
+    {if $compare.maxSize}
+        <div class="diff">
+            {s name="maxFileSize" namespace="blauband/ocs"}{/s}
+        </div>
+    {/if}
 
     {$compare.html}
 </div>

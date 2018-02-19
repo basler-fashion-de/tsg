@@ -6,12 +6,9 @@ class FolderCompareResult
 {
     private $data;
 
-    private $state;
-
     public function __construct()
     {
         $this->data = [];
-        $this->state = FolderCompareResultItem::IDENTICAL;
     }
 
     public function addFile($left, $right)
@@ -69,6 +66,8 @@ class FolderCompareResultItem
 
     public $maxSize = false;
 
+    public $title;
+
     public function __construct($left, $right, $state)
     {
         $this->left = $left;
@@ -85,11 +84,15 @@ class FolderCompareResultItem
         } else {
             $this->html = '';
         }
+
+        $this->title = empty($this->left) ? $this->right['path'] : $this->left['path'];
+        $this->title = str_replace(Shopware()->Container->get('kernel.root_dir'), '', $this->title);
     }
 
     public function __toArray()
     {
         return [
+            'title' => $this->title,
             'left' => $this->left,
             'right' => $this->right,
             'state' => $this->state,
