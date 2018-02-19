@@ -53,8 +53,8 @@
         </service>
 
         <service id="blauband_one_click_system.set_up_system_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\SetUpSystemService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Local\SetUpSystemService">
+            <argument type="service" id="dbal_connection"/>
             <argument type="service" id="snippets"/>
         </service>
 

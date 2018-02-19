@@ -1,6 +1,9 @@
 //{literal}
 
 var autocompleteNames = [
+  //{/literal}
+  "{$shopTitle}",
+  //{literal}
   "Staging",
   "Dev",
   "Test",

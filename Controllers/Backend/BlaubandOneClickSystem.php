@@ -6,6 +6,7 @@ use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
+use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 
 class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
@@ -47,6 +48,10 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $this->View()->assign('dbhost', $connection->getHost());
         $this->View()->assign('dbuser', $connection->getUsername());
         $this->View()->assign('dbpass', $connection->getPassword());
+
+        /** @var SetUpSystemService $setUpService */
+        $setUpService = $this->container->get('blauband_one_click_system.set_up_system_service');
+        $this->View()->assign('shopTitle', $setUpService->getDefaultTestShopName());
     }
 
     /**
