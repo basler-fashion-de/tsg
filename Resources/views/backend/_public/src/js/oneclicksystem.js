@@ -14,7 +14,7 @@ $(function () {
   })
 
   $('#name').val(autocompleteNames[0])
-  $('#dbname').val(autocompleteNames[0].toLowerCase())
+  $('#dbname').val(autocompleteNames[0].toLowerCase().replace(' ', '-'))
 
   $('#type').selectmenu()
 })
