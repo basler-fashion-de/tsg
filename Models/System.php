@@ -20,7 +20,7 @@ class System extends ModelEntity
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    public $id;
 
     /**
      * @var
@@ -105,6 +105,12 @@ class System extends ModelEntity
      * @ORM\Column(name="new_shop_owner", type="text", nullable=true)
      */
     private $newShopOwner;
+
+    /**
+     * @var
+     * @ORM\Column(name="summery_mail", type="boolean")
+     */
+    private $summeryMail;
 
     /**
      * @var
@@ -377,5 +383,25 @@ class System extends ModelEntity
     public function getCreateDate()
     {
         return $this->createDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSummeryMail()
+    {
+        return $this->summeryMail;
+    }
+
+    /**
+     * @param mixed $summeryMail
+     */
+    public function setSummeryMail($summeryMail)
+    {
+        $this->summeryMail = $summeryMail;
+    }
+
+    public function __toArray(){
+        return get_object_vars($this);
     }
 }

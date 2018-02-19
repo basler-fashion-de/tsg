@@ -75,6 +75,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
 
         $shopOwnerMail = $this->Request()->getParam('shopowner');
+        $sendSummery = $this->Request()->getParam('sendsummery') == 'on';
+
 
         $htpasswordPass = $htpasswordName = null;
         if (
@@ -98,7 +100,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
                 'skipMedia' => $skipMedia,
                 'htpasswordName' => $htpasswordName,
                 'htpasswordPass' => $htpasswordPass,
-                'shopOwnerMail' => $shopOwnerMail
+                'shopOwnerMail' => $shopOwnerMail,
+                'sendSummery' => $sendSummery
             ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");

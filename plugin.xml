@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
     <label lang="de">1-Klick System</label>
     <label lang="en">1-Click System</label>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <copyright>(c) by Blauband GmbH</copyright>
     <license>proprietary</license>
     <link>http://www.blauband.com</link>

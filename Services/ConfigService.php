@@ -12,7 +12,7 @@ class ConfigService
         $this->data = json_decode(json_encode((array)simplexml_load_string($configData)),1);
     }
 
-    public function get($string){
+    public function get($string, $asArray = false){
         try{
             $result = $this->data;
             $steps = explode('.', $string);
@@ -20,7 +20,7 @@ class ConfigService
                 $result = $result[$step];
             }
 
-            if(!is_array($result) && !empty($result)){
+            if($asArray && !is_array($result) && !empty($result)){
                 $result = [$result];
             }
 

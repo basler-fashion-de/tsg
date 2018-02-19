@@ -3,6 +3,8 @@
 namespace BlaubandOneClickSystem;
 
 use BlaubandOneClickSystem\Installers\CronJob;
+use BlaubandOneClickSystem\Installers\Mails;
+use BlaubandOneClickSystem\Services\ConfigService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UninstallContext;
 use Shopware\Components\Plugin\Context\InstallContext;
@@ -66,6 +68,15 @@ class BlaubandOneClickSystem extends Plugin
 
             '1.0.1' => function () {
                 (new Models($this->container->get('models')))->update();
+                return true;
+            },
+
+            '1.0.1' => function () {
+                (new Mails(
+                    $this->container->get('models'),
+                    new ConfigService($this->getPath().'/Resources/mails.xml'),
+                    $this->getPath()
+                ))->install();
                 return true;
             },
         ];

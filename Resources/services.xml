@@ -15,6 +15,11 @@
             <argument>%blauband_one_click_system.plugin_dir%/Resources/files.xml</argument>
         </service>
 
+        <service id="blauband_one_click_system.mail_config_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%blauband_one_click_system.plugin_dir%/Resources/mails.xml</argument>
+        </service>
+
         <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
@@ -81,6 +86,7 @@
             <argument type="service" id="blauband_one_click_system.ht_access_service"/>
             <argument type="service" id="blauband_one_click_system.mail_service"/>
             <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
+            <argument type="service" id="TemplateMail"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 

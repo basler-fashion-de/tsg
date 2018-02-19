@@ -20,7 +20,7 @@ class FolderCompareService
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, ConfigService $filesConfigService)
     {
         $this->snippets = $snippets;
-        $this->blackList = $filesConfigService->get('files.blacklist.file');
+        $this->blackList = $filesConfigService->get('files.blacklist.file', true);
         $this->skipHidden = (
             isset($filesConfigService->get('files.blacklist.@attributes')['hiddenFiles']) &&
             $filesConfigService->get('files.blacklist.@attributes')['hiddenFiles'] === 'true'

@@ -24,7 +24,7 @@ class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
         $this->View()->assign('publicFilePath', $pluginPath . '/Resources/views/backend/_public/');
     }
 
-    private function sendJsonResponse($data)
+    protected function sendJsonResponse($data)
     {
         $this->Front()->Plugins()->ViewRenderer()->setNoRender();
         $this->Response()->setBody(json_encode($data));

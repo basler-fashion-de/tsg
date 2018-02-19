@@ -121,6 +121,8 @@ function registerCommitButton () {
 }
 
 function registerRemoteDbCheckbox () {
+  $('.dblocal').toggle($('#dbremote').val())
+
   $('#dbremote').on('change', function () {
     $('.dblocal').toggle($(this).val())
   })

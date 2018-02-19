@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <mails>
+        <name>blaubandOCSStarted</name>
+        <fromMail>{config name=mail}</fromMail>
+        <fromName>{config name=shopName}</fromName>
+        <subject>Blauband Test-System</subject>
+        <htmlContent>/Resources/views/mail/blauband_ocs_started_html.tpl</htmlContent>
+        <plainContent>/Resources/views/mail/blauband_ocs_started_plain.tpl</plainContent>
+        <isHtml>true</isHtml>
+    </mails>
+
+    <mails>
+        <name>blaubandOCSFinished</name>
+        <fromMail>{config name=mail}</fromMail>
+        <fromName>{config name=shopName}</fromName>
+        <subject>Blauband Test-System</subject>
+        <htmlContent>/Resources/views/mail/blauband_ocs_finished_html.tpl</htmlContent>
+        <plainContent>/Resources/views/mail/blauband_ocs_finished_plain.tpl</plainContent>
+        <isHtml>true</isHtml>
+    </mails>
+</config>
