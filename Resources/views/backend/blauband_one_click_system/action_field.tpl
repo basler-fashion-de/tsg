@@ -21,15 +21,6 @@
                     </label>
                     <input name="name" id="name"></br>
 
-                    <label for="type">
-                        {s name="type" namespace="blauband/ocs"}{/s}:
-                    </label>
-                    <select name="type" id="type">
-                        <option value="local"
-                                selected="selected">{s name="typeLocal" namespace="blauband/ocs"}{/s}</option>
-                        <option disabled>{s name="typeAmazon" namespace="blauband/ocs"}{/s}</option>
-                    </select></br>
-
                     <label for="preventmail">
                         {s name="preventmail" namespace="blauband/ocs"}{/s}:
                     </label>
@@ -101,6 +92,17 @@
                         {s name="htpasswdpassword" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input name="htpasswdpassword" id="htpasswdpassword" value="password"></br>
+                </div>
+                <div style="display: none">
+                    <!-- Feature die erstmal nicht gebraucht werden -->
+                    <label for="type">
+                        {s name="type" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <select name="type" id="type">
+                        <option value="local"
+                                selected="selected">{s name="typeLocal" namespace="blauband/ocs"}{/s}</option>
+                        <option disabled>{s name="typeAmazon" namespace="blauband/ocs"}{/s}</option>
+                    </select></br>
 
 
                     <h4>
@@ -110,7 +112,6 @@
                         {s name="shopowner" namespace="blauband/ocs"}{/s}:
                     </label>
                     <input name="shopowner" id="shopowner"></br>
-
                 </div>
             </div>
         </form>
