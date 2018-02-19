@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <files>
-        <blacklist hiddenFiles="true">
-            <!--<file>.svn</file>-->
-            <!--<file>.git</file>-->
-            <!--<file>.idea</file>-->
-            <!--<file>.DS_Store</file>-->
+        <blacklist hiddenFiles="false" vcsFiles="true">
+            <file>.idea</file>
+            <file>.DS_Store</file>
         </blacklist>
     </files>
 </config>
