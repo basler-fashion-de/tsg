@@ -34,10 +34,8 @@ class CronJob
     public function fixCronTab()
     {
         $cronName = $this->configService->get('cronjob.action');
-        $this->connection->update(
-            's_crontab',
-            ['start' => 'now()', 'end' => 'now()'],
-            ['action' => $cronName]
+        $this->connection->exec(
+            "UPDATE s_crontab SET start = now(), end = now() WHERE action = '$cronName'"
         );
     }
 }
