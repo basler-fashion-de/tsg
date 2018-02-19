@@ -2,6 +2,7 @@
 
 namespace BlaubandOneClickSystem\Services\System;
 
+use BlaubandOneClickSystem\Services\ConfigService;
 use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
 use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
@@ -72,6 +73,11 @@ class Local extends SystemService implements SystemServiceInterface
     private $templateMail;
 
     /**
+     * @var ConfigService
+     */
+    private $mailConfigService;
+
+    /**
      * @var string
      */
     private $docRoot;
@@ -88,6 +94,8 @@ class Local extends SystemService implements SystemServiceInterface
         MailService $mailService,
         AmazonRDSService $amazonRDSService,
         \Shopware_Components_TemplateMail $templateMail,
+        ConfigService $mailConfigService,
+        $shopOwnerMail,
         $docRoot
     )
     {
@@ -102,6 +110,8 @@ class Local extends SystemService implements SystemServiceInterface
         $this->mailService = $mailService;
         $this->amazonRDSService = $amazonRDSService;
         $this->templateMail = $templateMail;
+        $this->mailConfigService = $mailConfigService;
+        $this->shopOwnerMail = $shopOwnerMail;
         $this->docRoot = $docRoot;
     }
 
@@ -149,7 +159,7 @@ class Local extends SystemService implements SystemServiceInterface
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
 
             if($sendSummery){
-                $this->templateMail->createMail('blaubandOCSStarted', $systemModel->__toArray());
+                $this->sendMail($systemModel, 'blaubandOCSStarted');
             }
         } catch (\Exception $e) {
             //Rollback
@@ -188,7 +198,7 @@ class Local extends SystemService implements SystemServiceInterface
                     $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
 
                     if($systemModel->getSummeryMail()){
-                        $this->templateMail->createMail('blaubandOCSStarted', $systemModel->__toArray());
+                        $this->sendMail($systemModel, 'blaubandOCSFinished');
                     }
                 } catch (\Exception $e) {
                     $this->modelManager->remove($systemModel);
@@ -298,6 +308,17 @@ class Local extends SystemService implements SystemServiceInterface
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_MAILING);
         $this->mailService->preventMail($system);
+    }
+
+    private function sendMail($systemModel, $templateName){
+        foreach ($this->mailConfigService->get('mails', true) as $mail) {
+            if($mail['name'] === $templateName){
+                /** @var \Enlight_Components_Mail $mail */
+                $mailModel = $this->templateMail->createMail($mail['name'], $systemModel->__toArray());
+                $mailModel->addTo($this->shopOwnerMail);
+                $mailModel->send();
+            }
+        }
     }
 
     private function changeSystemState($systemModel, $state)

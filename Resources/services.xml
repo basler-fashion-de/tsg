@@ -87,6 +87,8 @@
             <argument type="service" id="blauband_one_click_system.mail_service"/>
             <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
             <argument type="service" id="TemplateMail"/>
+            <argument type="service" id="blauband_one_click_system.mail_config_service"/>
+            <argument>%shopware.mail%</argument>
             <argument>%kernel.root_dir%</argument>
         </service>
 
