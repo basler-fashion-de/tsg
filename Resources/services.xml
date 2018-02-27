@@ -20,6 +20,11 @@
             <argument>%blauband_one_click_system.plugin_dir%/Resources/mails.xml</argument>
         </service>
 
+        <service id="blauband_one_click_system.cron_job_config_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%blauband_one_click_system.plugin_dir%/Resources/cronjob.xml</argument>
+        </service>
+
         <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
@@ -29,6 +34,12 @@
                  class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
             <argument type="service" id="snippets"/>
             <argument type="service" id="models"/>
+        </service>
+
+        <service id="blauband_one_click_system.cron_job_helper_service"
+                 class="BlaubandOneClickSystem\Services\CronJobHelperService">
+            <argument type="service" id="blauband_one_click_system.cron_job_config_service"/>
+            <argument>%kernel.root_dir%</argument>
         </service>
 
         <!-- common -->

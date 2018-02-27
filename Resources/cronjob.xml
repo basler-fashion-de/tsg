@@ -6,7 +6,7 @@
         <name>Blauband OCS</name>
         <action>BlaubandOCS</action>
         <active>true</active>
-        <interval>60</interval>
+        <interval>1</interval>
         <disableOnError>false</disableOnError>
     </cronjob>
 

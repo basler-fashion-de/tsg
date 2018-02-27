@@ -1,7 +1,8 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandOneClickSystem\Services\SystemServiceInterface;
+use BlaubandOneClickSystem\Services\System\SystemService;
+use BlaubandOneClickSystem\Services\System\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
@@ -17,7 +18,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             'createSystem',
             'deleteSystem',
             'systemList',
-            'guestSystemError'
+            'guestSystemError',
+            'fireCronJob'
         ];
     }
 
@@ -77,6 +79,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $shopOwnerMail = $this->Request()->getParam('shopowner');
         $sendSummery = $this->Request()->getParam('sendsummery') == 'on';
 
+        $autoFireCronJob = $this->Request()->getParam('autofirecronjob') == 'on';
+
 
         $htpasswordPass = $htpasswordName = null;
         if (
@@ -101,11 +105,16 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
                 'htpasswordName' => $htpasswordName,
                 'htpasswordPass' => $htpasswordPass,
                 'shopOwnerMail' => $shopOwnerMail,
-                'sendSummery' => $sendSummery
+                'sendSummery' => $sendSummery,
             ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
             $systemService->createSystem($systemName, $para);
+
+            if($autoFireCronJob){
+                $this->fireCronJobAction();
+            }
+
             $this->sendJsonResponse(
                 [
                     'success' => true,
@@ -142,14 +151,16 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             $systemModel = $modelManager->find(System::class, $systemId);
             $validation->validateCurrentProcesses();
             $validation->validateDeleting($systemModel);
-            $systemName = $systemModel->getName();
-            $modelManager->remove($systemModel);
+
+            $systemModel->setState(SystemService::SYSTEM_STATE_DELETING_WAITING);
             $modelManager->flush($systemModel);
+
+            $this->fireCronJobAction();
 
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('deleteSystemSuccess'), $systemName)
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('deleteSystemSuccess'), $systemModel->getName())
                 ]
             );
         } catch (Exception $e) {
@@ -192,6 +203,14 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
                 ]
             );
         }
+    }
+
+    public function fireCronJobAction()
+    {
+        /** @var \BlaubandOneClickSystem\Services\CronJobHelperService $cronJobHelper */
+        $cronJobHelper = $this->container->get('blauband_one_click_system.cron_job_helper_service');
+        $cronJobHelper->fire();
+        $this->sendJsonResponse(['success' => true]);
     }
 
     public function guestSystemErrorAction()

@@ -134,6 +134,7 @@ class Local extends SystemService implements SystemServiceInterface
         $htpasswordPass = $parameters['htpasswordPass'];
         $shopOwnerMail = $parameters['shopOwnerMail'];
         $sendSummery = $parameters['sendSummery'];
+
         $systemNameUrl = strtolower(str_replace([' '], ['-'], $systemName));
 
 
@@ -348,5 +349,19 @@ class Local extends SystemService implements SystemServiceInterface
         }
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
+    }
+
+    public function executeDeleteSystem()
+    {
+        $systemList = $this->modelManager->getRepository(System::class)->findAll();
+
+        /** @var System $systemModel */
+        foreach ($systemList as $systemModel) {
+            if ($systemModel->getState() === SystemService::SYSTEM_STATE_DELETING_WAITING) {
+                $this->modelManager->remove($systemModel);
+            }
+        }
+
+        $this->modelManager->flush();
     }
 }

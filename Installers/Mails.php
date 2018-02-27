@@ -4,6 +4,7 @@ namespace BlaubandOneClickSystem\Installers;
 
 use Shopware\Models\Mail\Mail;
 use Shopware\Components\Model\ModelManager;
+use BlaubandOneClickSystem\Services\ConfigService;
 
 class Mails
 {

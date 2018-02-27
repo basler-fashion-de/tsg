@@ -104,6 +104,10 @@
                         <option disabled>{s name="typeAmazon" namespace="blauband/ocs"}{/s}</option>
                     </select></br>
 
+                    <label for="autofirecronjob">
+                        {s name="autofirecronjob" namespace="blauband/ocs"}{/s}:
+                    </label>
+                    <input type="checkbox" name="autofirecronjob" id="autofirecronjob" checked></br>
 
                     <h4>
                         {s name="options" namespace="blauband/ocs"}{/s}
