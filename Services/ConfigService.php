@@ -8,8 +8,12 @@ class ConfigService
 
     public function __construct($path)
     {
-        $configData = file_get_contents($path);
-        $this->data = json_decode(json_encode((array)simplexml_load_string($configData)),1);
+        if(strpos($path, '/config.php') !== false){
+            $this->data = include $path;
+        }else{
+            $configData = file_get_contents($path);
+            $this->data = json_decode(json_encode((array)simplexml_load_string($configData)),1);
+        }
     }
 
     public function get($string, $asArray = false){

@@ -5,16 +5,16 @@ namespace BlaubandOneClickSystem\Subscriber;
 use BlaubandOneClickSystem\Services\ConfigService;
 use Enlight\Event\SubscriberInterface;
 
-class Frontend implements SubscriberInterface
+class Backend implements SubscriberInterface
 {
     public static function getSubscribedEvents()
     {
         return array(
-            'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onFrontendPostDispatch'
+            'Enlight_Controller_Action_PostDispatchSecure_Backend_Index' => 'onBackendPostDispatch'
         );
     }
 
-    public function onFrontendPostDispatch(\Enlight_Event_EventArgs $args)
+    public function onBackendPostDispatch(\Enlight_Event_EventArgs $args)
     {
         /** @var $controller \Enlight_Controller_Action */
         $controller = $args->getSubject();
@@ -25,5 +25,6 @@ class Frontend implements SubscriberInterface
         $view->assign('blaubandOcsIsGuest', $config->get('blauband.ocs.isGuest'));
 
         $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
+        $view->extendsTemplate('backend/blauband_one_click_system/icons.tpl');
     }
 }

@@ -5,6 +5,11 @@
 
     <services>
         <!-- Plugin -->
+        <service id="blauband_one_click_system.config_php_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%kernel.root_dir%/config.php</argument>
+        </service>
+
         <service id="blauband_one_click_system.config_service"
                  class="BlaubandOneClickSystem\Services\ConfigService">
             <argument>%blauband_one_click_system.plugin_dir%/Resources/compare.xml</argument>
@@ -23,11 +28,6 @@
         <service id="blauband_one_click_system.cron_job_config_service"
                  class="BlaubandOneClickSystem\Services\ConfigService">
             <argument>%blauband_one_click_system.plugin_dir%/Resources/cronjob.xml</argument>
-        </service>
-
-        <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
-            <argument type="service" id="service_container"/>
-            <tag name="shopware.event_subscriber"/>
         </service>
 
         <service id="blauband_one_click_system.system_validation"
@@ -114,6 +114,20 @@
                  class="BlaubandOneClickSystem\Services\FolderCompare\FolderCompareService">
             <argument type="service" id="snippets"/>
             <argument type="service" id="blauband_one_click_system.file_config_service"/>
+        </service>
+
+        <!-- event subscriber -->
+        <service id="blauband_one_click_system.subscriber.frontend" class="BlaubandOneClickSystem\Subscriber\Frontend">
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="blauband_one_click_system.subscriber.backend" class="BlaubandOneClickSystem\Subscriber\Backend">
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+        <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
+            <argument type="service" id="service_container"/>
+            <tag name="shopware.event_subscriber"/>
         </service>
     </services>
 </container>
