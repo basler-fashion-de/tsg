@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {include file="backend/blauband_one_click_system/header.tpl"}
+    {include file="backend/blauband_common/header.tpl"}
 </head>
 
 <body>
@@ -14,6 +14,16 @@
             </div>
         </div>
     </div>
+
+    {if $mails}
+        <div class="mail-list">
+            <h4>
+                {s name="local_saved_mails" namespace="blauband/ocs"}{/s}
+            </h4>
+            {include file="backend/blauband_one_click_system/mails.tpl"}
+        </div>
+    {/if}
+
 </div>
 </body>
 </html>

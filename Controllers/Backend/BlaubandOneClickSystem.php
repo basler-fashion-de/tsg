@@ -254,6 +254,9 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
     public function guestSystemErrorAction()
     {
+        /** @var \BlaubandOneClickSystem\Services\System\Local\MailService $mailService */
+        $mailService = $this->container->get('blauband_one_click_system.mail_service');
+        $this->View()->assign('mails', $mailService->loadMails());
 
     }
 

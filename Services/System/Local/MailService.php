@@ -5,6 +5,8 @@ namespace BlaubandOneClickSystem\Services\System\Local;
 use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
 use BlaubandOneClickSystem\Models\System;
 
+require_once(__DIR__ . '/../../../Library/php-email-parser-master/PlancakeEmailParser.php');
+
 class MailService
 {
     /**
@@ -12,9 +14,12 @@ class MailService
      */
     private $snippets;
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets)
+    private $docRoot;
+
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, $docRoot)
     {
         $this->snippets = $snippets;
+        $this->docRoot = $docRoot;
     }
 
     public function preventMail(System $system)
@@ -42,5 +47,27 @@ class MailService
         return true;
     }
 
+    public function loadMails(){
+        $mailPath = $this->docRoot.'/mail';
 
+        if (!is_dir($mailPath)) {
+            return [];
+        }
+
+        $mails = array_diff(scandir($mailPath, SCANDIR_SORT_NONE), array('.', '..'));
+
+        foreach ($mails as &$mail){
+            $rawContent = file_get_contents($mailPath.'/'.$mail);
+            $mailObject = new \PlancakeEmailParser($rawContent);
+            $mailArray['to'] = $mailObject->getTo();
+            $mailArray['subject'] = utf8_decode($mailObject->getSubject());
+            $mailArray['body'] = quoted_printable_decode($mailObject->getBody(\PlancakeEmailParser::HTML));
+
+            $mailArray['from'] = $mailObject->getHeader('from');
+
+            $mail = $mailArray;
+        }
+
+        return $mails;
+    }
 }

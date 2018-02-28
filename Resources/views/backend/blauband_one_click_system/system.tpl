@@ -44,7 +44,7 @@
                 </button>
             </div>
             <div class="option-button-wrapper">
-                {if $system.mediaFolderDuplicated}
+                {if !$system.mediaFolderDuplicated}
                     <button class="media-button ui-button ui-corner-all" data-id="{$system.id}">
                         {s name="duplicateMedia" namespace="blauband/ocs"}{/s}
                     </button>

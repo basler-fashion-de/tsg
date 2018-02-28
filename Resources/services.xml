@@ -63,9 +63,9 @@
 
         <!-- local -->
         <service id="blauband_one_click_system.mail_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\MailService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Local\MailService">
             <argument type="service" id="snippets"/>
+            <argument>%kernel.root_dir%</argument>
         </service>
 
         <service id="blauband_one_click_system.ht_access_service"
