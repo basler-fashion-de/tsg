@@ -171,47 +171,35 @@ class Local extends SystemService implements SystemServiceInterface
         }
     }
 
-
-    public function executeCreateSystem()
+    public function deleteSystem(System $system)
     {
-        $systemList = $this->modelManager->getRepository(System::class)->findAll();
+        $this->systemValidation->validateDeleting($system);
 
-        /** @var System $systemModel */
-        foreach ($systemList as $systemModel) {
-            if ($systemModel->getState() === SystemService::SYSTEM_STATE_CREATING_WAITING) {
-                try {
-                    $guestConnection = $this->dbConnectionService->createConnection(
-                        $systemModel->getDbHost(),
-                        $systemModel->getDbUsername(),
-                        $systemModel->getDbPassword(),
-                        $systemModel->getDbName()
-                    );
+        $dbName = $system->getDbName();
+        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
 
-                    $this->duplicateDB($systemModel, $guestConnection);
-                    $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath());
-                    $this->setUpNewSystem($systemModel, $guestConnection);
-                    $this->createHtPasswd($systemModel, $systemModel->getPath());
-                    $this->preventMail($systemModel, $systemModel->getPreventMail());
-
-                    $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
-
-                    if ($systemModel->getSummeryMail()) {
-                        $this->sendMail($systemModel, 'blaubandOCSFinished');
-                    }
-                } catch (\Exception $e) {
-                    $this->modelManager->remove($systemModel);
-                    $this->modelManager->flush($systemModel);
-
-                    throw $e;
-                }
-            }
+        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
+        try {
+            $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
+        } catch (\Exception $e) {
         }
+
+        //Verzeichniss löschen
+        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);
+        try {
+            $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
+        } catch (\Exception $e) {
+        }
+
+        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
     }
 
+
     /**
-     * @param $systemName
-     * @return System
+     * Helfer Funktionen
      */
+
+
     private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $startParameters)
     {
         $systemModel = new System();
@@ -230,6 +218,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setHtPasswdPassword($htpasswordPass);
 
         $systemModel->setPreventMail($preventMail);
+        $systemModel->setMediaFolderDuplicated(false);
         $systemModel->setStartParameter($startParameters);
 
         $this->modelManager->persist($systemModel);
@@ -261,6 +250,17 @@ class Local extends SystemService implements SystemServiceInterface
 
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
         $this->codebaseDuplicationService->duplicateCodeBase($sourcePath, $destinationPath, $exceptions);
+
+        return true;
+    }
+
+    private function duplicateMediaFolder(System $systemModel, $sourcePath, $destinationPath)
+    {
+        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_MEDIA_FOLDER);
+        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath.'/media', $destinationPath.'/media');
+
+        $systemModel->setMediaFolderDuplicated(true);
+        $this->modelManager->flush($systemModel);
 
         return true;
     }
@@ -319,27 +319,65 @@ class Local extends SystemService implements SystemServiceInterface
         $this->modelManager->flush($systemModel);
     }
 
-    public function deleteSystem(System $system)
+    /**
+     * CronJob Events
+     *
+     * Diese Funktionen werden im regelfall von einem CronJob oder einem anderen Process ausgeführt.
+     * Diese Prozesse dauern sehr lang und werden im Frontend mit Statusmeldungen angezeigt
+     */
+
+
+    public function executeCreateSystem()
     {
-        $this->systemValidation->validateDeleting($system);
+        $systemList = $this->modelManager->getRepository(System::class)->findAll();
 
-        $dbName = $system->getDbName();
-        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
+        /** @var System $systemModel */
+        foreach ($systemList as $systemModel) {
+            if ($systemModel->getState() === SystemService::SYSTEM_STATE_CREATING_WAITING) {
+                try {
+                    $guestConnection = $this->dbConnectionService->createConnection(
+                        $systemModel->getDbHost(),
+                        $systemModel->getDbUsername(),
+                        $systemModel->getDbPassword(),
+                        $systemModel->getDbName()
+                    );
 
-        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
-        try {
-            $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
-        } catch (\Exception $e) {
+                    $this->duplicateDB($systemModel, $guestConnection);
+                    $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath());
+                    $this->setUpNewSystem($systemModel, $guestConnection);
+                    $this->createHtPasswd($systemModel, $systemModel->getPath());
+                    $this->preventMail($systemModel, $systemModel->getPreventMail());
+
+                    if(!$systemModel->getStartParameter()['skipMediaFolder']){
+                        $this->duplicateMediaFolder($systemModel, $this->docRoot, $systemModel->getPath());
+                    }
+
+                    $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
+
+                    if ($systemModel->getSummeryMail()) {
+                        $this->sendMail($systemModel, 'blaubandOCSFinished');
+                    }
+                } catch (\Exception $e) {
+                    $this->modelManager->remove($systemModel);
+                    $this->modelManager->flush($systemModel);
+
+                    throw $e;
+                }
+            }
         }
+    }
 
-        //Verzeichniss löschen
-        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_CODEBASE);
-        try {
-            $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
-        } catch (\Exception $e) {
+    public function executeDuplicateMediaFolder(){
+        $systemList = $this->modelManager->getRepository(System::class)->findAll();
+
+        /** @var System $systemModel */
+        foreach ($systemList as $systemModel) {
+            if ($systemModel->getState() === SystemService::SYSTEM_STATE_WAITING_GUEST_MEDIA_FOLDER) {
+                $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_MEDIA_FOLDER);
+                $this->duplicateMediaFolder($systemModel, $this->docRoot, $systemModel->getPath());
+                $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
+            }
         }
-
-        $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
     }
 
     public function executeDeleteSystem()

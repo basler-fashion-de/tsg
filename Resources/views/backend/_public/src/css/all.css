@@ -36,6 +36,7 @@ html {
 }
 
 .delete-button-wrapper,
+.option-button-wrapper,
 .compare-button-wrapper {
     display: block;
     float: left;

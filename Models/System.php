@@ -96,6 +96,12 @@ class System extends ModelEntity
 
     /**
      * @var
+     * @ORM\Column(name="media_folder_duplicated", type="boolean")
+     */
+    private $mediaFolderDuplicated;
+
+    /**
+     * @var
      * @ORM\Column(name="start_parameter", type="text")
      */
     private $startParameter;
@@ -331,6 +337,22 @@ class System extends ModelEntity
     public function setPreventMail($preventMail)
     {
         $this->preventMail = $preventMail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMediaFolderDuplicated()
+    {
+        return $this->mediaFolderDuplicated;
+    }
+
+    /**
+     * @param mixed $mediaFolderDuplicated
+     */
+    public function setMediaFolderDuplicated($mediaFolderDuplicated)
+    {
+        $this->mediaFolderDuplicated = $mediaFolderDuplicated;
     }
 
     /**

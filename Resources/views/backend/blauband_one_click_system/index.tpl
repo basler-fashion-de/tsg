@@ -9,6 +9,7 @@
         id="one-click-system"
         data-createSystemUrl="{url action=createSystem}"
         data-deleteSystemUrl="{url action=deleteSystem}"
+        data-duplicateMediaFolderUrl="{url action=duplicateMediaFolder}"
         data-systemListUrl="{url action=systemList}">
 
     <div class="alerts ui-widget">

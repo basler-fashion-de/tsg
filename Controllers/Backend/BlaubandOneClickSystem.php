@@ -18,6 +18,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             'index',
             'createSystem',
             'deleteSystem',
+            'duplicateMediaFolder',
             'systemList',
             'guestSystemError',
             'fireCronJob'
@@ -129,6 +130,35 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
                     'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName),
                     'shopTitle' => $setUpService->getDefaultTestShopName()
 
+                ]
+            );
+        } catch (Exception $e) {
+            $this->sendJsonResponse(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]
+            );
+        }
+    }
+
+    public function duplicateMediaFolderAction()
+    {
+        try {
+            /** @var ModelManager $modelManager */
+            $modelManager = $this->container->get('models');
+            $systemId = $this->Request()->getParam('id');
+
+            /** @var System $systemModel */
+            $systemModel = $modelManager->find(System::class, $systemId);
+            $systemModel->setState(SystemService::SYSTEM_STATE_WAITING_GUEST_MEDIA_FOLDER);
+            $modelManager->flush($systemModel);
+
+            $this->fireCronJobAction();
+
+            $this->sendJsonResponse(
+                [
+                    'success' => true,
                 ]
             );
         } catch (Exception $e) {

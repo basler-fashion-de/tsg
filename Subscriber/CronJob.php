@@ -20,5 +20,7 @@ class CronJob implements SubscriberInterface
         $localService = Shopware()->Container()->get('blauband_one_click_system.local_system_service');
         $localService->executeCreateSystem();
         $localService->executeDeleteSystem();
+        $localService->executeDuplicateMediaFolder();
+
     }
 }

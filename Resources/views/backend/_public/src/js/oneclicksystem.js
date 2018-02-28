@@ -23,6 +23,7 @@ function registerEvents () {
   registerShowButton()
   registerCreateButton()
   registerDeleteButton()
+  registerMediaButton()
   registerCompareButton()
   registerCommitButton()
   registerRemoteDbCheckbox()
@@ -101,6 +102,31 @@ function registerDeleteButton () {
   })
 }
 
+function registerMediaButton () {
+  $('.media-button').on('click', function () {
+    $(this).button('option', 'disabled', true)
+
+    hideErrorPanel()
+    hideInfoPanel()
+
+    var url = $('#one-click-system').data('duplicatemediafolderurl')
+    var params = {'id': $(this).data('id')}
+
+    $.ajax({
+      type: 'post',
+      url: url,
+      data: params,
+      success: function (response) {
+        if (!response.success) {
+          showErrorPanel(response.error)
+        }
+      }
+    })
+
+    loadSystemList()
+  })
+}
+
 function registerCompareButton () {
   $('.compare-button').on('click', function () {
     openNewIframe(
@@ -155,10 +181,18 @@ function loadSystemList (callback) {
 
 function handleSystemLoadListResponse (response) {
   var activeId = $('#systems').accordion('option', 'active')
-  var disabledStates = []
+
+  var deleteDisabledStates = []
   $('button.delete-button').each(
     function () {
-      disabledStates.push({id: $(this).data('id'), state: $(this).button('option', 'disabled')})
+      deleteDisabledStates.push({id: $(this).data('id'), state: $(this).button('option', 'disabled')})
+    }
+  )
+
+  var mediaDisabledStates = []
+  $('button.media-button').each(
+    function () {
+      mediaDisabledStates.push({id: $(this).data('id'), state: $(this).button('option', 'disabled')})
     }
   )
 
@@ -169,10 +203,15 @@ function handleSystemLoadListResponse (response) {
 
   registerDeleteButton()
   registerCompareButton()
+  registerMediaButton()
 
   $('button').button()
-  $.each(disabledStates, function (key, value) {
+  $.each(deleteDisabledStates, function (key, value) {
     $($('.delete-button[data-id=' + value.id + ']')).button('option', 'disabled', value.state)
+  })
+
+  $.each(mediaDisabledStates, function (key, value) {
+    $($('.media-button[data-id=' + value.id + ']')).button('option', 'disabled', value.state)
   })
 }
 
