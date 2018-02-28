@@ -58,7 +58,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
         $this->hostConnection = $this->container->get('dbal_connection');
         $this->dbCompareService = $this->container->get('blauband_one_click_system.db_compare_service');
         $this->folderCompareService = $this->container->get('blauband_one_click_system.folder_compare_service');
-        $this->pluginConfig = $this->container->get('blauband_one_click_system.config_service');
+        $this->pluginConfig = $this->container->get('blauband_one_click_system.compare_config_service');
         $this->connectionService = $this->container->get('blauband_one_click_system.db_connection_service');
         $this->dbDuplicationService = $this->container->get('blauband_one_click_system.db_duplication_service');
         $this->codebaseDuplicationService = $this->container->get('blauband_one_click_system.codebase_duplication_service');

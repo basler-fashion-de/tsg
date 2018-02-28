@@ -129,10 +129,8 @@ class Local extends SystemService implements SystemServiceInterface
         $dbOverwrite = $parameters['dbOverwrite'];
         $dbRemote = $parameters['dbRemote'];
         $preventMail = $parameters['preventMail'];
-        $skipMedia = $parameters['skipMedia'];
-        $htpasswordName = $parameters['htpasswordName'];
-        $htpasswordPass = $parameters['htpasswordPass'];
-        $shopOwnerMail = $parameters['shopOwnerMail'];
+        $htpasswordName = $parameters['htpasswdUsername'];
+        $htpasswordPass = $parameters['htpasswdPassword'];
         $sendSummery = $parameters['sendSummery'];
 
         $systemNameUrl = strtolower(str_replace([' '], ['-'], $systemName));
@@ -151,15 +149,14 @@ class Local extends SystemService implements SystemServiceInterface
         $destinationPath = $this->docRoot . '/' . $systemNameUrl;
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
-        $this->systemValidation->validateEmailAddress($shopOwnerMail, true);
         $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerMail, $sendSummery);
+            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $parameters);
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
 
-            if($sendSummery){
+            if ($sendSummery) {
                 $this->sendMail($systemModel, 'blaubandOCSStarted');
             }
         } catch (\Exception $e) {
@@ -191,14 +188,14 @@ class Local extends SystemService implements SystemServiceInterface
                     );
 
                     $this->duplicateDB($systemModel, $guestConnection);
-                    $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath(), $systemModel->getSkipMedia());
-                    $this->setUpNewSystem($systemModel, $guestConnection, $systemModel->getNewShopOwner());
+                    $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath());
+                    $this->setUpNewSystem($systemModel, $guestConnection);
                     $this->createHtPasswd($systemModel, $systemModel->getPath());
                     $this->preventMail($systemModel, $systemModel->getPreventMail());
 
                     $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
 
-                    if($systemModel->getSummeryMail()){
+                    if ($systemModel->getSummeryMail()) {
                         $this->sendMail($systemModel, 'blaubandOCSFinished');
                     }
                 } catch (\Exception $e) {
@@ -215,7 +212,7 @@ class Local extends SystemService implements SystemServiceInterface
      * @param $systemName
      * @return System
      */
-    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $skipMedia, $shopOwnerEmailAddress, $summeryMail)
+    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $startParameters)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -233,9 +230,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setHtPasswdPassword($htpasswordPass);
 
         $systemModel->setPreventMail($preventMail);
-        $systemModel->setSkipMedia($skipMedia);
-        $systemModel->setNewShopOwner($shopOwnerEmailAddress);
-        $systemModel->setSummeryMail($summeryMail);
+        $systemModel->setStartParameter($startParameters);
 
         $this->modelManager->persist($systemModel);
         $this->modelManager->flush($systemModel);
@@ -251,7 +246,7 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath, $skipMedia)
+    private function duplicateCodeBase(System $systemModel, $sourcePath, $destinationPath)
     {
         $exceptions = [];
         $systems = $this->modelManager->getRepository(System::class)->findAll();
@@ -259,12 +254,9 @@ class Local extends SystemService implements SystemServiceInterface
             $exceptions[] = $system->getPath();
         }
 
-        if ($skipMedia === true) {
-            $mediaFolders = glob($this->docRoot . '/media/*/*', GLOB_ONLYDIR);
-            if (!empty($mediaFolders)) {
-                $exceptions = array_merge($exceptions, $mediaFolders);
-            }
-
+        $mediaFolders = glob($this->docRoot . '/media/*/*', GLOB_ONLYDIR);
+        if (!empty($mediaFolders)) {
+            $exceptions = array_merge($exceptions, $mediaFolders);
         }
 
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_CODEBASE);
@@ -273,16 +265,14 @@ class Local extends SystemService implements SystemServiceInterface
         return true;
     }
 
-    private function setUpNewSystem(System $systemModel, Connection $guestConnection, $shopOwnerMail)
+    private function setUpNewSystem(System $systemModel, Connection $guestConnection)
     {
-        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_HOST_SHOP);
+        $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_SHOP);
         $this->setUpSystemService->changeShopTitle($guestConnection, $systemModel);
         $this->setUpSystemService->changeShopUrl($guestConnection, $systemModel);
+        $this->setUpSystemService->setShopOffline($guestConnection, $systemModel);
+        $this->setUpSystemService->setShopMode($guestConnection, $systemModel);
         $this->setUpSystemService->setUpConfigPhp($guestConnection, $systemModel);
-
-        if (!empty($shopOwnerMail)) {
-            $this->setUpSystemService->changeShopOwner($guestConnection, $shopOwnerMail);
-        }
 
         return true;
     }
@@ -311,9 +301,10 @@ class Local extends SystemService implements SystemServiceInterface
         $this->mailService->preventMail($system);
     }
 
-    private function sendMail($systemModel, $templateName){
+    private function sendMail($systemModel, $templateName)
+    {
         foreach ($this->mailConfigService->get('mails', true) as $mail) {
-            if($mail['name'] === $templateName){
+            if ($mail['name'] === $templateName) {
                 /** @var \Enlight_Components_Mail $mail */
                 $mailModel = $this->templateMail->createMail($mail['name'], $systemModel->__toArray());
                 $mailModel->addTo($this->shopOwnerMail);

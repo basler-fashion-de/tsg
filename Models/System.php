@@ -96,21 +96,9 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="skip_media", type="boolean")
+     * @ORM\Column(name="start_parameter", type="text")
      */
-    private $skipMedia;
-
-    /**
-     * @var
-     * @ORM\Column(name="new_shop_owner", type="text", nullable=true)
-     */
-    private $newShopOwner;
-
-    /**
-     * @var
-     * @ORM\Column(name="summery_mail", type="boolean")
-     */
-    private $summeryMail;
+    private $startParameter;
 
     /**
      * @var
@@ -348,33 +336,17 @@ class System extends ModelEntity
     /**
      * @return mixed
      */
-    public function getSkipMedia()
+    public function getStartParameter()
     {
-        return $this->skipMedia;
+        return unserialize($this->startParameter);
     }
 
     /**
-     * @param mixed $skipMedia
+     * @param mixed $startParameter
      */
-    public function setSkipMedia($skipMedia)
+    public function setStartParameter($startParameter)
     {
-        $this->skipMedia = $skipMedia;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNewShopOwner()
-    {
-        return $this->newShopOwner;
-    }
-
-    /**
-     * @param mixed $newShopOwner
-     */
-    public function setNewShopOwner($newShopOwner)
-    {
-        $this->newShopOwner = $newShopOwner;
+        $this->startParameter = serialize($startParameter);
     }
 
     /**
@@ -383,22 +355,6 @@ class System extends ModelEntity
     public function getCreateDate()
     {
         return $this->createDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSummeryMail()
-    {
-        return $this->summeryMail;
-    }
-
-    /**
-     * @param mixed $summeryMail
-     */
-    public function setSummeryMail($summeryMail)
-    {
-        $this->summeryMail = $summeryMail;
     }
 
     public function __toArray(){

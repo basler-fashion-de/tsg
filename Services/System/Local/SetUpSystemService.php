@@ -42,6 +42,22 @@ class SetUpSystemService
         $guestConnection->exec("UPDATE s_core_shops SET secure_base_path = CONCAT(IFNULL(secure_base_path,''),'$urlPostfix')");
     }
 
+    public function setShopOffline(Connection $guestConnection, System $system)
+    {
+        if($system->getStartParameter()['serviceMode']){
+            $elementId = $guestConnection->fetchColumn("SELECT id FROM s_core_config_elements WHERE name = 'setoffline'");
+            $defaultShop = $guestConnection->fetchColumn("SELECT id FROM s_core_shops WHERE `default` = 1");
+
+            $guestConnection->delete('s_core_config_values', ['element_id' => $elementId]);
+            $guestConnection->insert('s_core_config_values', ['element_id' => $elementId, 'shop_id' => $defaultShop, 'value' => 'b:1;']);
+        }
+    }
+
+    public function setShopMode(Connection $guestConnection, System $system)
+    {
+        $guestConnection->exec("UPDATE s_core_plugins SET active = 0 WHERE name = 'HttpCache'");
+    }
+
     public function setUpConfigPhp(Connection $guestConnection, System $system)
     {
         //config.php ändern
@@ -52,6 +68,7 @@ class SetUpSystemService
         $config['db']['password'] = $guestConnection->getPassword();
         $config['db']['dbname'] = $guestConnection->getDatabase();
         $config['blauband']['ocs']['isGuest'] = true;
+        $config['blauband']['ocs']['noIndex'] = $system->getStartParameter()['preventGoogleIndex'];
         $configData = "<?php\n\n return " . var_export($config, true) . ";";
         $result = file_put_contents($configPath, $configData);
 
@@ -60,11 +77,5 @@ class SetUpSystemService
                 $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
             );
         }
-    }
-
-    public function changeShopOwner(Connection $guestConnection, $shopOwnerEmail)
-    {
-        $serialEMailAddress = serialize($shopOwnerEmail);
-        $guestConnection->exec("UPDATE s_core_config_values AS val JOIN s_core_config_elements AS ele ON (val.element_id = ele.id AND ele.name = 'mail') SET val.value = '$serialEMailAddress'");
     }
 }

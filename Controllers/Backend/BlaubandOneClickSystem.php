@@ -6,6 +6,7 @@ use BlaubandOneClickSystem\Services\System\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
+use BlaubandOneClickSystem\Services\ConfigService;
 use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 
@@ -47,9 +48,28 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
         $this->View()->assign("systems", $systemListArray);
 
-        $this->View()->assign('dbhost', $connection->getHost());
-        $this->View()->assign('dbuser', $connection->getUsername());
-        $this->View()->assign('dbpass', $connection->getPassword());
+        /** @var ConfigService $connection */
+        $parameters = $this->container->get('blauband_one_click_system.parameter_config_service');
+        $groups = $parameters->get('groups');
+
+        //Defaults überschreiben
+        foreach ($groups as &$group) {
+            foreach ($group['parameters'] as &$parameter) {
+                if ($parameter['title'] == 'dbHost') {
+                    $parameter['default'] = $connection->getHost();
+                }
+
+                if ($parameter['title'] == 'dbUser') {
+                    $parameter['default'] = $connection->getUsername();
+                }
+
+                if ($parameter['title'] == 'dbPass') {
+                    $parameter['default'] = $connection->getPassword();
+                }
+            }
+        }
+
+        $this->View()->assign('actionFields', $groups);
 
         /** @var SetUpSystemService $setUpService */
         $setUpService = $this->container->get('blauband_one_click_system.set_up_system_service');
@@ -63,62 +83,51 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
     {
         $snippets = $this->container->get('snippets');
 
-        $systemName = $this->Request()->getParam('name');
-        $systemType = $this->Request()->getParam('type');
+        $params = $this->Request()->getParams();
 
-        $dbHost = $this->Request()->getParam('dbhost');
-        $dbUser = $this->Request()->getParam('dbuser');
-        $dbPass = $this->Request()->getParam('dbpass');
-        $dbName = $this->Request()->getParam('dbname');
-        $dbOverwrite = $this->Request()->getParam('dboverwrite') == 'on';
-        $dbRemote = $this->Request()->getParam('dbremote') == 'on';
+        $systemName = $params['name'];
+        $systemType = $params['type'];
 
-        $preventMail = $this->Request()->getParam('preventmail') == 'on';
-        $skipMedia = $this->Request()->getParam('skipmedia') == 'on';
+        unset($params['module']);
+        unset($params['controller']);
+        unset($params['action']);
 
-        $shopOwnerMail = $this->Request()->getParam('shopowner');
-        $sendSummery = $this->Request()->getParam('sendsummery') == 'on';
+        /** @var ConfigService $parameterService */
+        $parameterService = $this->container->get('blauband_one_click_system.parameter_config_service');
+        $groups = $parameterService->get('groups');
 
-        $autoFireCronJob = $this->Request()->getParam('autofirecronjob') == 'on';
+        //On|Off zu true|false
+        foreach ($groups as $group) {
+            foreach ($group['parameters'] as $parameter) {
+                if ($parameter['type'] == 'checkbox') {
+                    $params[$parameter['title']] = $params[$parameter['title']] === 'on';
+                }
+            }
+        }
 
-
-        $htpasswordPass = $htpasswordName = null;
-        if (
-            $this->Request()->getParam('htpasswd') == 'on' &&
-            !empty($this->Request()->getParam('htpasswdusername')) &&
-            !empty($this->Request()->getParam('htpasswdpassword'))
-        ) {
-            $htpasswordName = $this->Request()->getParam('htpasswdusername');
-            $htpasswordPass = $this->Request()->getParam('htpasswdpassword');
+        if (!$params['htpasswd']) {
+            $params['htpasswdUsername'] = null;
+            $params['htpasswdPassword'] = null;
         }
 
         try {
-            $para = [
-                'dbHost' => $dbHost,
-                'dbUser' => $dbUser,
-                'dbPass' => $dbPass,
-                'dbName' => $dbName,
-                'dbOverwrite' => $dbOverwrite,
-                'dbRemote' => $dbRemote,
-                'preventMail' => $preventMail,
-                'skipMedia' => $skipMedia,
-                'htpasswordName' => $htpasswordName,
-                'htpasswordPass' => $htpasswordPass,
-                'shopOwnerMail' => $shopOwnerMail,
-                'sendSummery' => $sendSummery,
-            ];
             /** @var SystemServiceInterface $localSystemService */
             $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
-            $systemService->createSystem($systemName, $para);
+            $systemService->createSystem($systemName, $params);
 
-            if($autoFireCronJob){
+            if ($params['autoFireCronJob']) {
                 $this->fireCronJobAction();
             }
+
+            /** @var SetUpSystemService $setUpService */
+            $setUpService = $this->container->get('blauband_one_click_system.set_up_system_service');
+            $this->View()->assign('shopTitle', $setUpService->getDefaultTestShopName());
 
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName)
+                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName),
+                    'shopTitle' => $setUpService->getDefaultTestShopName()
 
                 ]
             );

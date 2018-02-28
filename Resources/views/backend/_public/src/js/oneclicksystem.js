@@ -14,7 +14,7 @@ $(function () {
   })
 
   $('#name').val(autocompleteNames[0])
-  $('#dbname').val(autocompleteNames[0].toLowerCase().replace(' ', '-'))
+  $('#dbName').val(autocompleteNames[0].toLowerCase().replace(' ', '-'))
 
   $('#type').selectmenu()
 })
@@ -61,6 +61,7 @@ function registerCreateButton () {
       success: function (response) {
         if (response.success) {
           showInfoPanel(response.message)
+          $('#name').val(response.shopTitle)
         } else {
           showErrorPanel(response.error)
         }

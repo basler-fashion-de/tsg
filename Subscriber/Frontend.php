@@ -24,6 +24,10 @@ class Frontend implements SubscriberInterface
         $config = Shopware()->Container()->get('blauband_one_click_system.config_php_service');
         $view->assign('blaubandOcsIsGuest', $config->get('blauband.ocs.isGuest'));
 
+        if($config->get('blauband.ocs.noIndex') == 'true'){
+            header("X-Robots-Tag: noindex, nofollow", true);
+        }
+
         $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
     }
 }

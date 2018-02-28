@@ -4,13 +4,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Plugin -->
+        <!-- configs -->
         <service id="blauband_one_click_system.config_php_service"
                  class="BlaubandOneClickSystem\Services\ConfigService">
             <argument>%kernel.root_dir%/config.php</argument>
         </service>
 
-        <service id="blauband_one_click_system.config_service"
+        <service id="blauband_one_click_system.compare_config_service"
                  class="BlaubandOneClickSystem\Services\ConfigService">
             <argument>%blauband_one_click_system.plugin_dir%/Resources/compare.xml</argument>
         </service>
@@ -29,6 +29,12 @@
                  class="BlaubandOneClickSystem\Services\ConfigService">
             <argument>%blauband_one_click_system.plugin_dir%/Resources/cronjob.xml</argument>
         </service>
+
+        <service id="blauband_one_click_system.parameter_config_service"
+                 class="BlaubandOneClickSystem\Services\ConfigService">
+            <argument>%blauband_one_click_system.plugin_dir%/Resources/parameter.xml</argument>
+        </service>
+        <!-- -->
 
         <service id="blauband_one_click_system.system_validation"
                  class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
@@ -129,5 +135,6 @@
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
         </service>
+        <!-- -->
     </services>
 </container>

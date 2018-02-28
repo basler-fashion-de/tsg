@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <groups>
+        <title>allgemein</title>
+        <snippet>general</snippet>
+        <column>1</column>
+        <hidden>false</hidden>
+
+        <parameters>
+            <title>name</title>
+            <snippet>name</snippet>
+            <type>text</type>
+            <default></default>
+        </parameters>
+
+        <parameters>
+            <title>preventMail</title>
+            <snippet>preventmail</snippet>
+            <type>checkbox</type>
+            <default>false</default>
+        </parameters>
+
+        <parameters>
+            <title>skipMediaFolder</title>
+            <snippet>skipmedia</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>serviceMode</title>
+            <snippet>servicemode</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>editMode</title>
+            <snippet>editmode</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>preventGoogleIndex</title>
+            <snippet>preventgoogleindex</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+    </groups>
+
+    <groups>
+        <title>ergebnis</title>
+        <snippet>summery</snippet>
+        <column>1</column>
+        <hidden>false</hidden>
+
+        <parameters>
+            <title>sendSummery</title>
+            <snippet>sendsummery</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+    </groups>
+
+    <groups>
+        <title>datenbanken</title>
+        <snippet>database</snippet>
+        <column>2</column>
+        <hidden>false</hidden>
+
+        <parameters>
+            <title>dbRemote</title>
+            <info>dbremoteinfo</info>
+            <snippet>dbremote</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>dbHost</title>
+            <snippet>dbhost</snippet>
+            <type>text</type>
+            <class>dblocal</class>
+            <default></default>
+        </parameters>
+
+        <parameters>
+            <title>dbUser</title>
+            <snippet>dbuser</snippet>
+            <type>text</type>
+            <class>dblocal</class>
+            <default></default>
+        </parameters>
+
+        <parameters>
+            <title>dbPass</title>
+            <snippet>dbpass</snippet>
+            <type>password</type>
+            <class>dblocal</class>
+            <default></default>
+        </parameters>
+
+        <parameters>
+            <title>dbName</title>
+            <snippet>dbname</snippet>
+            <type>text</type>
+            <class>dblocal</class>
+            <default></default>
+        </parameters>
+
+        <parameters>
+            <title>dbOverwrite</title>
+            <snippet>dboverwrite</snippet>
+            <type>checkbox</type>
+            <class>dblocal</class>
+            <default>false</default>
+        </parameters>
+    </groups>
+
+    <groups>
+        <title>sicherheit</title>
+        <snippet>security</snippet>
+        <column>3</column>
+        <hidden>false</hidden>
+
+        <parameters>
+            <title>htpasswd</title>
+            <snippet>htpasswd</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>htpasswdUsername</title>
+            <snippet>htpasswdusername</snippet>
+            <type>text</type>
+            <default>admin</default>
+        </parameters>
+
+        <parameters>
+            <title>htpasswdPassword</title>
+            <snippet>htpasswdpassword</snippet>
+            <type>password</type>
+            <default>admin</default>
+        </parameters>
+    </groups>
+
+    <groups>
+        <title>hidden</title>
+        <snippet>hidden</snippet>
+        <column>1</column>
+        <hidden>true</hidden>
+        <parameters>
+            <title>type</title>
+            <snippet>type</snippet>
+            <type>select</type>
+            <option>
+                <value>local</value>
+                <snippet>typeLocal</snippet>
+                <selected>true</selected>
+            </option>
+            <option>
+                <value>ec2</value>
+                <snippet>typeAmazon</snippet>
+            </option>
+        </parameters>
+        <parameters>
+            <title>autoFireCronJob</title>
+            <snippet>autofirecronjob</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+    </groups>
+</config>

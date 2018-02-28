@@ -71,12 +71,17 @@ class BlaubandOneClickSystem extends Plugin
                 return true;
             },
 
-            '1.0.1' => function () {
+            '1.0.2' => function () {
                 (new Mails(
                     $this->container->get('models'),
                     new ConfigService($this->getPath().'/Resources/mails.xml'),
                     $this->getPath()
                 ))->install();
+                return true;
+            },
+
+            '1.0.3' => function () {
+                (new Models($this->container->get('models')))->update();
                 return true;
             },
         ];
