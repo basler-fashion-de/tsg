@@ -94,15 +94,26 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
             $dbResult = $dbResult->__toArray();
 
             $paths = $this->pluginConfig->get("compare.$compareGroup.folders");
-            $hostPaths = $guestPaths = [];
-            foreach ($paths as $path){
-                $hostPaths[] = $this->docRoot.'/'.$path;
-                $guestPaths[] = $system->getPath().'/'.$path;
+
+            //Wenn Folder in der Config angegeben sind soll diese bearbeitet werden ansonsten leeres Ergebnis
+            if(!empty($paths)){
+                if(!is_array($paths)){
+                    $paths = [$paths];
+                }
+
+                $hostPaths = $guestPaths = [];
+                foreach ($paths as $path){
+                    $hostPaths[] = $this->docRoot.'/'.$path;
+                    $guestPaths[] = $system->getPath().'/'.$path;
+                }
+
+                /** @var FolderCompareResult $result */
+                $folderResult = $this->folderCompareService->compareFolder($hostPaths, $guestPaths);
+                $folderResult = $folderResult->__toArray();
+            }else{
+                $folderResult = [];
             }
 
-            /** @var FolderCompareResult $result */
-            $folderResult = $this->folderCompareService->compareFolder($hostPaths, $guestPaths);
-            $folderResult = $folderResult->__toArray();
 
             $attributes = $this->pluginConfig->get("compare.$compareGroup.@attributes");
             $commit = !(isset($attributes['commit']) && $attributes['commit'] === "false"); //Default true
