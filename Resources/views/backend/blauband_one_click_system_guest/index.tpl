@@ -19,9 +19,9 @@
 
     <fieldset>
         <legend>{s name="allow_send_mail" namespace="blauband/ocs"}{/s}: </legend>
-        <label for="radio-yes">{s name="yes" namespace="blauband/ocs"}{/s}</label>
+        <label for="radio-yes">{s name="label_yes" namespace="blauband/ocs"}{/s}</label>
         <input type="radio" name="radio-mail" id="radio-yes" {if $mailsAllow}checked{/if}>
-        <label for="radio-no">{s name="no" namespace="blauband/ocs"}{/s}</label>
+        <label for="radio-no">{s name="label_no" namespace="blauband/ocs"}{/s}</label>
         <input type="radio" name="radio-mail" id="radio-no" {if !$mailsAllow}checked{/if}>
     </fieldset>
 
