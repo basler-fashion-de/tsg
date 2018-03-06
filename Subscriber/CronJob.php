@@ -16,6 +16,8 @@ class CronJob implements SubscriberInterface
 
     public function onBlaubandOCS(\Shopware_Components_Cron_CronJob $job)
     {
+        ini_set('max_execution_time', 3600); // 1 Stunde
+
         /** @var Local $localService */
         $localService = Shopware()->Container()->get('blauband_one_click_system.local_system_service');
         $localService->executeCreateSystem();
