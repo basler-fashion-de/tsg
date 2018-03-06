@@ -5,6 +5,9 @@
 
 <script type="text/javascript" src="{link file="backend/base/frame/postmessage-api.js"}"></script>
 <script type="text/javascript" >{include file="{$publicFilePath}src/js/autocomplete-system-names.js"}</script>
+<script type="text/javascript" >{include file="{$publicFilePath}src/js/common.js"}</script>
+<script type="text/javascript" >{include file="{$publicFilePath}src/js/events.js"}</script>
 <script type="text/javascript" >{include file="{$publicFilePath}src/js/oneclicksystem.js"}</script>
+<script type="text/javascript" >{include file="{$publicFilePath}src/js/oneclicksystemguest.js"}</script>
 
 <style>{include file="{$publicFilePath}src/css/all.css"}</style>

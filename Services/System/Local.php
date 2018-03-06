@@ -128,7 +128,6 @@ class Local extends SystemService implements SystemServiceInterface
         $dbName = $parameters['dbName'];
         $dbOverwrite = $parameters['dbOverwrite'];
         $dbRemote = $parameters['dbRemote'];
-        $preventMail = $parameters['preventMail'];
         $htpasswordName = $parameters['htpasswdUsername'];
         $htpasswordPass = $parameters['htpasswdPassword'];
         $sendSummery = $parameters['sendSummery'];
@@ -153,7 +152,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validatePath($destinationPath);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $parameters);
+            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $parameters);
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
 
             if ($sendSummery) {
@@ -200,7 +199,7 @@ class Local extends SystemService implements SystemServiceInterface
      */
 
 
-    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $preventMail, $startParameters)
+    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $startParameters)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -217,7 +216,6 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setHtPasswdUsername($htpasswordName);
         $systemModel->setHtPasswdPassword($htpasswordPass);
 
-        $systemModel->setPreventMail($preventMail);
         $systemModel->setMediaFolderDuplicated(false);
         $systemModel->setStartParameter($startParameters);
 
@@ -298,7 +296,7 @@ class Local extends SystemService implements SystemServiceInterface
         }
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_CREATING_SET_UP_GUEST_MAILING);
-        $this->mailService->preventMail($system);
+        $this->mailService->preventMail($system->getPath());
     }
 
     private function sendMail($systemModel, $templateName)
@@ -346,7 +344,7 @@ class Local extends SystemService implements SystemServiceInterface
                     $this->duplicateCodeBase($systemModel, $this->docRoot, $systemModel->getPath());
                     $this->setUpNewSystem($systemModel, $guestConnection);
                     $this->createHtPasswd($systemModel, $systemModel->getPath());
-                    $this->preventMail($systemModel, $systemModel->getPreventMail());
+                    $this->preventMail($systemModel, $systemModel->getStartParameter()['preventMail']);
 
                     if(!$systemModel->getStartParameter()['skipMediaFolder']){
                         $this->duplicateMediaFolder($systemModel, $this->docRoot, $systemModel->getPath());

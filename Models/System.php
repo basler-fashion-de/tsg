@@ -90,12 +90,6 @@ class System extends ModelEntity
 
     /**
      * @var
-     * @ORM\Column(name="prevent_mail", type="boolean")
-     */
-    private $preventMail;
-
-    /**
-     * @var
      * @ORM\Column(name="media_folder_duplicated", type="boolean")
      */
     private $mediaFolderDuplicated;
@@ -321,22 +315,6 @@ class System extends ModelEntity
     public function setHtPasswdPassword($htPasswdPassword)
     {
         $this->htPasswdPassword = $htPasswdPassword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPreventMail()
-    {
-        return $this->preventMail;
-    }
-
-    /**
-     * @param mixed $preventMail
-     */
-    public function setPreventMail($preventMail)
-    {
-        $this->preventMail = $preventMail;
     }
 
     /**

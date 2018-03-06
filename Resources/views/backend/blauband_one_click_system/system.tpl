@@ -30,8 +30,6 @@
                 <h4>
                     {s name="settings" namespace="blauband/ocs"}{/s}
                 </h4>
-                <label>{s name="preventmail" namespace="blauband/ocs"}{/s}:</label> <span
-                        class="ui-icon {if $system.preventMail}ui-icon-check{else}ui-icon-close{/if}"></span><br/>
                 <label>{s name="htPasswordSecure" namespace="blauband/ocs"}{/s}:</label> <span
                         class="ui-icon {if $system.htPasswdUsername != null}ui-icon-check{else}ui-icon-close{/if}"></span><br/>
             </div>

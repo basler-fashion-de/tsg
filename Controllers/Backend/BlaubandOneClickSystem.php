@@ -20,7 +20,6 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             'deleteSystem',
             'duplicateMediaFolder',
             'systemList',
-            'guestSystemError',
             'fireCronJob'
         ];
     }
@@ -252,14 +251,6 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $this->sendJsonResponse(['success' => true]);
     }
 
-    public function guestSystemErrorAction()
-    {
-        /** @var \BlaubandOneClickSystem\Services\System\Local\MailService $mailService */
-        $mailService = $this->container->get('blauband_one_click_system.mail_service');
-        $this->View()->assign('mails', $mailService->loadMails());
-
-    }
-
     private function checkGuestSystem()
     {
         $configPath = Shopware()->DocPath() . "/config.php";
@@ -267,13 +258,12 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
         if (
             isset($config['blauband']['ocs']['isGuest']) &&
-            $config['blauband']['ocs']['isGuest'] &&
-            $this->Request()->getActionName() != 'guestSystemError'
+            $config['blauband']['ocs']['isGuest']
         ) {
             $redirect = array(
                 'module' => 'backend',
-                'controller' => 'BlaubandOneClickSystem',
-                'action' => 'guestSystemError',
+                'controller' => 'BlaubandOneClickSystemGuest',
+                'action' => 'index',
             );
             $this->redirect($redirect);
         }

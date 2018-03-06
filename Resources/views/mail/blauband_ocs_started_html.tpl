@@ -14,7 +14,6 @@
 {$dbName}: 180219_2ba8
 {$htPasswdUsername}: admin
 {$htPasswdPassword}: password
-{$preventMail}: false
 {$skipMedia}: true
 {$newShopOwner}:
 {$summeryMail}: true

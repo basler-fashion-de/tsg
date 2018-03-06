@@ -22,23 +22,23 @@ class MailService
         $this->docRoot = $docRoot;
     }
 
-    public function preventMail(System $system)
+    public function preventMail($path)
     {
-        $mailPath = $system->getPath() . '/mail';
+        $mailPath = $path . '/mail';
         if (!@mkdir($mailPath) && !is_dir($mailPath)) {
             throw new SystemFileSystemException(
                 sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathCanNotCreate'), $mailPath)
             );
         }
 
-        $configPath = $system->getPath() . "/config.php";
+        $configPath = $path . "/config.php";
         $config = include $configPath;
         $config['mail']['type'] = 'file';
         $config['mail']['path'] = $mailPath;
         $configData = "<?php\n\n return " . var_export($config, true) . ";";
         $result = file_put_contents($configPath, $configData);
 
-        if($result === false){
+        if ($result === false) {
             throw new SystemFileSystemException(
                 $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
             );
@@ -47,8 +47,33 @@ class MailService
         return true;
     }
 
-    public function loadMails(){
-        $mailPath = $this->docRoot.'/mail';
+    public function allowMail($path)
+    {
+        $configPath = $path . "/config.php";
+        $config = include $configPath;
+        unset($config['mail']);
+        $configData = "<?php\n\n return " . var_export($config, true) . ";";
+        $result = file_put_contents($configPath, $configData);
+
+        if ($result === false) {
+            throw new SystemFileSystemException(
+                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+            );
+        }
+
+        return true;
+    }
+
+    public function isMailAllowed($path)
+    {
+        $configPath = $path . "/config.php";
+        $config = include $configPath;
+        return !(isset($config['mail']['type']) && $config['mail']['type'] == 'file');
+    }
+
+    public function loadMails()
+    {
+        $mailPath = $this->docRoot . '/mail';
 
         if (!is_dir($mailPath)) {
             return [];
@@ -56,8 +81,8 @@ class MailService
 
         $mails = array_diff(scandir($mailPath, SCANDIR_SORT_NONE), array('.', '..'));
 
-        foreach ($mails as &$mail){
-            $rawContent = file_get_contents($mailPath.'/'.$mail);
+        foreach ($mails as &$mail) {
+            $rawContent = file_get_contents($mailPath . '/' . $mail);
             $mailObject = new \PlancakeEmailParser($rawContent);
             $mailArray['to'] = $mailObject->getTo();
             $mailArray['subject'] = utf8_decode($mailObject->getSubject());
