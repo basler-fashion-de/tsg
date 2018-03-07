@@ -13,13 +13,18 @@ class SetUpSystemService
     /** @var \Enlight_Components_Snippet_Manager */
     private $snippets;
 
+    /** @var \Shopware_Components_Config */
+    private $config;
+
     public function __construct(
         Connection $connection,
-        \Enlight_Components_Snippet_Manager $snippets
+        \Enlight_Components_Snippet_Manager $snippets,
+        \Shopware_Components_Config $config
     )
     {
         $this->snippets = $snippets;
         $this->shopConnection = $connection;
+        $this->config = $config;
     }
 
     public function getDefaultTestShopName()
@@ -39,7 +44,10 @@ class SetUpSystemService
         $urlPostfix = $system->getUrl();
         $guestConnection->exec("UPDATE s_core_shops SET base_path = CONCAT(IFNULL(base_path,''),'$urlPostfix')");
         $guestConnection->exec("UPDATE s_core_shops SET base_url = CONCAT(IFNULL(base_url,''),'$urlPostfix')");
-        $guestConnection->exec("UPDATE s_core_shops SET secure_base_path = CONCAT(IFNULL(secure_base_path,''),'$urlPostfix')");
+
+        if(version_compare($this->config->get('version'), '5.4.0', '<')){
+            $guestConnection->exec("UPDATE s_core_shops SET secure_base_path = CONCAT(IFNULL(secure_base_path,''),'$urlPostfix')");
+        }
     }
 
     public function setShopOffline(Connection $guestConnection, System $system)

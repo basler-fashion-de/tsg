@@ -78,6 +78,7 @@
                  class="BlaubandOneClickSystem\Services\System\Local\SetUpSystemService">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="snippets"/>
+            <argument type="service" id="config"/>
         </service>
 
         <service id="blauband_one_click_system.db_duplication_service"
@@ -106,7 +107,8 @@
             <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
             <argument type="service" id="TemplateMail"/>
             <argument type="service" id="blauband_one_click_system.mail_config_service"/>
-            <argument>%shopware.mail%</argument>
+            <argument type="service" id="config"/>
+            <argument type="service" id="pluginlogger"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 

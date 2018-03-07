@@ -12,6 +12,7 @@ use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 use Doctrine\DBAL\Connection;
+use Shopware\Components\Logger;
 use Shopware\Components\Model\ModelManager;
 use BlaubandOneClickSystem\Models\System;
 
@@ -78,9 +79,14 @@ class Local extends SystemService implements SystemServiceInterface
     private $mailConfigService;
 
     /**
-     * @var string
+     * @var \Shopware_Components_Config
      */
-    private $shopOwnerMail;
+    private $config;
+
+    /**
+     * @var $logger Logger
+     */
+    private $pluginLogger;
 
     /**
      * @var string
@@ -100,7 +106,8 @@ class Local extends SystemService implements SystemServiceInterface
         AmazonRDSService $amazonRDSService,
         \Shopware_Components_TemplateMail $templateMail,
         ConfigService $mailConfigService,
-        $shopOwnerMail,
+        \Shopware_Components_Config $config,
+        Logger $pluginLogger,
         $docRoot
     )
     {
@@ -116,7 +123,8 @@ class Local extends SystemService implements SystemServiceInterface
         $this->amazonRDSService = $amazonRDSService;
         $this->templateMail = $templateMail;
         $this->mailConfigService = $mailConfigService;
-        $this->shopOwnerMail = $shopOwnerMail;
+        $this->config = $config;
+        $this->pluginLogger = $pluginLogger;
         $this->docRoot = $docRoot;
     }
 
@@ -310,7 +318,7 @@ class Local extends SystemService implements SystemServiceInterface
             if ($mail['name'] === $templateName) {
                 /** @var \Enlight_Components_Mail $mail */
                 $mailModel = $this->templateMail->createMail($mail['name'], $systemModel->__toArray());
-                $mailModel->addTo($this->shopOwnerMail);
+                $mailModel->addTo($this->config->get('mail'));
                 $mailModel->send();
             }
         }
@@ -363,6 +371,8 @@ class Local extends SystemService implements SystemServiceInterface
                 } catch (\Exception $e) {
                     $this->modelManager->remove($systemModel);
                     $this->modelManager->flush($systemModel);
+
+                    $this->pluginLogger->addError("Blauband OCS: ".$e->getMessage());
 
                     throw $e;
                 }

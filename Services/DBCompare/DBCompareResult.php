@@ -23,7 +23,7 @@ class DBCompareResult
         $this->state = DBCompareResultItem::IDENTICAL;
     }
 
-    public function addRow(array $left, array $right)
+    public function addRow($left, $right)
     {
         if (!empty($left)) {
             $this->header = array_unique(array_merge(array_keys($left), $this->header));

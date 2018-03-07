@@ -55,10 +55,10 @@ class DBDuplicationService
         $sourceDb = $sourceConnection->getDatabase();
         $sourceTables = implode(' ', $tables);
         $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $dumPath = $this->pluginPath.'/'.$dumpName;
+        $dumpPath = $this->pluginPath.'/'.$dumpName;
         $passString = empty($sourcePass) ? '' : "-p$sourcePass";
 
-        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumPath";
+        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumpPath";
 
         $output = shell_exec($exportCommand);
 
@@ -71,7 +71,7 @@ class DBDuplicationService
         $destinationUser = $destinationConnection->getUsername();
         $destinationPass = $destinationConnection->getPassword();
         $destinationDb = $destinationConnection->getDatabase();
-        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumPath";
+        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumpPath";
         $output = shell_exec($importCommand);
 
         if($output !== null){
@@ -79,7 +79,7 @@ class DBDuplicationService
             throw new \SystemDBException($output);
         }
 
-        @unlink($dumpName);
+        @unlink($dumpPath);
 
         return true;
     }

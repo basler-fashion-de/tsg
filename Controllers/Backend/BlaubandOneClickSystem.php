@@ -253,12 +253,9 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
     private function checkGuestSystem()
     {
-        $configPath = Shopware()->DocPath() . "/config.php";
-        $config = include $configPath;
-
         if (
-            isset($config['blauband']['ocs']['isGuest']) &&
-            $config['blauband']['ocs']['isGuest']
+            $this->container->hasParameter('shopware.blauband.ocs.isguest') &&
+            $this->container->getParameter('shopware.blauband.ocs.isguest')
         ) {
             $redirect = array(
                 'module' => 'backend',
