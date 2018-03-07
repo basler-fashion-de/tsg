@@ -83,6 +83,7 @@
         <service id="blauband_one_click_system.db_duplication_service"
                  class="BlaubandOneClickSystem\Services\System\Common\DBDuplicationService">
             <argument type="service" id="snippets"/>
+            <argument>%blauband_one_click_system.plugin_dir%</argument>
         </service>
 
         <service id="blauband_one_click_system.codebase_duplication_service"

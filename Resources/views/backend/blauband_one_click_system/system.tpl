@@ -4,7 +4,7 @@
         <div class="ui-widget">
             <div class="three-cols">
                 <h4>
-                    {s name="generel" namespace="blauband/ocs"}{/s}
+                    {s name="general" namespace="blauband/ocs"}{/s}
                 </h4>
                 <label>{s name="name" namespace="blauband/ocs"}{/s}:</label> {$system.name}<br/>
                 <label>{s name="createDate" namespace="blauband/ocs"}{/s}

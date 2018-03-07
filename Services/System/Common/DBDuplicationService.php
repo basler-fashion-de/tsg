@@ -15,11 +15,17 @@ class DBDuplicationService
     /**
      * @var string
      */
+    private $pluginPath;
+
+    /**
+     * @var string
+     */
     private $dumpPrefix = "BlaubandOneClickSystemDBDump";
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets)
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, $pluginPath)
     {
         $this->snippets = $snippets;
+        $this->pluginPath = $pluginPath;
     }
 
     public function createDatabaseAndUse(Connection $connection, $dbName){
@@ -49,7 +55,11 @@ class DBDuplicationService
         $sourceDb = $sourceConnection->getDatabase();
         $sourceTables = implode(' ', $tables);
         $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser -p$sourcePass --default-character-set=utf8 $sourceDb $sourceTables > $dumpName";
+        $dumPath = $this->pluginPath.'/'.$dumpName;
+        $passString = empty($sourcePass) ? '' : "-p$sourcePass";
+
+        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumPath";
+
         $output = shell_exec($exportCommand);
 
         if($output !== null){
@@ -61,7 +71,7 @@ class DBDuplicationService
         $destinationUser = $destinationConnection->getUsername();
         $destinationPass = $destinationConnection->getPassword();
         $destinationDb = $destinationConnection->getDatabase();
-        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumpName";
+        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumPath";
         $output = shell_exec($importCommand);
 
         if($output !== null){

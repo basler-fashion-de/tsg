@@ -80,6 +80,11 @@ class Local extends SystemService implements SystemServiceInterface
     /**
      * @var string
      */
+    private $shopOwnerMail;
+
+    /**
+     * @var string
+     */
     private $docRoot;
 
     public function __construct(
