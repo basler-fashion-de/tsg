@@ -15,6 +15,11 @@ fieldset {
     margin: 10px 0;
 }
 
+label {
+    width:200px;
+    display: inline-block
+}
+
 .diffInserted,
 .green {
     background-color: greenyellow;
