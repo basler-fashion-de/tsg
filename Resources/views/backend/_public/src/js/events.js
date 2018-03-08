@@ -1,5 +1,3 @@
-//{literal}
-
 $(function () {
   registerEvents()
 })
@@ -161,5 +159,3 @@ function registerMailButton () {
     })
   })
 }
-
-//{/literal}

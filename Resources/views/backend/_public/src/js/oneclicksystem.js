@@ -1,5 +1,3 @@
-//{literal}
-
 $(function () {
   activateAccordion()
   $('button').button()
@@ -92,5 +90,3 @@ function activateAccordion () {
     animate: false
   })
 }
-
-//{/literal}

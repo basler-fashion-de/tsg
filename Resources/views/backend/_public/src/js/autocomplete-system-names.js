@@ -1,9 +1,5 @@
-//{literal}
-
 var autocompleteNames = [
-  //{/literal}
-  "{$shopTitle}",
-  //{literal}
+  defaultShopTitle,
   "Staging",
   "Dev",
   "Test",
@@ -11,5 +7,3 @@ var autocompleteNames = [
   "Staging-System",
   "Dev-System"
 ];
-
-//{/literal}

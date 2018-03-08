@@ -1,6 +1,3 @@
-//{literal}
-
-
 function hideErrorPanel () {
   $('#one-click-system .alerts .ui-state-error').hide()
   $('#one-click-system .alerts .ui-state-error .content').text('')
@@ -35,5 +32,3 @@ function openNewIframe (title, controller, action, params) {
   }
   postMessageApi.createSubWindow(values)
 }
-
-//{/literal}
