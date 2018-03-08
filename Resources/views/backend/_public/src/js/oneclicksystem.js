@@ -39,7 +39,26 @@ function loadSystemList (callback) {
   })
 }
 
+var newHtmlHash = null
+
 function handleSystemLoadListResponse (response) {
+  //Hash generieren um einen Abgleich mit dem letzten Response zu haben
+  var newHtml = response.html.trim()
+  var hash = 0, i, chr, len
+  if (newHtml.length === 0) return hash
+  for (i = 0, len = newHtml.length; i < len; i++) {
+    chr = newHtml.charCodeAt(i)
+    hash = ((hash << 5) - hash) + chr
+    hash |= 0 // Convert to 32bit integer
+  }
+
+  //Keine Änderung
+  if (newHtmlHash === hash) {
+    return
+  }else{
+    newHtmlHash = hash;
+  }
+
   var activeId = $('#systems').accordion('option', 'active')
 
   var deleteDisabledStates = []
@@ -56,7 +75,7 @@ function handleSystemLoadListResponse (response) {
     }
   )
 
-  $('#system-list').html(response.html)
+  $('#system-list').html(newHtml)
 
   activateAccordion()
   $('#systems').accordion('option', 'active', activeId)
