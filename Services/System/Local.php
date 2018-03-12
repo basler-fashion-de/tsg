@@ -3,11 +3,11 @@
 namespace BlaubandOneClickSystem\Services\System;
 
 use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
 use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
 use BlaubandOneClickSystem\Services\System\Local\MailService;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
 use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
-use BlaubandOneClickSystem\Services\System\Common\AmazonRDSService;
 use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService;
 use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
@@ -64,9 +64,9 @@ class Local extends SystemService implements SystemServiceInterface
     private $mailService;
 
     /**
-     * @var AmazonRDSService
+     * @var OCSApiService
      */
-    private $amazonRDSService;
+    private $ocsApiService;
 
     /**
      * @var \Shopware_Components_TemplateMail
@@ -103,7 +103,7 @@ class Local extends SystemService implements SystemServiceInterface
         SetUpSystemService $setUpSystemService,
         HtAccessService $htAccessService,
         MailService $mailService,
-        AmazonRDSService $amazonRDSService,
+        OCSApiService $ocsApiService,
         \Shopware_Components_TemplateMail $templateMail,
         ConfigService $mailConfigService,
         \Shopware_Components_Config $config,
@@ -120,7 +120,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->setUpSystemService = $setUpSystemService;
         $this->htAccessService = $htAccessService;
         $this->mailService = $mailService;
-        $this->amazonRDSService = $amazonRDSService;
+        $this->ocsApiService = $ocsApiService;
         $this->templateMail = $templateMail;
         $this->mailConfigService = $mailConfigService;
         $this->config = $config;
@@ -149,11 +149,11 @@ class Local extends SystemService implements SystemServiceInterface
 
 
         if ($dbRemote) {
-            $dbName = $this->amazonRDSService->getUniqDatabaseName();
-            $dbUser = $dbName;
-            $dbPass = $dbName;
-            $dbHost = $this->amazonRDSService->host;
-            $guestConnection = $this->amazonRDSService->createDatabase($dbUser, $dbPass, $dbName);
+            $guestConnection = $this->ocsApiService->createDatabase();
+            $dbHost = $guestConnection->getHost();
+            $dbUser = $guestConnection->getUsername();
+            $dbPass = $guestConnection->getPassword();
+            $dbName = $guestConnection->getDatabase();
         } else {
             $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         }

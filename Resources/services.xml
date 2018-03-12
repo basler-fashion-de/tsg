@@ -49,11 +49,12 @@
         </service>
 
         <!-- common -->
-        <service id="blauband_one_click_system.amazon_rds_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\AmazonRDSService"
-                 public="false">
+        <service id="blauband_one_click_system.ocs_api_service"
+                 class="BlaubandOneClickSystem\Services\System\Common\OCSApiService">
             <argument type="service" id="snippets"/>
             <argument type="service" id="blauband_one_click_system.db_connection_service"/>
+            <argument type="service" id="dbal_connection"/>
+            <argument>%blauband_one_click_system.plugin_dir%/Resources/token.lock</argument>
         </service>
 
         <service id="blauband_one_click_system.db_connection_service"
@@ -69,8 +70,7 @@
         </service>
 
         <service id="blauband_one_click_system.ht_access_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\HtAccessService"
-                 public="false">
+                 class="BlaubandOneClickSystem\Services\System\Local\HtAccessService">
             <argument type="service" id="snippets"/>
         </service>
 
@@ -104,7 +104,7 @@
             <argument type="service" id="blauband_one_click_system.set_up_system_service"/>
             <argument type="service" id="blauband_one_click_system.ht_access_service"/>
             <argument type="service" id="blauband_one_click_system.mail_service"/>
-            <argument type="service" id="blauband_one_click_system.amazon_rds_service"/>
+            <argument type="service" id="blauband_one_click_system.ocs_api_service"/>
             <argument type="service" id="TemplateMail"/>
             <argument type="service" id="blauband_one_click_system.mail_config_service"/>
             <argument type="service" id="config"/>

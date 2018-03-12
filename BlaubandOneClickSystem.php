@@ -2,15 +2,19 @@
 
 namespace BlaubandOneClickSystem;
 
+use BlaubandOneClickSystem\Installers\Api;
 use BlaubandOneClickSystem\Installers\CronJob;
 use BlaubandOneClickSystem\Installers\Mails;
 use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UninstallContext;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\UpdateContext;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use BlaubandOneClickSystem\Installers\Models;
+
 /**
  * Shopware-Plugin BlaubandOneClickSystem.
  */
@@ -18,8 +22,8 @@ class BlaubandOneClickSystem extends Plugin
 {
 
     /**
-    * @param ContainerBuilder $container
-    */
+     * @param ContainerBuilder $container
+     */
     public function build(ContainerBuilder $container)
     {
         $container->setParameter('blauband_one_click_system.plugin_dir', $this->getPath());
@@ -30,6 +34,8 @@ class BlaubandOneClickSystem extends Plugin
     {
         $this->setup(null, $context->getCurrentVersion());
         parent::install($context);
+
+        (new Api($this->getOcsService()))->install();
 
         (new CronJob(
             $this->container->get('dbal_connection'),
@@ -48,6 +54,8 @@ class BlaubandOneClickSystem extends Plugin
         if (!$context->keepUserData()) {
             (new Models($this->container->get('models')))->uninstall();
         }
+
+        (new Api($this->getOcsService()))->uninstall();
 
         parent::uninstall($context);
     }
@@ -74,7 +82,7 @@ class BlaubandOneClickSystem extends Plugin
             '1.0.2' => function () {
                 (new Mails(
                     $this->container->get('models'),
-                    new ConfigService($this->getPath().'/Resources/mails.xml'),
+                    new ConfigService($this->getPath() . '/Resources/mails.xml'),
                     $this->getPath()
                 ))->install();
                 return true;
@@ -95,5 +103,15 @@ class BlaubandOneClickSystem extends Plugin
         }
 
         return true;
+    }
+
+    private function getOcsService()
+    {
+        return new OCSApiService(
+            $this->container->get('snippets'),
+            new DBConnectionService($this->container->get('snippets')),
+            $this->container->get('dbal_connection'),
+            $this->getPath() . '/Resources/token.lock'
+        );
     }
 }
