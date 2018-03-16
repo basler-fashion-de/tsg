@@ -48,7 +48,7 @@ class OCSApiService
         $token = $this->loadToken();
 
         try {
-            $url = $this->apiIp . $this->dbApi;
+            $url = $this->schema . $this->apiIp . $this->dbApi;
             $data = array('token' => $token);
 
             $options = array(
