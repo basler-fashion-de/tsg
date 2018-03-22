@@ -12,6 +12,8 @@
         data-duplicateMediaFolderUrl="{url action=duplicateMediaFolder}"
         data-systemListUrl="{url action=systemList}">
 
+    {include file="backend/blauband_one_click_system/action_field.tpl"}
+
     <div class="alerts ui-widget">
         <div class="ui-state-error ui-corner-all">
             <span class="ui-icon ui-icon-alert"></span>
@@ -23,8 +25,6 @@
             <div class="content"></div>
         </div>
     </div>
-
-    {include file="backend/blauband_one_click_system/action_field.tpl"}
 
     <div id="system-list">
         {if !empty($systems)}

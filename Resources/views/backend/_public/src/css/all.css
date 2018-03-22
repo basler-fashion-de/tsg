@@ -16,8 +16,14 @@ fieldset {
 }
 
 label {
-    width:200px;
+    width:300px;
     display: inline-block
+}
+
+progress {
+    display: block;
+    width: 100%;
+    margin: 10px 0 2px 0
 }
 
 .diffInserted,
@@ -34,35 +40,41 @@ label {
     background-color: lightpink;
 }
 
+.button-right-wrapper {
+    float: right;
+    text-align: right;
+    padding: 10px;
+}
+
+.full-width {
+    width: 100%;
+}
+
 #action-field {
     margin-bottom: 75px;
     overflow: hidden;
 }
 
-#create-button {
-    width: 100%;
-    margin: 10px 0;
+#action-field #create-button,
+#action-field #show-options-button{
+    display: block;
+    padding: 15px 30px;
+    margin: 0 auto;
 }
 
-.delete-button-wrapper,
-.option-button-wrapper,
-.compare-button-wrapper {
+.option-button-wrapper {
     display: block;
     float: left;
     width: 100%;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-#show-options-button {
-    width: 100%;
-    text-align: center;
-    display: block;
-    cursor: pointer;
-    font-size: 10px;
+#options {
+    margin-top: 75px
 }
 
 #options-form label {
-    width: 25%;
+    width: 75%;
     display: inline-block
 }
 

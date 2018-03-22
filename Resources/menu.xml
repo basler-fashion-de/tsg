@@ -9,7 +9,7 @@
             <action>index</action>
             <class>sprite-application-block</class>
             <parent identifiedBy="controller">ConfigurationMenu</parent>
-            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "1-Click System"})</onclick>
+            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "Test-System-Generator (TSG)"})</onclick>
         </entry>
     </entries>
 </menu>

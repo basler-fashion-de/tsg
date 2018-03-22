@@ -1,13 +1,15 @@
 <div id="action-field">
     <button id="create-button" class="ui-button ui-corner-all ui-widget"
-            data-activeText="{s name="create" namespace="blauband/ocs"}{/s}"
+            data-activeText="{s name="createButton" namespace="blauband/ocs"}{/s}"
             data-disabledText="{s name="createDisabled" namespace="blauband/ocs"}{/s}">
-        {s name="create" namespace="blauband/ocs"}{/s}
+        {s name="createButton" namespace="blauband/ocs"}{/s}
     </button>
 
-    <a id="show-options-button" class="">
+    <br/>
+
+    <button id="show-options-button" class="ui-button ui-corner-all ui-widget">
         {s name="showOptions" namespace="blauband/ocs"}{/s}
-    </a>
+    </button>
 
     <div id="options" style="display: none">
         <form id="options-form">
@@ -18,10 +20,6 @@
                             {if $group['column'] == $i}
                                 <div class="action-field-group group-{$group['snippet']}"
                                      {if $group['hidden'] == 'true'}style="display: none"{/if}>
-                                    <h4>
-                                        {''|snippet:$group['snippet']:'blauband/ocs'}
-                                    </h4>
-
                                     {if isset($group['parameters'][0])}
                                         {foreach $group['parameters'] as $parameter}
                                             {include file="backend/blauband_one_click_system/fields/fields.tpl" field=$parameter}
@@ -36,5 +34,15 @@
                 {/for}
             </div>
         </form>
+
+        <div class="button-right-wrapper full-width">
+            <button id="back-button" class="ui-button ui-corner-all ui-widget">
+                {s name="back" namespace="blauband/ocs"}{/s}
+            </button>
+
+            <button id="next-button" class="ui-button ui-corner-all ui-widget">
+                {s name="next" namespace="blauband/ocs"}{/s}
+            </button>
+        </div>
     </div>
 </div>

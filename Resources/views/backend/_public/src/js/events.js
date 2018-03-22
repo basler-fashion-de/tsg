@@ -3,8 +3,11 @@ $(function () {
 })
 
 function registerEvents () {
-  registerShowButton()
   registerCreateButton()
+  registerShowButton()
+  registerBackButton()
+  registerNextButton()
+  
   registerDeleteButton()
   registerMediaButton()
   registerCompareButton()
@@ -14,14 +17,7 @@ function registerEvents () {
   registerMailButton()
 }
 
-function registerShowButton () {
-  $('#show-options-button').on('click', function () {
-    $('#options').show()
-    $('#show-options-button').hide()
-  })
-}
-
-function registerCreateButton () {
+function registerCreateButton (selector) {
   $('#create-button').on('click', function () {
 
     //Kurzer Timeout für den create Button um doppel Klicks besser abzufangen.
@@ -57,6 +53,24 @@ function registerCreateButton () {
       loadSystemList()
     }, 1000)
   })
+}
+
+function registerShowButton () {
+  $('#show-options-button').on('click', function () {
+    $('#options').show()
+    $('#create-button').button('option', 'disabled', true)
+    $('#show-options-button').button('option', 'disabled', true)
+  })
+}
+
+function registerBackButton () {
+  $('#back-button').on('click', function () {
+    location.reload()
+  })
+}
+
+function registerNextButton(){
+
 }
 
 function registerDeleteButton () {

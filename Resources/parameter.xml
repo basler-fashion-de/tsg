@@ -7,13 +7,6 @@
         <hidden>false</hidden>
 
         <parameters>
-            <title>name</title>
-            <snippet>name</snippet>
-            <type>text</type>
-            <default></default>
-        </parameters>
-
-        <parameters>
             <title>preventMail</title>
             <snippet>preventmail</snippet>
             <type>checkbox</type>
@@ -53,7 +46,7 @@
         <title>ergebnis</title>
         <snippet>summery</snippet>
         <column>1</column>
-        <hidden>false</hidden>
+        <hidden>true</hidden>
 
         <parameters>
             <title>sendSummery</title>
@@ -74,6 +67,14 @@
             <info>dbremoteinfo</info>
             <snippet>dbremote</snippet>
             <type>checkbox</type>
+            <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>dbOverwrite</title>
+            <snippet>dboverwrite</snippet>
+            <type>checkbox</type>
+            <class>dblocal</class>
             <default>true</default>
         </parameters>
 
@@ -108,14 +109,6 @@
             <class>dblocal</class>
             <default></default>
         </parameters>
-
-        <parameters>
-            <title>dbOverwrite</title>
-            <snippet>dboverwrite</snippet>
-            <type>checkbox</type>
-            <class>dblocal</class>
-            <default>false</default>
-        </parameters>
     </groups>
 
     <groups>
@@ -141,7 +134,7 @@
         <parameters>
             <title>htpasswdPassword</title>
             <snippet>htpasswdpassword</snippet>
-            <type>password</type>
+            <type>text</type>
             <default>admin</default>
         </parameters>
     </groups>
@@ -165,11 +158,19 @@
                 <snippet>typeAmazon</snippet>
             </option>
         </parameters>
+
         <parameters>
             <title>autoFireCronJob</title>
             <snippet>autofirecronjob</snippet>
             <type>checkbox</type>
             <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>name</title>
+            <snippet>name</snippet>
+            <type>text</type>
+            <default></default>
         </parameters>
     </groups>
 </config>
