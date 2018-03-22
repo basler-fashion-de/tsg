@@ -20,6 +20,17 @@ class Frontend implements SubscriberInterface
         $controller = $args->getSubject();
         $view = $controller->View();
 
+        $this->checkSearchEngineRobot($view);
+
+        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
+    }
+
+    /**
+     * Schaut in der Config.php ob Suchmaschinen diese Seite indezieren dürfen
+     *
+     * @param $view
+     */
+    private function checkSearchEngineRobot($view){
         /** @var ConfigService $config */
         $config = Shopware()->Container()->get('blauband_one_click_system.config_php_service');
         $view->assign('blaubandOcsIsGuest', $config->get('blauband.ocs.isGuest'));
@@ -28,6 +39,6 @@ class Frontend implements SubscriberInterface
             header("X-Robots-Tag: noindex, nofollow", true);
         }
 
-        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
+
     }
 }
