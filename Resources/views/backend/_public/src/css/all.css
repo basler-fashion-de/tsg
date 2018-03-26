@@ -5,6 +5,8 @@ html {
     box-sizing: border-box;
     font-family: Arial, Verdana, sans-serif;
     color: #1d5987;
+
+    padding: 20px;
 }
 
 *, *:before, *:after {
@@ -16,7 +18,7 @@ fieldset {
 }
 
 label {
-    width:300px;
+    width: 300px;
     display: inline-block
 }
 
@@ -43,39 +45,10 @@ progress {
 .button-right-wrapper {
     float: right;
     text-align: right;
-    padding: 10px;
 }
 
 .full-width {
     width: 100%;
-}
-
-#action-field {
-    margin-bottom: 75px;
-    overflow: hidden;
-}
-
-#action-field #create-button,
-#action-field #show-options-button{
-    display: block;
-    padding: 15px 30px;
-    margin: 0 auto;
-}
-
-.option-button-wrapper {
-    display: block;
-    float: left;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-#options {
-    margin-top: 75px
-}
-
-#options-form label {
-    width: 75%;
-    display: inline-block
 }
 
 .two-cols {
@@ -92,6 +65,127 @@ progress {
     width: 40%;
 }
 
+/* Start Ansicht (Start Buttons) */
+.header-title {
+    font-weight: normal;
+}
+
+.start-button-field {
+    width: 30%;
+    float: left;
+}
+
+.content-field {
+    width: 70%;
+    float: right;
+}
+
+.start-button {
+    width: calc((100% - 80px) / 2);
+    float: left;
+    padding-top: 18%;
+    padding-bottom: 23%;
+    margin-right: 40px;
+
+    -webkit-filter: grayscale(80%);
+    filter: grayscale(80%);
+}
+
+.start-button > div {
+    height: 50px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.start-button > div h1 {
+    font-size: 26px !important;
+    margin-bottom: 2px;
+}
+
+.start-button.active,
+.start-button:hover {
+    -webkit-filter: grayscale(0%);
+    filter: grayscale(0%);
+
+    opacity: 1;
+    filter: Alpha(Opacity=100);
+}
+
+#create-button,
+#show-options-button {
+    background-image: url("../images/image.png");
+    background-size: cover;
+}
+
+/* Eingabe Felder */
+#action-field {
+    overflow: hidden;
+    display: none;
+}
+
+#action-field #options-form{
+    border: 1px solid #46AFE1;
+    background-color: #F4F4F4;
+    margin-bottom: 5px;
+    padding: 20px 40px;
+}
+
+#action-field #back-button {
+    float: left;
+}
+
+#action-field .action-field {
+    width: 100%;
+}
+
+#action-field input[type='checkbox'] {
+    margin: 5px 5px 5px 0;
+}
+
+#action-field .action-field-group {
+    margin-bottom: 40px;
+}
+
+#action-field .button-right-wrapper {
+    margin-bottom: 40px;
+}
+
+#action-field .button-right-wrapper button{
+    width: 200px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 6px;
+    text-transform: uppercase ;
+    font-weight: bold
+}
+
+.option-button-wrapper {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+#options {
+}
+
+#options-form label {
+    width: auto;
+    display: inline-block
+}
+
+#options-form .password-field label,
+#options-form .text-field label {
+    width: 25%;
+}
+
+#options-form .password-field input,
+#options-form .text-field input {
+    width: calc(75% - 3px);
+    height: 30px;
+    margin: 4px 0
+}
+
+/* Errors */
 #one-click-system .alerts .ui-state-highlight,
 #one-click-system .alerts .ui-state-error {
     padding: 10px;
@@ -119,7 +213,7 @@ progress {
 /* Table */
 #compare table {
     width: 100%;
-    border:solid 1px #333333;
+    border: solid 1px #333333;
 }
 
 #compare th.separator,
@@ -141,11 +235,11 @@ progress {
 }
 
 /* Folder */
-#compare .file_compare table.diff{
+#compare .file_compare table.diff {
     margin-bottom: 50px;
 }
 
-#compare .file_compare td{
+#compare .file_compare td {
     width: 50%;
 }
 

@@ -7,5 +7,3 @@
 />
 
 {include file="backend/blauband_one_click_system/fields/label.tpl" field=$field}
-
-</br>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
-    <label lang="de">Test-System-Generator (TSG)</label>
-    <label lang="en">Test-System-Generator (TSG)</label>
+    <label lang="de">1-Klick System</label>
+    <label lang="en">1-Click System</label>
     <version>1.0.3</version>
     <copyright>(c) by Blauband GmbH</copyright>
     <license>proprietary</license>

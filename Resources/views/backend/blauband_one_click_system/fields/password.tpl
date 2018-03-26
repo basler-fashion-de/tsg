@@ -1,3 +1,5 @@
+{include file="backend/blauband_one_click_system/fields/label.tpl" field=$field}
+
 <input
         type="password"
         name="{$field['title']}"
@@ -7,6 +9,3 @@
         {if $field['info']}title="{''|snippet:$field['info']:'blauband/ocs'}"{/if}
 />
 
-{include file="backend/blauband_one_click_system/fields/label.tpl" field=$field}
-
-</br>

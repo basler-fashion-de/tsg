@@ -7,7 +7,7 @@ function registerEvents () {
   registerShowButton()
   registerBackButton()
   registerNextButton()
-  
+
   registerDeleteButton()
   registerMediaButton()
   registerCompareButton()
@@ -60,6 +60,8 @@ function registerShowButton () {
     $('#options').show()
     $('#create-button').button('option', 'disabled', true)
     $('#show-options-button').button('option', 'disabled', true)
+    $('#show-options-button').addClass('active')
+    $('#action-field').show();
   })
 }
 

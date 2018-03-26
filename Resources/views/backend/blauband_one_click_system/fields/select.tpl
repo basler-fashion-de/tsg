@@ -11,4 +11,4 @@
             {''|snippet:$option['snippet']:'blauband/ocs'}
         </option>
     {/foreach}
-</select></br>
+</select>
