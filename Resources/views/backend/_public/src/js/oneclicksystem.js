@@ -12,7 +12,7 @@ $(function () {
   $('#name').val(autocompleteNames[0])
   $('#dbName').val(autocompleteNames[0].toLowerCase().replace(' ', '-'))
 
-  $('#type').selectmenu()
+  //$('#type').selectmenu()
 })
 
 function startUpdateInterval () {
@@ -55,8 +55,8 @@ function handleSystemLoadListResponse (response) {
   //Keine Änderung
   if (newHtmlHash === hash) {
     return
-  }else{
-    newHtmlHash = hash;
+  } else {
+    newHtmlHash = hash
   }
 
   var activeId = $('#systems').accordion('option', 'active')
@@ -107,5 +107,36 @@ function activateAccordion () {
     collapsible: true,
     active: false,
     animate: false
+  })
+}
+
+function openConfirmModal () {
+  var id = 'modal-confirm'
+  var selector = '#' + id
+  var values = $('#options-form').clone()
+  values.find('input').attr('disabled', 'disabled')
+  values.find(':hidden').show()
+  values.find('label[for=type]').hide()
+  values.find('select#type').hide()
+
+  $(selector).remove()
+  $('body').append('<div id="' + id + '"></div>')
+  $(selector).html(values)
+
+  $(selector).dialog({
+    resizable: false,
+    height: 'auto',
+    width: '50%',
+    modal: true,
+    buttons: {
+      Ok: function () {
+        $(this).dialog('close')
+        $('#create-button').click();
+        $('#back-button').click();
+      },
+      Cancel: function () {
+        $(this).dialog('close')
+      }
+    }
   })
 }

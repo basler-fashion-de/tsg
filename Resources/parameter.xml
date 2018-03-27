@@ -7,6 +7,30 @@
         <hidden>false</hidden>
 
         <parameters>
+            <title>name</title>
+            <snippet>name</snippet>
+            <type>text</type>
+            <default></default>
+            <hidden>true</hidden>
+        </parameters>
+
+        <parameters>
+            <title>type</title>
+            <snippet>type</snippet>
+            <type>select</type>
+            <option>
+                <value>local</value>
+                <snippet>typeLocal</snippet>
+                <selected>true</selected>
+            </option>
+            <option>
+                <value>ec2</value>
+                <snippet>typeAmazon</snippet>
+            </option>
+            <hidden>true</hidden>
+        </parameters>
+
+        <parameters>
             <title>preventMail</title>
             <snippet>preventmail</snippet>
             <type>checkbox</type>
@@ -39,6 +63,14 @@
             <snippet>preventgoogleindex</snippet>
             <type>checkbox</type>
             <default>true</default>
+        </parameters>
+
+        <parameters>
+            <title>autoFireCronJob</title>
+            <snippet>autofirecronjob</snippet>
+            <type>checkbox</type>
+            <default>true</default>
+            <hidden>true</hidden>
         </parameters>
     </groups>
 
@@ -139,38 +171,18 @@
         </parameters>
     </groups>
 
-    <groups>
-        <title>hidden</title>
-        <snippet>hidden</snippet>
-        <column>1</column>
-        <hidden>true</hidden>
-        <parameters>
-            <title>type</title>
-            <snippet>type</snippet>
-            <type>select</type>
-            <option>
-                <value>local</value>
-                <snippet>typeLocal</snippet>
-                <selected>true</selected>
-            </option>
-            <option>
-                <value>ec2</value>
-                <snippet>typeAmazon</snippet>
-            </option>
-        </parameters>
+    <!--<groups>-->
+        <!--<title>hidden</title>-->
+        <!--<snippet>hidden</snippet>-->
+        <!--<column>1</column>-->
+        <!--<hidden>true</hidden>-->
 
-        <parameters>
-            <title>autoFireCronJob</title>
-            <snippet>autofirecronjob</snippet>
-            <type>checkbox</type>
-            <default>true</default>
-        </parameters>
-
-        <parameters>
-            <title>name</title>
-            <snippet>name</snippet>
-            <type>text</type>
-            <default></default>
-        </parameters>
-    </groups>
+        <!--<parameters>-->
+            <!--<title>name</title>-->
+            <!--<snippet>name</snippet>-->
+            <!--<type>text</type>-->
+            <!--<default></default>-->
+            <!--<hidden>true</hidden>-->
+        <!--</parameters>-->
+    <!--</groups>-->
 </config>

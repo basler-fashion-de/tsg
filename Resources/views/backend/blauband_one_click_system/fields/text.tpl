@@ -7,4 +7,3 @@
         {if $field['class']}class="{$field['class']}"{/if}
         {if $field['info']}title="{''|snippet:$field['info']:'blauband/ocs'}"{/if}
 />
-

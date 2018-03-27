@@ -123,7 +123,7 @@ progress {
     display: none;
 }
 
-#action-field #options-form{
+#action-field #options-form {
     border: 1px solid #46AFE1;
     background-color: #F4F4F4;
     margin-bottom: 5px;
@@ -150,12 +150,12 @@ progress {
     margin-bottom: 40px;
 }
 
-#action-field .button-right-wrapper button{
+#action-field .button-right-wrapper button {
     width: 200px;
     height: 40px;
     font-size: 20px;
     border-radius: 6px;
-    text-transform: uppercase ;
+    text-transform: uppercase;
     font-weight: bold
 }
 
@@ -163,9 +163,6 @@ progress {
     display: block;
     float: left;
     width: 100%;
-}
-
-#options {
 }
 
 #options-form label {
@@ -180,7 +177,7 @@ progress {
 
 #options-form .password-field input,
 #options-form .text-field input {
-    width: calc(75% - 3px);
+    width: calc(75% - 4px);
     height: 30px;
     margin: 4px 0
 }
@@ -207,6 +204,11 @@ progress {
 /* Jquery UI Anpassungen */
 .ui-widget {
     font-size: 12px;
+}
+
+.ui-widget-content {
+    background: none;
+    background-color: #F4F4F4 !important;
 }
 
 /* Compare */
@@ -241,6 +243,14 @@ progress {
 
 #compare .file_compare td {
     width: 50%;
+}
+
+
+/* BORDER COLOR */
+#compare table,
+#action-field #options-form,
+.ui-widget-content {
+    border-color: #46AFE1;
 }
 
 /*{/literal}*/

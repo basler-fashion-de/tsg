@@ -1,4 +1,4 @@
-<div class="action-field {$field.type}-field">
+<div class="action-field {$field.type}-field" {if $field.hidden === 'true'}style="display: none"{/if}>
     {if $field.type == 'text'}
         {include file="backend/blauband_one_click_system/fields/text.tpl" field=$field}
     {/if}

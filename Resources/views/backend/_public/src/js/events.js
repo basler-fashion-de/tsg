@@ -17,20 +17,12 @@ function registerEvents () {
   registerMailButton()
 }
 
-function registerCreateButton (selector) {
+function registerCreateButton () {
   $('#create-button').on('click', function () {
 
     //Kurzer Timeout für den create Button um doppel Klicks besser abzufangen.
     var btn = $(this)
     btn.button('option', 'disabled', true)
-    btn.html(btn.data('disabledtext'))
-    setTimeout(function () {
-      btn.button('option', 'disabled', false)
-      btn.html(btn.data('activetext'))
-    }, 5000)
-
-    hideErrorPanel()
-    hideInfoPanel()
 
     var url = $('#one-click-system').data('createsystemurl')
     var params = $('form#options-form').serialize()
@@ -46,33 +38,38 @@ function registerCreateButton (selector) {
         } else {
           showErrorPanel(response.error)
         }
+
+        loadSystemList()
+        setTimeout(function () {
+          btn.button('option', 'disabled', false)
+        }, 1000)
       }
     })
-
-    setTimeout(function () {
-      loadSystemList()
-    }, 1000)
   })
 }
 
 function registerShowButton () {
   $('#show-options-button').on('click', function () {
-    $('#options').show()
     $('#create-button').button('option', 'disabled', true)
     $('#show-options-button').button('option', 'disabled', true)
     $('#show-options-button').addClass('active')
-    $('#action-field').show();
+    $('#action-field').show()
   })
 }
 
 function registerBackButton () {
   $('#back-button').on('click', function () {
-    location.reload()
+    $('#create-button').button('option', 'disabled', false)
+    $('#show-options-button').button('option', 'disabled', false)
+    $('#show-options-button').removeClass('active')
+    $('#action-field').hide()
   })
 }
 
-function registerNextButton(){
-
+function registerNextButton () {
+  $('#next-button').on('click', function () {
+    openConfirmModal()
+  })
 }
 
 function registerDeleteButton () {

@@ -12,6 +12,10 @@ function showErrorPanel (text) {
   if (text !== '') {
     $('#one-click-system .alerts .ui-state-error .content').text(text)
     $('#one-click-system .alerts .ui-state-error').show()
+
+    setTimeout(function () {
+      hideErrorPanel();
+    }, 5000)
   }
 }
 
@@ -19,6 +23,10 @@ function showInfoPanel (text) {
   if (text !== '') {
     $('#one-click-system .alerts .ui-state-highlight .content').text(text)
     $('#one-click-system .alerts .ui-state-highlight').show()
+
+    setTimeout(function () {
+      hideInfoPanel();
+    }, 5000)
   }
 }
 
