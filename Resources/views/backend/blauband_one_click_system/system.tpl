@@ -11,7 +11,7 @@
         <div class="ui-widget">
             {if $system.state == 'ready'}
                 <div class="button-right-wrapper delete-button-wrapper">
-                    <button class="delete-button ui-button ui-corner-all" data-id="{$system.id}">
+                    <button class="delete-button red ui-button ui-corner-all" data-id="{$system.id}">
                         {s name="delete" namespace="blauband/ocs"}{/s}
                     </button>
                 </div>
@@ -38,7 +38,7 @@
             {if $system.state == 'ready'}
                 <br/>
                 <br/>
-                <label style="float: left; width: auto; padding-top: 8px">{s name="compareTitle" namespace="blauband/ocs"}{/s}:</label>
+                <label style="width: auto; padding-top: 8px">{s name="compareTitle" namespace="blauband/ocs"}{/s}:</label>
                 <div class="compare-button-wrapper">
                     <button class="compare-article-button compare-button ui-button ui-corner-all" data-id="{$system.id}"
                             data-group="article" data-title="{s name="compareArticle" namespace="blauband/ocs"}{/s}">

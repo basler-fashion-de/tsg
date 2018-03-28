@@ -3,13 +3,13 @@
     <entries>
         <entry>
             <name>BlaubandOneClickSystem</name>
-            <label lang="en">1-Click System</label>
-            <label lang="de">1-Klick System</label>
+            <label lang="en">Testsystem-Generator</label>
+            <label lang="de">Testsystem-Generator</label>
             <controller>BlaubandOneClickSystem</controller>
             <action>index</action>
             <class>sprite-application-block</class>
             <parent identifiedBy="controller">ConfigurationMenu</parent>
-            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "1-Click System"})</onclick>
+            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "Testsystem-Generator"})</onclick>
         </entry>
     </entries>
 </menu>

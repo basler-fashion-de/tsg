@@ -2,10 +2,14 @@
     <h3 class="title">{$compare.table}</h3>
 
     <table>
-        <tr style="height: 1px">
-            <th colspan="{count($compare.diffs)}" style="width: 49%"></th>
+        <tr>
+            <th colspan="{count($compare.diffs)}" style="width: 49%">
+                <h3>{s name="hostSystem" namespace="blauband/ocs"}{/s}<h3/>
+            </th>
             <th></th>
-            <th colspan="{count($compare.diffs)}" style="width: 49%"></th>
+            <th colspan="{count($compare.diffs)}" style="width: 49%">
+                <h3>{s name="testSystem" namespace="blauband/ocs"}{/s}</h3>
+            </th>
         </tr>
         <tr>
             {foreach $compare.diffs as $head}

@@ -32,8 +32,6 @@ function showInfoPanel (text) {
 
 function openNewIframe (title, controller, action, params) {
   var values = {
-    width: 1600,
-    height: 800,
     component: 'customSubWindow',
     url: controller + '/' + action + '?' + jQuery.param(params),
     title: title

@@ -38,7 +38,7 @@
             {s name="back" namespace="blauband/ocs"}{/s}
         </button>
 
-        <button id="next-button" class="ui-button ui-corner-all ui-widget">
+        <button id="next-button" class="blau ui-button ui-corner-all ui-widget">
             {s name="next" namespace="blauband/ocs"}{/s}
         </button>
     </div>

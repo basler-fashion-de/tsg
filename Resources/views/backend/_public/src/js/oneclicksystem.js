@@ -128,15 +128,22 @@ function openConfirmModal () {
     height: 'auto',
     width: '50%',
     modal: true,
-    buttons: {
-      Ok: function () {
-        $(this).dialog('close')
-        $('#create-button').click();
-        $('#back-button').click();
+    buttons: [
+      {
+        text: 'Abbrechen',
+        click: function () {
+          $(this).dialog('close')
+        }
       },
-      Cancel: function () {
-        $(this).dialog('close')
+      {
+        text: 'Ok',
+        'class': 'blau',
+        click: function () {
+          $(this).dialog('close')
+          $('#create-button').click()
+          $('#back-button').click()
+        }
       }
-    }
+    ]
   })
 }
