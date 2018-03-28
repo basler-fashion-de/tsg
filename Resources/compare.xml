@@ -69,11 +69,11 @@
             <tables>s_core_templates_config_values</tables>
         </theme>
 
-        <plugins commit="false">
-            <folders>custom/plugins</folders>
-            <folders>engine/Shopware/Plugins</folders>
-            <tables>s_core_plugins</tables>
-        </plugins>
+        <!--<plugins commit="false">-->
+            <!--<folders>custom/plugins</folders>-->
+            <!--<folders>engine/Shopware/Plugins</folders>-->
+            <!--<tables>s_core_plugins</tables>-->
+        <!--</plugins>-->
 
     </compare>
 </config>
