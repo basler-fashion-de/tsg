@@ -48,7 +48,8 @@
             <title>serviceMode</title>
             <snippet>servicemode</snippet>
             <type>checkbox</type>
-            <default>true</default>
+            <default>false</default>
+            <hidden>true</hidden>
         </parameters>
 
         <parameters>
