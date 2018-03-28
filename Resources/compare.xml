@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <compare>
-        <article>
+        <article commit="false">
             <tables>s_addon_premiums</tables>
             <tables>s_articles</tables>
             <tables>s_articles_also_bought_ro</tables>
@@ -48,7 +48,7 @@
             <tables>s_filter_articles</tables>
         </article>
 
-        <emotion>
+        <emotion commit="false">
             <tables>s_emotion</tables>
             <tables>s_emotion_attributes</tables>
             <tables>s_emotion_categories</tables>
@@ -56,11 +56,11 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
-        <snippets>
+        <snippets commit="false">
             <tables>s_core_snippets</tables>
         </snippets>
 
-        <theme>
+        <theme commit="false">
             <folders>themes</folders>
             <tables>s_core_templates</tables>
             <tables>s_core_templates_config_elements</tables>
