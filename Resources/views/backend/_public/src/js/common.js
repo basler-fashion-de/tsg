@@ -38,3 +38,13 @@ function openNewIframe (title, controller, action, params) {
   }
   postMessageApi.createSubWindow(values)
 }
+
+function openModal(selector, buttons){
+  $(selector).dialog({
+    resizable: false,
+    height: 'auto',
+    width: '50%',
+    modal: true,
+    buttons: buttons
+  })
+}

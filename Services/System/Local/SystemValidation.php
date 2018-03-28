@@ -7,6 +7,7 @@ use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
 use BlaubandOneClickSystem\Exceptions\SystemNotFoundException;
 use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
+use BlaubandOneClickSystem\Exceptions\SystemDBAlreadyExists;
 use BlaubandOneClickSystem\Exceptions\SystemNameException;
 use BlaubandOneClickSystem\Exceptions\SystemProcessException;
 use BlaubandOneClickSystem\Services\System\SystemService;
@@ -128,15 +129,18 @@ class SystemValidation
 
             if (!empty($exists)) {
                 $isEmpty = $guestConnection->fetchColumn("SELECT COUNT(DISTINCT `table_name`) AS count FROM `information_schema`.`columns` WHERE `table_schema` = '$dbName'");
-
-                if ($isEmpty !== '0' && !$overwrite) {
-                    throw new SystemDBException(
-                        $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
-                    );
-                }
+            }else{
+                $isEmpty = '0';
             }
         } catch (\Exception $e) {
             throw new SystemDBException($e->getMessage());
+        }
+
+
+        if ($isEmpty !== '0' && !$overwrite) {
+            throw new SystemDBAlreadyExists(
+                $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
+            );
         }
 
         return true;

@@ -136,7 +136,7 @@ function openConfirmModal () {
         }
       },
       {
-        text: 'Ok',
+        text: 'Fortfahren',
         'class': 'blau',
         click: function () {
           $(this).dialog('close')

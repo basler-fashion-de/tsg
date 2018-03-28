@@ -9,3 +9,7 @@
         <div class="content"></div>
     </div>
 </div>
+
+<div class="db-overwrite-error" style="display: none">
+    {s name="dbOverwriteError" namespace="blauband/ocs"}{/s}
+</div>

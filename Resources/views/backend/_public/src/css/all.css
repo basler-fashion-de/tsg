@@ -78,13 +78,12 @@ progress {
 .ui-button {
     border-radius: 4px;
     box-shadow: 2px 2px grey;
-    margin-right: 4px;
 
     font-size: 14px !important;
     text-transform: uppercase;
 }
 
-.ui-button:hover {
+.ui-button:hover:not(.ui-dialog-titlebar-close) {
     box-shadow: 4px 4px grey;
     position: relative;
     top: -2px;

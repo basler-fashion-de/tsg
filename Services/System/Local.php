@@ -147,7 +147,6 @@ class Local extends SystemService implements SystemServiceInterface
 
         $systemNameUrl = strtolower(str_replace([' '], ['-'], $systemName));
 
-
         if ($dbRemote) {
             $guestConnection = $this->ocsApiService->createDatabase();
             $dbHost = $guestConnection->getHost();
@@ -161,8 +160,8 @@ class Local extends SystemService implements SystemServiceInterface
         $destinationPath = $this->docRoot . '/' . $systemNameUrl;
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
-        $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
         $this->systemValidation->validatePath($destinationPath);
+        $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
 
         try {
             $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $parameters);
@@ -268,7 +267,7 @@ class Local extends SystemService implements SystemServiceInterface
     private function duplicateMediaFolder(System $systemModel, $sourcePath, $destinationPath)
     {
         $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_GUEST_MEDIA_FOLDER);
-        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath.'/media', $destinationPath.'/media');
+        $this->codebaseDuplicationService->duplicateCodeBase($sourcePath . '/media', $destinationPath . '/media');
 
         $systemModel->setMediaFolderDuplicated(true);
         $this->modelManager->flush($systemModel);
@@ -359,7 +358,7 @@ class Local extends SystemService implements SystemServiceInterface
                     $this->createHtPasswd($systemModel, $systemModel->getPath());
                     $this->preventMail($systemModel, $systemModel->getStartParameter()['preventMail']);
 
-                    if(!$systemModel->getStartParameter()['skipMediaFolder']){
+                    if (!$systemModel->getStartParameter()['skipMediaFolder']) {
                         $this->duplicateMediaFolder($systemModel, $this->docRoot, $systemModel->getPath());
                     }
 
@@ -372,7 +371,7 @@ class Local extends SystemService implements SystemServiceInterface
                     $this->modelManager->remove($systemModel);
                     $this->modelManager->flush($systemModel);
 
-                    $this->pluginLogger->addError("Blauband OCS: ".$e->getMessage());
+                    $this->pluginLogger->addError("Blauband OCS: " . $e->getMessage());
 
                     throw $e;
                 }
@@ -380,7 +379,8 @@ class Local extends SystemService implements SystemServiceInterface
         }
     }
 
-    public function executeDuplicateMediaFolder(){
+    public function executeDuplicateMediaFolder()
+    {
         $systemList = $this->modelManager->getRepository(System::class)->findAll();
 
         /** @var System $systemModel */

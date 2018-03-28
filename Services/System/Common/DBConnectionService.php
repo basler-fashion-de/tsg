@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
 
-//Verschlüsseln
 class DBConnectionService
 {
     /**
@@ -14,9 +13,15 @@ class DBConnectionService
      */
     private $snippets;
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets)
+    /**
+     * @var DBDuplicationService
+     */
+    private $dbDuplicationService;
+
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, DBDuplicationService $dbDuplicationService)
     {
         $this->snippets = $snippets;
+        $this->dbDuplicationService = $dbDuplicationService;
     }
 
     public function createConnection($dbHost, $dbUser, $dbPass, $dbName = null, $dbPort = 3306, $dbCharset = 'utf8'){
@@ -30,7 +35,7 @@ class DBConnectionService
             ], new Driver());
 
             if(!empty($dbName)){
-                $connection->exec("USE `$dbName`");
+                $this->dbDuplicationService->createDatabaseAndUse($connection, $dbName);
             }
         }catch (\Exception $e){
             throw new SystemDBException(

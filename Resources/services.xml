@@ -60,6 +60,7 @@
         <service id="blauband_one_click_system.db_connection_service"
                  class="BlaubandOneClickSystem\Services\System\Common\DBConnectionService">
             <argument type="service" id="snippets"/>
+            <argument type="service" id="blauband_one_click_system.db_duplication_service"/>
         </service>
 
         <!-- local -->

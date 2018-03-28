@@ -108,7 +108,8 @@
             <snippet>dboverwrite</snippet>
             <type>checkbox</type>
             <class>dblocal</class>
-            <default>true</default>
+            <default>false</default>
+            <hidden>true</hidden>
         </parameters>
 
         <parameters>

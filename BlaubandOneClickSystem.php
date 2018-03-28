@@ -7,6 +7,7 @@ use BlaubandOneClickSystem\Installers\CronJob;
 use BlaubandOneClickSystem\Installers\Mails;
 use BlaubandOneClickSystem\Services\ConfigService;
 use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
+use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
 use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UninstallContext;
@@ -109,7 +110,13 @@ class BlaubandOneClickSystem extends Plugin
     {
         return new OCSApiService(
             $this->container->get('snippets'),
-            new DBConnectionService($this->container->get('snippets')),
+            new DBConnectionService(
+                $this->container->get('snippets'),
+                new DBDuplicationService(
+                    $this->container->get('snippets'),
+                    $this->getPath()
+                )
+            ),
             $this->container->get('dbal_connection'),
             $this->getPath() . '/Resources/token.lock'
         );

@@ -36,7 +36,28 @@ function registerCreateButton () {
           showInfoPanel(response.message)
           $('#name').val(response.shopTitle)
         } else {
-          showErrorPanel(response.error)
+          if(response.dbOverwrite){
+            openModal('.db-overwrite-error', [
+              {
+                text: 'Abbrechen',
+                click: function () {
+                  $(this).dialog('close')
+                }
+              },
+              {
+                text: 'Ok',
+                'class': 'blau',
+                click: function () {
+                  $(this).dialog('close')
+                  $('#dbOverwrite').prop('checked', true);
+                  $('#create-button').click()
+                  $('#back-button').click()
+                }
+              }
+            ]);
+          }else{
+            showErrorPanel(response.error)
+          }
         }
 
         loadSystemList()

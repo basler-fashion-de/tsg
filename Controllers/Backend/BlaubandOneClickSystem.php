@@ -9,6 +9,7 @@ use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
 use BlaubandOneClickSystem\Services\ConfigService;
 use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
 use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
+use BlaubandOneClickSystem\Exceptions\SystemDBAlreadyExists;
 
 class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
@@ -132,12 +133,21 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
                 ]
             );
         } catch (Exception $e) {
-            $this->sendJsonResponse(
-                [
-                    'success' => false,
-                    'error' => $e->getMessage()
-                ]
-            );
+            if ($e instanceof SystemDBAlreadyExists) {
+                $this->sendJsonResponse(
+                    [
+                        'success' => false,
+                        'dbOverwrite' => true
+                    ]
+                );
+            } else {
+                $this->sendJsonResponse(
+                    [
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    ]
+                );
+            }
         }
     }
 
