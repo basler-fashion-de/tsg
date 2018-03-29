@@ -47,4 +47,5 @@ function openModal(selector, buttons){
     modal: true,
     buttons: buttons
   })
+  $('button').blur()
 }

@@ -323,10 +323,16 @@ class Local extends SystemService implements SystemServiceInterface
         }
     }
 
+    /**
+     * @param $systemModel System
+     * @param $state
+     */
     private function changeSystemState($systemModel, $state)
     {
         $systemModel->setState($state);
         $this->modelManager->flush($systemModel);
+
+        $this->pluginLogger->addInfo('Blauband OCS: System ' . $systemModel->getName(). ' changed state '.$state);
     }
 
     /**

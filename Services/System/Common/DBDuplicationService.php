@@ -4,6 +4,7 @@ namespace BlaubandOneClickSystem\Services\System\Common;
 
 use Doctrine\DBAL\Connection;
 use BlaubandOneClickSystem\Exceptions\SystemDBException;
+use Shopware\Components\Logger;
 
 class DBDuplicationService
 {
@@ -11,6 +12,11 @@ class DBDuplicationService
      * @var \Enlight_Components_Snippet_Manager
      */
     private $snippets;
+
+    /**
+     * @var $logger Logger
+     */
+    private $pluginLogger;
 
     /**
      * @var string
@@ -22,18 +28,21 @@ class DBDuplicationService
      */
     private $dumpPrefix = "BlaubandOneClickSystemDBDump";
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets, $pluginPath)
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, Logger $pluginLogger, $pluginPath)
     {
         $this->snippets = $snippets;
+        $this->pluginLogger = $pluginLogger;
         $this->pluginPath = $pluginPath;
     }
 
     public function createDatabaseAndUse(Connection $connection, $dbName){
         try{
             $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
+            $this->pluginLogger->addInfo('Blauband TSG: Database ' . $dbName . (empty($exists) ? ' dosnt exists' : ' exists'));
             
             if (empty($exists)) {
-                $connection->exec("CREATE DATABASE `$dbName` DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;");
+                $createResult = $connection->exec("CREATE DATABASE `$dbName` DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;");
+                $this->pluginLogger->addInfo('Blauband TSG: Database ' . $dbName . ' created with result ('.$createResult.')');
             }
         }catch (\Exception $e){
             throw new SystemDBException(
@@ -59,8 +68,10 @@ class DBDuplicationService
         $passString = empty($sourcePass) ? '' : "-p$sourcePass";
 
         $exportCommand = "mysqldump -h$sourceHost -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumpPath";
+        $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will write with command: '.$exportCommand);
 
         $output = shell_exec($exportCommand);
+        $this->pluginLogger->addInfo('Blauband TSG: Result: '.$output);
 
         if($output !== null){
             @unlink($dumpName);
@@ -71,8 +82,13 @@ class DBDuplicationService
         $destinationUser = $destinationConnection->getUsername();
         $destinationPass = $destinationConnection->getPassword();
         $destinationDb = $destinationConnection->getDatabase();
-        $importCommand = "mysql -h$destinationHost -u$destinationUser -p$destinationPass $destinationDb < $dumpPath";
+        $passString = empty($destinationPass) ? '' : "-p$destinationPass";
+
+        $importCommand = "mysql -h$destinationHost -u$destinationUser $passString $destinationDb < $dumpPath";
+        $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will read with command: '.$importCommand);
+
         $output = shell_exec($importCommand);
+        $this->pluginLogger->addInfo('Blauband TSG: Result: '.$output);
 
         if($output !== null){
             @unlink($dumpName);

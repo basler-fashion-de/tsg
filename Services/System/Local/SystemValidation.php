@@ -119,7 +119,7 @@ class SystemValidation
             $exists = $guestConnection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
 
             if(
-                $hostConnection->getDatabase() == $guestConnection->getDatabase() &&
+                $hostConnection->getDatabase() == $dbName &&
                 $hostConnection->getHost() == $guestConnection->getHost()
             ){
                 throw new SystemDBException(

@@ -146,4 +146,6 @@ function openConfirmModal () {
       }
     ]
   })
+  $('button').blur()
+
 }
