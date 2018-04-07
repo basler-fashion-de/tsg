@@ -28,17 +28,16 @@
 
             {if !empty($system.htPasswdUsername) && !empty($system.htPasswdPassword)}
                 <label>{s name="htpasswdusername" namespace="blauband/ocs"}{/s}:</label>
-                {$system.htPasswdUsername}
-                <br/>
+                <div>{$system.htPasswdUsername}</div>
                 <label>{s name="htpasswdpassword" namespace="blauband/ocs"}{/s}:</label>
-                {$system.htPasswdPassword}
-                <br/>
+                <div>{$system.htPasswdPassword}</div>
             {/if}
 
             {if $system.state == 'ready'}
                 <br/>
                 <br/>
-                <label style="width: auto; padding-top: 8px">{s name="compareTitle" namespace="blauband/ocs"}{/s}:</label>
+                <label style="width: auto; padding-top: 8px">{s name="compareTitle" namespace="blauband/ocs"}{/s}
+                    :</label>
                 <div class="compare-button-wrapper">
                     <button class="compare-article-button compare-button ui-button ui-corner-all" data-id="{$system.id}"
                             data-group="article" data-title="{s name="compareArticle" namespace="blauband/ocs"}{/s}">
@@ -70,9 +69,11 @@
 
             <br/>
             <br/>
-            <label>{s name="name" namespace="blauband/ocs"}{/s}:</label> {$system.name}<br/>
-            <label>{s name="createDate" namespace="blauband/ocs"}{/s}
-                :</label> {$system.createDate|date_format:"%d.%m.%y %H:%M"}<br/>
+            <label>{s name="name" namespace="blauband/ocs"}{/s}:</label>
+            <div>{$system.name}</div>
+
+            <label>{s name="createDate" namespace="blauband/ocs"}{/s}:</label>
+            <div>{$system.createDate|date_format:"%d.%m.%y %H:%M"}</div>
 
 
             <br/>

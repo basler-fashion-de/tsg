@@ -22,6 +22,15 @@ label {
     display: inline-block
 }
 
+label + div,
+label + a {
+    width: calc(100% - 305px);
+    min-width: 400px;
+    display: inline-block;
+    word-break: break-all;
+    margin-bottom: 5px;
+}
+
 progress {
     display: block;
     width: 100%;
@@ -43,7 +52,6 @@ progress {
 }
 
 .button-right-wrapper {
-    float: right;
     text-align: right;
 }
 
@@ -99,6 +107,7 @@ progress {
 .ui-button.blau:not(:hover) {
     background: none;
     background-color: #46AFE1;
+    color: #ffffff;
 }
 
 /* Start Ansicht (Start Buttons) */
@@ -119,8 +128,7 @@ progress {
 .start-button {
     width: calc((100% - 80px) / 2);
     float: left;
-    padding-top: 18%;
-    padding-bottom: 23%;
+    padding: 18% 0 23% 0;
     margin-right: 40px;
 }
 
@@ -203,6 +211,10 @@ progress {
     margin: 4px 0
 }
 
+.compare-button-wrapper {
+    width: 100%;
+}
+
 /* Errors */
 #one-click-system .alerts .ui-state-highlight,
 #one-click-system .alerts .ui-state-error {
@@ -261,6 +273,33 @@ progress {
 #action-field #options-form,
 .ui-widget-content {
     border-color: #46AFE1;
+}
+
+/*  */
+@media (max-width: 1200px) {
+    .start-button-field {
+        width: 350px;
+    }
+
+    .content-field {
+        width: calc(100% - 350px);
+    }
+}
+
+@media (max-width: 700px) {
+    .start-button {
+        float: none;
+        width: calc(100% - 20px);
+        margin-bottom: 20px;
+    }
+
+    .start-button-field {
+        width: 30%;
+    }
+
+    .content-field {
+        width: 70%;
+    }
 }
 
 /*{/literal}*/
