@@ -88,21 +88,37 @@ progress {
 
     font-size: 14px !important;
     text-transform: uppercase;
+    background: linear-gradient(#AAAAAA, #888888);
+    color: #ffffff;
+}
+
+.ui-button:hover {
+    border-color: #E1E1E1;
     background: linear-gradient(#E1E1E1, #AAAAAA);
 }
 
-.ui-button.red:not(:hover) {
+.ui-button.red {
     background: none;
-    background: linear-gradient(#FF0000, #AA0000);
+    background: linear-gradient(#CC0000, #880000);
 
     color: #ffffff;
 }
 
-.ui-button.blau:not(:hover) {
+.ui-button.red:hover {
+    border-color: #FF0000;
+    background: linear-gradient(#FF0000, #BB0000);
+}
+
+.ui-button.blau {
     background: none;
+    background: linear-gradient(#1177AA, #004477);
+    color: #ffffff;
+}
+
+.ui-button.blau:hover {
     background: linear-gradient(#46AFE1, #1177AA);
-    color: #ffffff;
 }
+
 
 /* Start Ansicht (Start Buttons) */
 .header-title {
@@ -146,7 +162,6 @@ progress {
 #create-button,
 #show-options-button {
     background: url("../images/image.png") 50% 50%;
-    /*background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)), url("../images/image.png") 50% 50%;*/
     background-size: cover;
 }
 
