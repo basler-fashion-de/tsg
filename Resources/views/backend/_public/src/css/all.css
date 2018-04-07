@@ -92,7 +92,8 @@ progress {
 
 .ui-button.red:not(:hover) {
     background: none;
-    background-color: #FF7777;
+    background-color: #FF0000;
+    color: #ffffff;
 }
 
 .ui-button.blau:not(:hover) {
