@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <mails>
-        <name>blaubandOCSStarted</name>
+        <name>blaubandTsgStarted</name>
         <fromMail>{config name=mail}</fromMail>
         <fromName>{config name=shopName}</fromName>
-        <subject>Blauband Test-System</subject>
-        <htmlContent>/Resources/views/mail/blauband_ocs_started_html.tpl</htmlContent>
-        <plainContent>/Resources/views/mail/blauband_ocs_started_plain.tpl</plainContent>
+        <subject>Blauband Testsystem Generator</subject>
+        <htmlContent>/Resources/views/mail/blauband_tsg_started_html.tpl</htmlContent>
+        <plainContent>/Resources/views/mail/blauband_tsg_started_plain.tpl</plainContent>
         <isHtml>true</isHtml>
     </mails>
 
     <mails>
-        <name>blaubandOCSFinished</name>
+        <name>blaubandTsgFinished</name>
         <fromMail>{config name=mail}</fromMail>
         <fromName>{config name=shopName}</fromName>
-        <subject>Blauband Test-System</subject>
-        <htmlContent>/Resources/views/mail/blauband_ocs_finished_html.tpl</htmlContent>
-        <plainContent>/Resources/views/mail/blauband_ocs_finished_plain.tpl</plainContent>
+        <subject>Blauband Testsystem Generator</subject>
+        <htmlContent>/Resources/views/mail/blauband_tsg_finished_html.tpl</htmlContent>
+        <plainContent>/Resources/views/mail/blauband_tsg_finished_plain.tpl</plainContent>
         <isHtml>true</isHtml>
     </mails>
 </config>
