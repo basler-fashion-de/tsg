@@ -72,6 +72,11 @@ class OCSApiService
             );
         }
 
+        if($result['success'] === false){
+            throw new SystemDBException(
+                $this->snippets->getNamespace('blauband/ocs')->get(trim($result['message'], '__'))
+            );
+        }
 
         return $this->connectionService->createConnection($result['host'], $result['username'], $result['password'], $result['dbname']);
     }
