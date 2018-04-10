@@ -78,7 +78,7 @@ class OCSApiService
             );
         }
 
-        return $this->connectionService->createConnection($result['host'], $result['username'], $result['password'], $result['dbname']);
+        return $this->connectionService->createConnection($result['host'], $result['username'], $result['password'], $result['dbname'], $result['port']);
     }
 
     public function register()

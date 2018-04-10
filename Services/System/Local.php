@@ -156,6 +156,7 @@ class Local extends SystemService implements SystemServiceInterface
         } else {
             $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
         }
+        $dbPort = $guestConnection->getPort();
 
         $destinationPath = $this->docRoot . '/' . $systemNameUrl;
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
@@ -164,7 +165,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validateDBData($this->hostConnection, $guestConnection, $dbName, $dbOverwrite);
 
         try {
-            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $parameters);
+            $systemModel = $this->createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbPort, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $parameters);
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
 
             if ($sendSummery) {
@@ -211,7 +212,7 @@ class Local extends SystemService implements SystemServiceInterface
      */
 
 
-    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $startParameters)
+    private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbPort, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $startParameters)
     {
         $systemModel = new System();
         $systemModel->setName($systemName);
@@ -221,6 +222,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setState(SystemService::SYSTEM_STATE_CREATING_HOST_DB_ENTRY);
 
         $systemModel->setDbHost($dbHost);
+        $systemModel->setDbPort($dbPort);
         $systemModel->setDbUsername($dbUser);
         $systemModel->setDbPassword($dbPass);
         $systemModel->setDbName($dbName);

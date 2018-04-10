@@ -60,6 +60,12 @@ class System extends ModelEntity
 
     /**
      * @var
+     * @ORM\Column(name="db_port", type="text", nullable=true)
+     */
+    private $dbPort;
+
+    /**
+     * @var
      * @ORM\Column(name="db_user", type="text")
      */
     private $dbUsername;

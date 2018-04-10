@@ -59,6 +59,7 @@ class DBDuplicationService
 
     public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = []){
         $sourceHost = $sourceConnection->getHost();
+        $sourcePort = $sourceConnection->getPort();
         $sourceUser = $sourceConnection->getUsername();
         $sourcePass = $sourceConnection->getPassword();
         $sourceDb = $sourceConnection->getDatabase();
@@ -67,7 +68,7 @@ class DBDuplicationService
         $dumpPath = $this->pluginPath.'/'.$dumpName;
         $passString = empty($sourcePass) ? '' : "-p$sourcePass";
 
-        $exportCommand = "mysqldump -h$sourceHost -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumpPath";
+        $exportCommand = "mysqldump -h$sourceHost -P$sourcePort -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumpPath";
         $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will write with command: '.$exportCommand);
 
         $output = shell_exec($exportCommand);
@@ -79,12 +80,13 @@ class DBDuplicationService
         }
 
         $destinationHost = $destinationConnection->getHost();
+        $destinationPort = $destinationConnection->getPort();
         $destinationUser = $destinationConnection->getUsername();
         $destinationPass = $destinationConnection->getPassword();
         $destinationDb = $destinationConnection->getDatabase();
         $passString = empty($destinationPass) ? '' : "-p$destinationPass";
 
-        $importCommand = "mysql -h$destinationHost -u$destinationUser $passString $destinationDb < $dumpPath";
+        $importCommand = "mysql -h$destinationHost -P$destinationPort -u$destinationUser $passString $destinationDb < $dumpPath";
         $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will read with command: '.$importCommand);
 
         $output = shell_exec($importCommand);
