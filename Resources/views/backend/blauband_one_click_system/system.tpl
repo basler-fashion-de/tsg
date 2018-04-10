@@ -60,10 +60,10 @@
                         {s name="compareTheme" namespace="blauband/ocs"}{/s}
                     </button>
 
-                    <button class="compare-plugin-button compare-button ui-button ui-corner-all" data-id="{$system.id}"
-                            data-group="plugins" data-title="{s name="comparePlugin" namespace="blauband/ocs"}{/s}">
-                        {s name="comparePlugin" namespace="blauband/ocs"}{/s}
-                    </button>
+                    {*<button class="compare-plugin-button compare-button ui-button ui-corner-all" data-id="{$system.id}"*}
+                            {*data-group="plugins" data-title="{s name="comparePlugin" namespace="blauband/ocs"}{/s}">*}
+                        {*{s name="comparePlugin" namespace="blauband/ocs"}{/s}*}
+                    {*</button>*}
                 </div>
             {/if}
 

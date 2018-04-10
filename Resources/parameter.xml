@@ -85,7 +85,8 @@
             <title>sendSummery</title>
             <snippet>sendsummery</snippet>
             <type>checkbox</type>
-            <default>true</default>
+            <default>false</default>
+            <!--Wird in einer anderen Version -->
         </parameters>
     </groups>
 
