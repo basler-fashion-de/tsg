@@ -83,19 +83,19 @@
 
 
             <span class="ui-icon {if $startParams.editMode}ui-icon-check{else}ui-icon-close{/if}"></span>
-            <label style="width: 50%">{s name="editmodeactiveted" namespace="blauband/ocs"}{/s}:</label><br/>
+            <label style="width: 50%">{s name="editmodeactiveted" namespace="blauband/ocs"}{/s}</label><br/>
 
             <span class="ui-icon {if $startParams.serviceMode}ui-icon-check{else}ui-icon-close{/if}"></span>
-            <label style="width: 50%">{s name="servicemodeactiveted" namespace="blauband/ocs"}{/s}:</label> <br/>
+            <label style="width: 50%">{s name="servicemodeactiveted" namespace="blauband/ocs"}{/s}</label> <br/>
 
             <span class="ui-icon {if $startParams.preventMail}ui-icon-check{else}ui-icon-close{/if}"></span>
-            <label style="width: 50%">{s name="mailprevented" namespace="blauband/ocs"}{/s}:</label> <br/>
+            <label style="width: 50%">{s name="mailprevented" namespace="blauband/ocs"}{/s}</label> <br/>
 
             <span class="ui-icon {if $startParams.preventGoogleIndex}ui-icon-check{else}ui-icon-close{/if}"></span>
-            <label style="width: 50%">{s name="googleindexprevented" namespace="blauband/ocs"}{/s}:</label> <br/>
+            <label style="width: 50%">{s name="googleindexprevented" namespace="blauband/ocs"}{/s}</label> <br/>
 
             <span class="ui-icon {if !empty($system.htPasswdUsername) && !empty($system.htPasswdPassword)}ui-icon-check{else}ui-icon-close{/if}"></span>
-            <label style="width: 50%">{s name="htPasswordSecure" namespace="blauband/ocs"}{/s}:</label> <br/>
+            <label style="width: 50%">{s name="htPasswordSecure" namespace="blauband/ocs"}{/s}</label> <br/>
 
         </div>
     </div>
