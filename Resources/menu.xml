@@ -7,7 +7,7 @@
             <label lang="de">Testsystem-Generator</label>
             <controller>BlaubandOneClickSystem</controller>
             <action>index</action>
-            <class>sprite-application-block</class>
+            <class>\" style=\"background: url('/custom/plugins/BlaubandOneClickSystem/plugin.png') no-repeat scroll 0 0 transparent !important;</class>
             <parent identifiedBy="controller">ConfigurationMenu</parent>
             <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "Testsystem-Generator"})</onclick>
         </entry>
