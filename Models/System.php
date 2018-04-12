@@ -246,6 +246,22 @@ class System extends ModelEntity
     /**
      * @return mixed
      */
+    public function getDbPort()
+    {
+        return $this->dbPort;
+    }
+
+    /**
+     * @param mixed $dbPort
+     */
+    public function setDbPort($dbPort)
+    {
+        $this->dbPort = $dbPort;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getDbUsername()
     {
         return $this->dbUsername;

@@ -93,6 +93,11 @@ class BlaubandOneClickSystem extends Plugin
                 (new Models($this->container->get('models')))->update();
                 return true;
             },
+
+            '1.0.4' => function () {
+                (new Models($this->container->get('models')))->update();
+                return true;
+            },
         ];
 
         foreach ($versions as $version => $callback) {
@@ -114,6 +119,7 @@ class BlaubandOneClickSystem extends Plugin
                 $this->container->get('snippets'),
                 new DBDuplicationService(
                     $this->container->get('snippets'),
+                    $this->container->get('pluginlogger'),
                     $this->getPath()
                 )
             ),

@@ -114,14 +114,18 @@ function openConfirmModal () {
   var id = 'modal-confirm'
   var selector = '#' + id
   var values = $('#options-form').clone()
+
+  //@TODO in .ini umziehen
+  var sureText = "<p>Sind Sie sicher dass Sie das System mit folgenden Einstellungen erstellen wollen.</p>"
   values.find('input').attr('disabled', 'disabled')
-  values.find(':hidden').show()
+  //values.find(':hidden').show()
   values.find('label[for=type]').hide()
   values.find('select#type').hide()
 
   $(selector).remove()
   $('body').append('<div id="' + id + '"></div>')
   $(selector).html(values)
+  $(selector).prepend(sureText)
 
   $(selector).dialog({
     resizable: false,

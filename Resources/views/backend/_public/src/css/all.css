@@ -98,7 +98,6 @@ progress {
 }
 
 .ui-button.red {
-    background: none;
     background: linear-gradient(#CC0000, #880000);
 
     color: #ffffff;
@@ -110,13 +109,16 @@ progress {
 }
 
 .ui-button.blau {
-    background: none;
     background: linear-gradient(#1177AA, #004477);
     color: #ffffff;
 }
 
 .ui-button.blau:hover {
     background: linear-gradient(#46AFE1, #1177AA);
+}
+
+.ui-dialog-titlebar-close .ui-button-icon {
+    background-color: #FFFFFF;
 }
 
 

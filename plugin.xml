@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
     <label lang="de">Testsystem-Generator</label>
     <label lang="en">Testsystem-Generator</label>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <copyright>(c) by Blauband GmbH</copyright>
     <license>proprietary</license>
     <link>http://www.blauband.com</link>

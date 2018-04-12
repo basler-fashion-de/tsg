@@ -10,7 +10,7 @@ class OCSApiService
 {
     private $schema = 'http://';
 
-    private $apiIp = '18.197.104.182';
+    private $apiIp = '18.184.61.86:3361';
 
     private $dbApi = '/api/db';
 
@@ -66,7 +66,7 @@ class OCSApiService
             }
 
             $result = json_decode($result, true);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/ocs')->get('unableToCreateRemoteDatabase')
             );
@@ -105,7 +105,6 @@ class OCSApiService
             );
 
             if (empty($owner) || empty($owner[0])) {
-                var_dump($owner);
                 throw new \Exception('Missing Parameter');
             }
 
@@ -135,7 +134,7 @@ class OCSApiService
             } else {
                 throw new \Exception('Error');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Alle Errors abfangen und ohne genauere Beschreibung ausgeben.
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/ocs')->get('unableToRegisterToApi')
@@ -177,7 +176,7 @@ class OCSApiService
             } else {
                 throw new \Exception('');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/ocs')->get('unableToCreateRemoteDatabase')
             );
