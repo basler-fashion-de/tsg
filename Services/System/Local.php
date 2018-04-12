@@ -357,7 +357,8 @@ class Local extends SystemService implements SystemServiceInterface
                         $systemModel->getDbHost(),
                         $systemModel->getDbUsername(),
                         $systemModel->getDbPassword(),
-                        $systemModel->getDbName()
+                        $systemModel->getDbName(),
+                        $systemModel->getDbPort()
                     );
 
                     $this->duplicateDB($systemModel, $guestConnection);
