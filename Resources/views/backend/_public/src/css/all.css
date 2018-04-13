@@ -88,8 +88,11 @@ progress {
 
     font-size: 14px !important;
     text-transform: uppercase;
-    background: linear-gradient(#AAAAAA, #888888);
     color: #ffffff;
+}
+
+.ui-button:not(.ui-state-active) {
+    background: linear-gradient(#AAAAAA, #888888);
 }
 
 .ui-button:hover {
@@ -227,20 +230,24 @@ progress {
     width: 100%;
 }
 
+.media-button-wrapper {
+    margin-top: 20px;
+}
+
 /* Errors */
-#one-click-system .alerts .ui-state-highlight,
-#one-click-system .alerts .ui-state-error {
+#tsg .alerts .ui-state-highlight,
+#tsg .alerts .ui-state-error {
     padding: 10px;
     display: none;
 }
 
-#one-click-system .alerts.shown .ui-state-highlight,
-#one-click-system .alerts.shown .ui-state-error {
+#tsg .alerts.shown .ui-state-highlight,
+#tsg .alerts.shown .ui-state-error {
     display: block;
 }
 
-#one-click-system .alerts .ui-state-highlight .ui-icon,
-#one-click-system .alerts .ui-state-error .ui-icon {
+#tsg .alerts .ui-state-highlight .ui-icon,
+#tsg .alerts .ui-state-error .ui-icon {
     float: left;
     margin-top: 0px;
     margin-right: 10px;

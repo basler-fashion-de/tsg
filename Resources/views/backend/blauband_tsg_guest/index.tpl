@@ -5,7 +5,7 @@
 </head>
 
 <body>
-<div id="one-click-system"
+<div id="tsg"
      data-mailUrl="{url action=allowMail}"
 >
     <div class="alerts ui-widget shown">
@@ -26,15 +26,11 @@
     </fieldset>
 
     {if $mails}
-        <div class="mail-list">
-            <h4>
-                {s name="local_saved_mails" namespace="blauband/tsg"}{/s}
-            </h4>
+        <h4>
+            {s name="local_saved_mails" namespace="blauband/tsg"}{/s}
+        </h4>
 
-
-            in eine accordion packen
-
-
+        <div class="mail-list" id="mails">
             {include file="backend/blauband_tsg_guest/mails.tpl"}
         </div>
     {/if}

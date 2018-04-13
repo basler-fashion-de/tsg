@@ -72,6 +72,7 @@ class SetUpSystemService
         $configPath = $system->getPath() . "/config.php";
         $config = include $configPath;
         $config['db']['host'] = $guestConnection->getHost();
+        $config['db']['port'] = $guestConnection->getPort();
         $config['db']['username'] = $guestConnection->getUsername();
         $config['db']['password'] = $guestConnection->getPassword();
         $config['db']['dbname'] = $guestConnection->getDatabase();

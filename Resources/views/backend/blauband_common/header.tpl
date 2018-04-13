@@ -11,7 +11,7 @@
 <script type="text/javascript" src="{link file="backend/_public/src/js/autocomplete-system-names.js"}"></script>
 <script type="text/javascript" src="{link file="backend/_public/src/js/common.js"}"></script>
 <script type="text/javascript" src="{link file="backend/_public/src/js/events.js"}"></script>
-<script type="text/javascript" src="{link file="backend/_public/src/js/oneclicksystem.js"}"></script>
-<script type="text/javascript" src="{link file="backend/_public/src/js/oneclicksystemguest.js"}"></script>
+<script type="text/javascript" src="{link file="backend/_public/src/js/tsg.js"}"></script>
+<script type="text/javascript" src="{link file="backend/_public/src/js/tsg-guest.js"}"></script>
 
 <link rel="stylesheet" href="{link file="backend/_public/src/css/all.css"}">

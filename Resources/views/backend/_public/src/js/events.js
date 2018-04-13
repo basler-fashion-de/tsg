@@ -24,7 +24,7 @@ function registerCreateButton () {
     var btn = $(this)
     btn.button('option', 'disabled', true)
 
-    var url = $('#one-click-system').data('createsystemurl')
+    var url = $('#tsg').data('createsystemurl')
     var params = $('form#options-form').serialize()
 
     $.ajax({
@@ -100,7 +100,7 @@ function registerDeleteButton () {
     hideErrorPanel()
     hideInfoPanel()
 
-    var url = $('#one-click-system').data('deletesystemurl')
+    var url = $('#tsg').data('deletesystemurl')
     var params = {'id': $(this).data('id')}
 
     $.ajax({
@@ -127,7 +127,7 @@ function registerMediaButton () {
     hideErrorPanel()
     hideInfoPanel()
 
-    var url = $('#one-click-system').data('duplicatemediafolderurl')
+    var url = $('#tsg').data('duplicatemediafolderurl')
     var params = {'id': $(this).data('id')}
 
     $.ajax({
@@ -176,7 +176,7 @@ function registerRemoteDbCheckbox () {
 function registerMailButton () {
   $('[name="radio-mail"]').on('change', function () {
     var me = this
-    var url = $('#one-click-system').data('mailurl')
+    var url = $('#tsg').data('mailurl')
     var params = {'allow': $(me).attr('id')}
 
     $.ajax({

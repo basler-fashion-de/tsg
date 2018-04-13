@@ -79,9 +79,8 @@
             <br/>
             <br/>
             <label class="full-width">{s name="startsettings" namespace="blauband/tsg"}{/s}:</label><br/>
+
             {assign startParams unserialize($system.startParameter)}
-
-
             <span class="ui-icon {if $startParams.editMode}ui-icon-check{else}ui-icon-close{/if}"></span>
             <label style="width: 50%">{s name="editmodeactiveted" namespace="blauband/tsg"}{/s}</label><br/>
 
@@ -97,6 +96,16 @@
             <span class="ui-icon {if !empty($system.htPasswdUsername) && !empty($system.htPasswdPassword)}ui-icon-check{else}ui-icon-close{/if}"></span>
             <label style="width: 50%">{s name="htPasswordSecure" namespace="blauband/tsg"}{/s}</label> <br/>
 
+            {if $system.state == 'ready' && !$system.mediaFolderDuplicated}
+                <div class="media-button-wrapper">
+                    <button class="media-button ui-button ui-corner-all" data-id="{$system.id}">
+                        {s name="duplicateMedia" namespace="blauband/tsg"}{/s}
+                    </button>
+                </div>
+            {else}
+                <span class="ui-icon ui-icon-check"></span>
+                <label style="width: 50%">{s name="mediacopied" namespace="blauband/tsg"}{/s}</label> <br/>
+            {/if}
         </div>
     </div>
 </div>

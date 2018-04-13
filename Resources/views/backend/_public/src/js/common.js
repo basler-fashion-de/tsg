@@ -1,17 +1,17 @@
 function hideErrorPanel () {
-  $('#one-click-system .alerts .ui-state-error').hide()
-  $('#one-click-system .alerts .ui-state-error .content').text('')
+  $('#tsg .alerts .ui-state-error').hide()
+  $('#tsg .alerts .ui-state-error .content').text('')
 }
 
 function hideInfoPanel () {
-  $('#one-click-system .alerts .ui-state-highlight').hide()
-  $('#one-click-system .alerts .ui-state-highlight .content').text('')
+  $('#tsg .alerts .ui-state-highlight').hide()
+  $('#tsg .alerts .ui-state-highlight .content').text('')
 }
 
 function showErrorPanel (text) {
   if (text !== '') {
-    $('#one-click-system .alerts .ui-state-error .content').text(text)
-    $('#one-click-system .alerts .ui-state-error').show()
+    $('#tsg .alerts .ui-state-error .content').text(text)
+    $('#tsg .alerts .ui-state-error').show()
 
     setTimeout(function () {
       hideErrorPanel();
@@ -21,8 +21,8 @@ function showErrorPanel (text) {
 
 function showInfoPanel (text) {
   if (text !== '') {
-    $('#one-click-system .alerts .ui-state-highlight .content').text(text)
-    $('#one-click-system .alerts .ui-state-highlight').show()
+    $('#tsg .alerts .ui-state-highlight .content').text(text)
+    $('#tsg .alerts .ui-state-highlight').show()
 
     setTimeout(function () {
       hideInfoPanel();

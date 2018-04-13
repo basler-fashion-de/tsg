@@ -16,13 +16,15 @@ $(function () {
 })
 
 function startUpdateInterval () {
-  setInterval(function () {
-    loadSystemList()
-  }, 5000)
+  if($('#tsg').data('systemlisturl')){
+    setInterval(function () {
+      loadSystemList()
+    }, 5000)
+  }
 }
 
 function loadSystemList (callback) {
-  var url = $('#one-click-system').data('systemlisturl')
+  var url = $('#tsg').data('systemlisturl')
 
   $.ajax({
     type: 'post',
@@ -45,7 +47,7 @@ function handleSystemLoadListResponse (response) {
   //Hash generieren um einen Abgleich mit dem letzten Response zu haben
   var newHtml = response.html.trim()
   var hash = 0, i, chr, len
-  if (newHtml.length === 0) return hash
+  //if (newHtml.length === 0) return hash
   for (i = 0, len = newHtml.length; i < len; i++) {
     chr = newHtml.charCodeAt(i)
     hash = ((hash << 5) - hash) + chr
@@ -103,6 +105,13 @@ function activateAccordion () {
   })
 
   $('.file_compare, .table_compare').accordion({
+    header: '.title',
+    collapsible: true,
+    active: false,
+    animate: false
+  })
+
+  $('#mails').accordion({
     header: '.title',
     collapsible: true,
     active: false,

@@ -269,7 +269,7 @@ class Shopware_Controllers_Backend_BlaubandTSG extends BlaubandEnlightController
         ) {
             $redirect = array(
                 'module' => 'backend',
-                'controller' => 'BlaubandTSGGuest',
+                'controller' => 'BlaubandTsgGuest',
                 'action' => 'index',
             );
             $this->redirect($redirect);

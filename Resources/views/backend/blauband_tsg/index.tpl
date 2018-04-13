@@ -6,7 +6,7 @@
 
 <body>
 <div
-        id="one-click-system"
+        id="tsg"
         data-createSystemUrl="{url action=createSystem}"
         data-deleteSystemUrl="{url action=deleteSystem}"
         data-duplicateMediaFolderUrl="{url action=duplicateMediaFolder}"
