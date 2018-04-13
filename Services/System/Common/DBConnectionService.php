@@ -1,10 +1,10 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Common;
+namespace BlaubandTSG\Services\System\Common;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
-use BlaubandOneClickSystem\Exceptions\SystemDBException;
+use BlaubandTSG\Exceptions\SystemDBException;
 
 class DBConnectionService
 {
@@ -39,7 +39,7 @@ class DBConnectionService
             }
         }catch (\Exception $e){
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get('unableToConnect')
+                $this->snippets->getNamespace('blauband/tsg')->get('unableToConnect')
             );
         }
 

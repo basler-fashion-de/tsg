@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System;
+namespace BlaubandTSG\Services\System;
 
 class SystemService
 {

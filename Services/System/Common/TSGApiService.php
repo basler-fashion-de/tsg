@@ -1,12 +1,12 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Common;
+namespace BlaubandTSG\Services\System\Common;
 
-use BlaubandOneClickSystem\Exceptions\SystemDBException;
-use BlaubandOneClickSystem\Exceptions\TokenException;
+use BlaubandTSG\Exceptions\SystemDBException;
+use BlaubandTSG\Exceptions\TokenException;
 use Doctrine\DBAL\Connection;
 
-class OCSApiService
+class TSGApiService
 {
     private $schema = 'http://';
 
@@ -68,13 +68,13 @@ class OCSApiService
             $result = json_decode($result, true);
         } catch (\Exception $e) {
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get('unableToCreateRemoteDatabase')
+                $this->snippets->getNamespace('blauband/tsg')->get('unableToCreateRemoteDatabase')
             );
         }
 
         if($result['success'] === false){
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get(trim($result['message'], '__'))
+                $this->snippets->getNamespace('blauband/tsg')->get(trim($result['message'], '__'))
             );
         }
 
@@ -137,7 +137,7 @@ class OCSApiService
         } catch (\Exception $e) {
             // Alle Errors abfangen und ohne genauere Beschreibung ausgeben.
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get('unableToRegisterToApi')
+                $this->snippets->getNamespace('blauband/tsg')->get('unableToRegisterToApi')
             );
         }
 
@@ -178,7 +178,7 @@ class OCSApiService
             }
         } catch (\Exception $e) {
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get('unableToCreateRemoteDatabase')
+                $this->snippets->getNamespace('blauband/tsg')->get('unableToCreateRemoteDatabase')
             );
         }
 
@@ -191,7 +191,7 @@ class OCSApiService
 
         if (empty($token)) {
             throw new TokenException(
-                $this->snippets->getNamespace('blauband/ocs')->get('missingToken')
+                $this->snippets->getNamespace('blauband/tsg')->get('missingToken')
             );
         } else {
             return $token;
@@ -202,7 +202,7 @@ class OCSApiService
     {
         if (empty($token)) {
             throw new TokenException(
-                $this->snippets->getNamespace('blauband/ocs')->get('missingToken')
+                $this->snippets->getNamespace('blauband/tsg')->get('missingToken')
             );
         }
 

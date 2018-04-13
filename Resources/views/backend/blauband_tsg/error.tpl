@@ -11,5 +11,5 @@
 </div>
 
 <div class="db-overwrite-error" style="display: none">
-    {s name="dbOverwriteError" namespace="blauband/ocs"}{/s}
+    {s name="dbOverwriteError" namespace="blauband/tsg"}{/s}
 </div>

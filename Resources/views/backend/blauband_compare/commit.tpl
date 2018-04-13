@@ -13,7 +13,7 @@
         </div>
     </div>
 {else}
-    {s name="commitSuccess" namespace="blauband/ocs"}{/s}
+    {s name="commitSuccess" namespace="blauband/tsg"}{/s}
 {/if}
 </body>
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandTSG\Services\System\Local;
 
-use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
-use BlaubandOneClickSystem\Models\System;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
+use BlaubandTSG\Models\System;
 
 require_once(__DIR__ . '/../../../Library/php-email-parser-master/PlancakeEmailParser.php');
 
@@ -27,7 +27,7 @@ class MailService
         $mailPath = $path . '/mail';
         if (!@mkdir($mailPath) && !is_dir($mailPath)) {
             throw new SystemFileSystemException(
-                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathCanNotCreate'), $mailPath)
+                sprintf($this->snippets->getNamespace('blauband/tsg')->get('pathCanNotCreate'), $mailPath)
             );
         }
 
@@ -40,7 +40,7 @@ class MailService
 
         if ($result === false) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+                $this->snippets->getNamespace('blauband/tsg')->get('canNoWriteConfigPhp')
             );
         }
 
@@ -57,7 +57,7 @@ class MailService
 
         if ($result === false) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+                $this->snippets->getNamespace('blauband/tsg')->get('canNoWriteConfigPhp')
             );
         }
 

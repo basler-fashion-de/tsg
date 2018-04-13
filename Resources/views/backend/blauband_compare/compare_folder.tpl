@@ -5,7 +5,7 @@
 
     {if $compare.maxSize}
         <div class="diff">
-            {s name="maxFileSize" namespace="blauband/ocs"}{/s}
+            {s name="maxFileSize" namespace="blauband/tsg"}{/s}
         </div>
     {/if}
 

@@ -1,7 +1,7 @@
 {extends file="parent:frontend/index/header.tpl"}
 
 {block name="frontend_index_header_favicons"}
-    {if $blaubandOcsIsGuest == 'true'}
+    {if $blaubandTsgIsGuest == 'true'}
         <link rel="apple-touch-icon{if $theme.setPrecomposed}-precomposed{/if}"
               href="{link file=$theme.appleTouchIcon}">
         <link href="data:image/png;base64,AAABAAMAMDAAAAEAIACoJQAANgAAACAgAAABACAAqBAAAN4lAAAQEAAAAQAgAGgEAACGNgAAKAAA

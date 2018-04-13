@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Subscriber;
+namespace BlaubandTSG\Subscriber;
 
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Services\ConfigService;
 use Enlight\Event\SubscriberInterface;
 
 class Backend implements SubscriberInterface
@@ -21,10 +21,10 @@ class Backend implements SubscriberInterface
         $view = $controller->View();
 
         /** @var ConfigService $config */
-        $config = Shopware()->Container()->get('blauband_one_click_system.config_php_service');
-        $view->assign('blaubandOcsIsGuest', $config->get('blauband.ocs.isGuest'));
+        $config = Shopware()->Container()->get('blauband_tsg.config_php_service');
+        $view->assign('blaubandTsgIsGuest', $config->get('blauband.tsg.isGuest'));
 
-        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
-        $view->extendsTemplate('backend/blauband_one_click_system/icons.tpl');
+        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_tsg.plugin_dir') . '/Resources/views');
+        $view->extendsTemplate('backend/blauband_tsg/icons.tpl');
     }
 }

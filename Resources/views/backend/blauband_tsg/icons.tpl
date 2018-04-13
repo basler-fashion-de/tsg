@@ -1,5 +1,5 @@
 {block name="backend/base/header/favicon"}
-    {if $blaubandOcsIsGuest == 'true'}
+    {if $blaubandTsgIsGuest == 'true'}
         <link rel="icon"
               href="data:image/png;base64,AAABAAMAMDAAAAEAIACoJQAANgAAACAgAAABACAAqBAAAN4lAAAQEAAAAQAgAGgEAACGNgAAKAAA
 ADAAAABgAAAAAQAgAAAAAAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

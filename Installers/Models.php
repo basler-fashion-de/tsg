@@ -1,10 +1,10 @@
 <?php
 
-namespace BlaubandOneClickSystem\Installers;
+namespace BlaubandTSG\Installers;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System AS OCSSystem;
+use BlaubandTSG\Models\System AS TSGSystem;
 
 class Models
 {
@@ -32,7 +32,7 @@ class Models
     {
         $this->modelManager = $modelManager;
         $this->tool = new SchemaTool($this->modelManager);
-        $this->classes = [$this->modelManager->getClassMetadata(OCSSystem::class)];
+        $this->classes = [$this->modelManager->getClassMetadata(TSGSystem::class)];
     }
 
     /**

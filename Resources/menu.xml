@@ -2,14 +2,14 @@
 <menu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.2/engine/Shopware/Components/Plugin/schema/menu.xsd">
     <entries>
         <entry>
-            <name>BlaubandOneClickSystem</name>
+            <name>BlaubandTSG</name>
             <label lang="en">Testsystem-Generator</label>
             <label lang="de">Testsystem-Generator</label>
-            <controller>BlaubandOneClickSystem</controller>
+            <controller>BlaubandTSG</controller>
             <action>index</action>
-            <class>\" style=\"background: url('/custom/plugins/BlaubandOneClickSystem/plugin.png') no-repeat scroll 0 0 transparent !important;</class>
+            <class>\" style=\"background: url('/custom/plugins/BlaubandTSG/plugin.png') no-repeat scroll 0 0 transparent !important;</class>
             <parent identifiedBy="controller">ConfigurationMenu</parent>
-            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandOneClickSystem", { "title": "Testsystem-Generator"})</onclick>
+            <onclick>Shopware.ModuleManager.createSimplifiedModule("BlaubandTsg", { "title": "Testsystem-Generator"})</onclick>
         </entry>
     </entries>
 </menu>

@@ -1,20 +1,20 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System;
+namespace BlaubandTSG\Services\System;
 
-use BlaubandOneClickSystem\Services\ConfigService;
-use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
-use BlaubandOneClickSystem\Services\System\Local\HtAccessService;
-use BlaubandOneClickSystem\Services\System\Local\MailService;
-use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
-use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
-use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
-use BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService;
-use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
+use BlaubandTSG\Services\ConfigService;
+use BlaubandTSG\Services\System\Common\TSGApiService;
+use BlaubandTSG\Services\System\Local\HtAccessService;
+use BlaubandTSG\Services\System\Local\MailService;
+use BlaubandTSG\Services\System\Local\SetUpSystemService;
+use BlaubandTSG\Services\System\Common\DBConnectionService;
+use BlaubandTSG\Services\System\Common\DBDuplicationService;
+use BlaubandTSG\Services\System\Common\CodebaseDuplicationService;
+use BlaubandTSG\Services\System\Local\SystemValidation;
 use Doctrine\DBAL\Connection;
 use Shopware\Components\Logger;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System;
+use BlaubandTSG\Models\System;
 
 class Local extends SystemService implements SystemServiceInterface
 {
@@ -64,9 +64,9 @@ class Local extends SystemService implements SystemServiceInterface
     private $mailService;
 
     /**
-     * @var OCSApiService
+     * @var TSGApiService
      */
-    private $ocsApiService;
+    private $tsgApiService;
 
     /**
      * @var \Shopware_Components_TemplateMail
@@ -103,7 +103,7 @@ class Local extends SystemService implements SystemServiceInterface
         SetUpSystemService $setUpSystemService,
         HtAccessService $htAccessService,
         MailService $mailService,
-        OCSApiService $ocsApiService,
+        TSGApiService $tsgApiService,
         \Shopware_Components_TemplateMail $templateMail,
         ConfigService $mailConfigService,
         \Shopware_Components_Config $config,
@@ -120,7 +120,7 @@ class Local extends SystemService implements SystemServiceInterface
         $this->setUpSystemService = $setUpSystemService;
         $this->htAccessService = $htAccessService;
         $this->mailService = $mailService;
-        $this->ocsApiService = $ocsApiService;
+        $this->tsgApiService = $tsgApiService;
         $this->templateMail = $templateMail;
         $this->mailConfigService = $mailConfigService;
         $this->config = $config;
@@ -148,7 +148,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemNameUrl = strtolower(str_replace([' '], ['-'], $systemName));
 
         if ($dbRemote) {
-            $guestConnection = $this->ocsApiService->createDatabase();
+            $guestConnection = $this->tsgApiService->createDatabase();
             $dbHost = $guestConnection->getHost();
             $dbUser = $guestConnection->getUsername();
             $dbPass = $guestConnection->getPassword();
@@ -169,7 +169,7 @@ class Local extends SystemService implements SystemServiceInterface
             $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_CREATING_WAITING);
 
             if ($sendSummery) {
-                $this->sendMail($systemModel, 'blaubandOCSStarted');
+                $this->sendMail($systemModel, 'blaubandTSGStarted');
             }
         } catch (\Exception $e) {
             //Rollback
@@ -334,7 +334,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setState($state);
         $this->modelManager->flush($systemModel);
 
-        $this->pluginLogger->addInfo('Blauband OCS: System ' . $systemModel->getName(). ' changed state '.$state);
+        $this->pluginLogger->addInfo('Blauband TSG: System ' . $systemModel->getName(). ' changed state '.$state);
     }
 
     /**
@@ -374,13 +374,13 @@ class Local extends SystemService implements SystemServiceInterface
                     $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
 
                     if ($systemModel->getSummeryMail()) {
-                        $this->sendMail($systemModel, 'blaubandOCSFinished');
+                        $this->sendMail($systemModel, 'blaubandTSGFinished');
                     }
                 } catch (\Exception $e) {
                     $this->modelManager->remove($systemModel);
                     $this->modelManager->flush($systemModel);
 
-                    $this->pluginLogger->addError("Blauband OCS: " . $e->getMessage());
+                    $this->pluginLogger->addError("Blauband TSG: " . $e->getMessage());
 
                     throw $e;
                 }

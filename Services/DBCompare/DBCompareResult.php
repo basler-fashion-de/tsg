@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\DBCompare;
+namespace BlaubandTSG\Services\DBCompare;
 
 class DBCompareResult
 {

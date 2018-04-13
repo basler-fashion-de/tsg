@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Exceptions;
+namespace BlaubandTSG\Exceptions;
 
 class SystemNotFoundException extends \Exception
 {

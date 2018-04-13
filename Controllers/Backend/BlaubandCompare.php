@@ -1,15 +1,15 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandOneClickSystem\Services\SystemServiceInterface;
+use BlaubandTSG\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System;
-use BlaubandOneClickSystem\Services\DBCompare\DBCompareService;
-use BlaubandOneClickSystem\Services\FolderCompare\FolderCompareService;
-use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
-use BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService;
-use BlaubandOneClickSystem\Exceptions\MissingParameterException;
-use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
+use BlaubandTSG\Models\System;
+use BlaubandTSG\Services\DBCompare\DBCompareService;
+use BlaubandTSG\Services\FolderCompare\FolderCompareService;
+use BlaubandTSG\Services\System\Common\DBDuplicationService;
+use BlaubandTSG\Services\System\Common\CodebaseDuplicationService;
+use BlaubandTSG\Exceptions\MissingParameterException;
+use BlaubandTSG\Controllers\Backend\BlaubandEnlightControllerAction;
 
 class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
@@ -56,12 +56,12 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
         $this->modelManager = $this->container->get('models');
         $this->snippets = $this->container->get('snippets');
         $this->hostConnection = $this->container->get('dbal_connection');
-        $this->dbCompareService = $this->container->get('blauband_one_click_system.db_compare_service');
-        $this->folderCompareService = $this->container->get('blauband_one_click_system.folder_compare_service');
-        $this->pluginConfig = $this->container->get('blauband_one_click_system.compare_config_service');
-        $this->connectionService = $this->container->get('blauband_one_click_system.db_connection_service');
-        $this->dbDuplicationService = $this->container->get('blauband_one_click_system.db_duplication_service');
-        $this->codebaseDuplicationService = $this->container->get('blauband_one_click_system.codebase_duplication_service');
+        $this->dbCompareService = $this->container->get('blauband_tsg.db_compare_service');
+        $this->folderCompareService = $this->container->get('blauband_tsg.folder_compare_service');
+        $this->pluginConfig = $this->container->get('blauband_tsg.compare_config_service');
+        $this->connectionService = $this->container->get('blauband_tsg.db_connection_service');
+        $this->dbDuplicationService = $this->container->get('blauband_tsg.db_duplication_service');
+        $this->codebaseDuplicationService = $this->container->get('blauband_tsg.codebase_duplication_service');
         $this->docRoot = $this->container->getParameter('kernel.root_dir');
 
     }
@@ -79,7 +79,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
 
             if (empty($systemId) || empty($compareGroup)) {
                 throw new MissingParameterException(
-                    $this->snippets->getNamespace('blauband/ocs')->get('missingParameter')
+                    $this->snippets->getNamespace('blauband/tsg')->get('missingParameter')
                 );
             }
 
@@ -136,7 +136,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
 
             if (empty($systemId) || empty($compareGroup)) {
                 throw new MissingParameterException(
-                    $this->snippets->getNamespace('blauband/ocs')->get('missingParameter')
+                    $this->snippets->getNamespace('blauband/tsg')->get('missingParameter')
                 );
             }
 

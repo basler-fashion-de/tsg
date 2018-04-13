@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandTSG\Services\System\Local;
 
-use BlaubandOneClickSystem\Models\System;
+use BlaubandTSG\Models\System;
 use Doctrine\DBAL\Connection;
 
 class SetUpSystemService
@@ -75,14 +75,14 @@ class SetUpSystemService
         $config['db']['username'] = $guestConnection->getUsername();
         $config['db']['password'] = $guestConnection->getPassword();
         $config['db']['dbname'] = $guestConnection->getDatabase();
-        $config['blauband']['ocs']['isGuest'] = true;
-        $config['blauband']['ocs']['noIndex'] = $system->getStartParameter()['preventGoogleIndex'];
+        $config['blauband']['tsg']['isGuest'] = true;
+        $config['blauband']['tsg']['noIndex'] = $system->getStartParameter()['preventGoogleIndex'];
         $configData = "<?php\n\n return " . var_export($config, true) . ";";
         $result = file_put_contents($configPath, $configData);
 
         if ($result === false) {
             throw new SystemFileSystemException(
-                $this->snippets->getNamespace('blauband/ocs')->get('canNoWriteConfigPhp')
+                $this->snippets->getNamespace('blauband/tsg')->get('canNoWriteConfigPhp')
             );
         }
     }

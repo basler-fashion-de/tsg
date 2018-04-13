@@ -1,10 +1,10 @@
 <?php
 
-namespace BlaubandOneClickSystem\Installers;
+namespace BlaubandTSG\Installers;
 
 use Shopware\Models\Mail\Mail;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Services\ConfigService;
 
 class Mails
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services;
+namespace BlaubandTSG\Services;
 
 class CronJobHelperService
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace BlaubandOneClickSystem\Models;
+namespace BlaubandTSG\Models;
 
-use BlaubandOneClickSystem\Services\SystemServiceInterface;
+use BlaubandTSG\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="blauband_ocs_systems")
+ * @ORM\Table(name="blauband_tsg_systems")
  * @ORM\HasLifecycleCallbacks
  */
 class System extends ModelEntity
@@ -127,7 +127,7 @@ class System extends ModelEntity
     public function preRemoveEvent()
     {
         /** @var SystemServiceInterface $service */
-        $service = Shopware()->Container()->get("blauband_one_click_system." . $this->type . "_system_service");
+        $service = Shopware()->Container()->get("blauband_tsg." . $this->type . "_system_service");
         $service->deleteSystem($this);
     }
 

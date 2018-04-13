@@ -1,17 +1,17 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandOneClickSystem\Services\System\SystemService;
-use BlaubandOneClickSystem\Services\System\SystemServiceInterface;
+use BlaubandTSG\Services\System\SystemService;
+use BlaubandTSG\Services\System\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System;
-use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
-use BlaubandOneClickSystem\Services\ConfigService;
-use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
-use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
-use BlaubandOneClickSystem\Exceptions\SystemDBAlreadyExists;
+use BlaubandTSG\Models\System;
+use BlaubandTSG\Services\System\Local\SystemValidation;
+use BlaubandTSG\Services\ConfigService;
+use BlaubandTSG\Controllers\Backend\BlaubandEnlightControllerAction;
+use BlaubandTSG\Services\System\Local\SetUpSystemService;
+use BlaubandTSG\Exceptions\SystemDBAlreadyExists;
 
-class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
+class Shopware_Controllers_Backend_BlaubandTSG extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
     public function getWhitelistedCSRFActions()
     {
@@ -50,7 +50,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $this->View()->assign("systems", $systemListArray);
 
         /** @var ConfigService $connection */
-        $parameters = $this->container->get('blauband_one_click_system.parameter_config_service');
+        $parameters = $this->container->get('blauband_tsg.parameter_config_service');
         $groups = $parameters->get('groups');
 
         //Defaults überschreiben
@@ -73,7 +73,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         $this->View()->assign('actionFields', $groups);
 
         /** @var SetUpSystemService $setUpService */
-        $setUpService = $this->container->get('blauband_one_click_system.set_up_system_service');
+        $setUpService = $this->container->get('blauband_tsg.set_up_system_service');
         $this->View()->assign('shopTitle', $setUpService->getDefaultTestShopName());
     }
 
@@ -94,7 +94,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
         unset($params['action']);
 
         /** @var ConfigService $parameterService */
-        $parameterService = $this->container->get('blauband_one_click_system.parameter_config_service');
+        $parameterService = $this->container->get('blauband_tsg.parameter_config_service');
         $groups = $parameterService->get('groups');
 
         //On|Off zu true|false
@@ -113,7 +113,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
         try {
             /** @var SystemServiceInterface $localSystemService */
-            $systemService = $this->container->get("blauband_one_click_system." . $systemType . "_system_service");
+            $systemService = $this->container->get("blauband_tsg." . $systemType . "_system_service");
             $systemService->createSystem($systemName, $params);
 
             if ($params['autoFireCronJob']) {
@@ -121,13 +121,13 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             }
 
             /** @var SetUpSystemService $setUpService */
-            $setUpService = $this->container->get('blauband_one_click_system.set_up_system_service');
+            $setUpService = $this->container->get('blauband_tsg.set_up_system_service');
             $this->View()->assign('shopTitle', $setUpService->getDefaultTestShopName());
 
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('duplicateSuccess'), $systemName),
+                    'message' => sprintf($snippets->getNamespace('blauband/tsg')->get('duplicateSuccess'), $systemName),
                     'shopTitle' => $setUpService->getDefaultTestShopName()
 
                 ]
@@ -191,7 +191,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             /** @var Enlight_Components_Snippet_Manager $snippets */
             $snippets = $this->container->get('snippets');
             /** @var SystemValidation $validation */
-            $validation = $this->container->get('blauband_one_click_system.system_validation');
+            $validation = $this->container->get('blauband_tsg.system_validation');
 
             $systemId = $this->Request()->getParam('id');
 
@@ -208,7 +208,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
             $this->sendJsonResponse(
                 [
                     'success' => true,
-                    'message' => sprintf($snippets->getNamespace('blauband/ocs')->get('deleteSystemSuccess'), $systemModel->getName())
+                    'message' => sprintf($snippets->getNamespace('blauband/tsg')->get('deleteSystemSuccess'), $systemModel->getName())
                 ]
             );
         } catch (Exception $e) {
@@ -232,7 +232,7 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
             if (!empty($systemModelsArray)) {
                 $this->View()->assign('systems', $systemModelsArray);
-                $html = $this->View()->fetch('backend/blauband_one_click_system/system_list.tpl');
+                $html = $this->View()->fetch('backend/blauband_tsg/system_list.tpl');
             } else {
                 $html = '';
             }
@@ -255,8 +255,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
 
     public function fireCronJobAction()
     {
-        /** @var \BlaubandOneClickSystem\Services\CronJobHelperService $cronJobHelper */
-        $cronJobHelper = $this->container->get('blauband_one_click_system.cron_job_helper_service');
+        /** @var \BlaubandTSG\Services\CronJobHelperService $cronJobHelper */
+        $cronJobHelper = $this->container->get('blauband_tsg.cron_job_helper_service');
         $cronJobHelper->fire();
         $this->sendJsonResponse(['success' => true]);
     }
@@ -264,12 +264,12 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystem extends BlaubandEnligh
     private function checkGuestSystem()
     {
         if (
-            $this->container->hasParameter('shopware.blauband.ocs.isguest') &&
-            $this->container->getParameter('shopware.blauband.ocs.isguest')
+            $this->container->hasParameter('shopware.blauband.tsg.isguest') &&
+            $this->container->getParameter('shopware.blauband.tsg.isguest')
         ) {
             $redirect = array(
                 'module' => 'backend',
-                'controller' => 'BlaubandOneClickSystemGuest',
+                'controller' => 'BlaubandTSGGuest',
                 'action' => 'index',
             );
             $this->redirect($redirect);

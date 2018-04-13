@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Installers;
+namespace BlaubandTSG\Installers;
 
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Services\ConfigService;
 use Doctrine\DBAL\Connection;
 
 class CronJob

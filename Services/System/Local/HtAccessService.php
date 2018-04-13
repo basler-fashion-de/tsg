@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandTSG\Services\System\Local;
 
-use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
 
 class HtAccessService
 {
@@ -47,7 +47,7 @@ class HtAccessService
         if (!$fp) {
             throw new SystemFileSystemException(
                 sprintf(
-                    $this->snippets->getNamespace('blauband/ocs')->get('fileNotFoundOrCreated'),
+                    $this->snippets->getNamespace('blauband/tsg')->get('fileNotFoundOrCreated'),
                     $file
                 )
             );
@@ -64,7 +64,7 @@ class HtAccessService
         if (!$fp) {
             throw new SystemFileSystemException(
                 sprintf(
-                    $this->snippets->getNamespace('blauband/ocs')->get('fileNotFoundOrCreated'),
+                    $this->snippets->getNamespace('blauband/tsg')->get('fileNotFoundOrCreated'),
                     $file
                 ));
         }

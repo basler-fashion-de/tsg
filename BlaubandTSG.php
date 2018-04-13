@@ -1,25 +1,25 @@
 <?php
 
-namespace BlaubandOneClickSystem;
+namespace BlaubandTSG;
 
-use BlaubandOneClickSystem\Installers\Api;
-use BlaubandOneClickSystem\Installers\CronJob;
-use BlaubandOneClickSystem\Installers\Mails;
-use BlaubandOneClickSystem\Services\ConfigService;
-use BlaubandOneClickSystem\Services\System\Common\DBConnectionService;
-use BlaubandOneClickSystem\Services\System\Common\DBDuplicationService;
-use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
+use BlaubandTSG\Installers\Api;
+use BlaubandTSG\Installers\CronJob;
+use BlaubandTSG\Installers\Mails;
+use BlaubandTSG\Services\ConfigService;
+use BlaubandTSG\Services\System\Common\DBConnectionService;
+use BlaubandTSG\Services\System\Common\DBDuplicationService;
+use BlaubandTSG\Services\System\Common\TSGApiService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UninstallContext;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\UpdateContext;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use BlaubandOneClickSystem\Installers\Models;
+use BlaubandTSG\Installers\Models;
 
 /**
- * Shopware-Plugin BlaubandOneClickSystem.
+ * Shopware-Plugin BlaubandTSG.
  */
-class BlaubandOneClickSystem extends Plugin
+class BlaubandTSG extends Plugin
 {
 
     /**
@@ -27,7 +27,7 @@ class BlaubandOneClickSystem extends Plugin
      */
     public function build(ContainerBuilder $container)
     {
-        $container->setParameter('blauband_one_click_system.plugin_dir', $this->getPath());
+        $container->setParameter('blauband_tsg.plugin_dir', $this->getPath());
         parent::build($container);
     }
 
@@ -36,7 +36,7 @@ class BlaubandOneClickSystem extends Plugin
         $this->setup(null, $context->getCurrentVersion());
         parent::install($context);
 
-        (new Api($this->getOcsService()))->install();
+        (new Api($this->getTsgService()))->install();
 
         (new CronJob(
             $this->container->get('dbal_connection'),
@@ -56,7 +56,7 @@ class BlaubandOneClickSystem extends Plugin
             (new Models($this->container->get('models')))->uninstall();
         }
 
-        (new Api($this->getOcsService()))->uninstall();
+        (new Api($this->getTsgService()))->uninstall();
 
         parent::uninstall($context);
     }
@@ -80,15 +80,6 @@ class BlaubandOneClickSystem extends Plugin
                 return true;
             },
 
-            '1.0.2' => function () {
-                (new Mails(
-                    $this->container->get('models'),
-                    new ConfigService($this->getPath() . '/Resources/mails.xml'),
-                    $this->getPath()
-                ))->install();
-                return true;
-            },
-
             '1.0.3' => function () {
                 (new Models($this->container->get('models')))->update();
                 return true;
@@ -98,6 +89,18 @@ class BlaubandOneClickSystem extends Plugin
                 (new Models($this->container->get('models')))->update();
                 return true;
             },
+
+            //Next Release
+//            '1.0.x' => function () {
+//                (new Mails(
+//                    $this->container->get('models'),
+//                    new ConfigService($this->getPath() . '/Resources/mails.xml'),
+//                    $this->getPath()
+//                ))->install();
+//                return true;
+//            },
+
+
         ];
 
         foreach ($versions as $version => $callback) {
@@ -111,9 +114,9 @@ class BlaubandOneClickSystem extends Plugin
         return true;
     }
 
-    private function getOcsService()
+    private function getTsgService()
     {
-        return new OCSApiService(
+        return new TSGApiService(
             $this->container->get('snippets'),
             new DBConnectionService(
                 $this->container->get('snippets'),

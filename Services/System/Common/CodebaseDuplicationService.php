@@ -1,9 +1,9 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Common;
+namespace BlaubandTSG\Services\System\Common;
 
-use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
+use BlaubandTSG\Services\ConfigService;
 
 class CodebaseDuplicationService
 {
@@ -37,7 +37,7 @@ class CodebaseDuplicationService
     {
         if (!@mkdir($destinationPath) && !is_dir($destinationPath)) {
             throw new SystemFileSystemException(
-                sprintf($this->snippets->getNamespace('blauband/ocs')->get('destinationPathNotCreated'), $destinationPath)
+                sprintf($this->snippets->getNamespace('blauband/tsg')->get('destinationPathNotCreated'), $destinationPath)
             );
         }
 

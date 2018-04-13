@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Subscriber;
+namespace BlaubandTSG\Subscriber;
 
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Services\ConfigService;
 use Enlight\Event\SubscriberInterface;
 
 class Frontend implements SubscriberInterface
@@ -22,7 +22,7 @@ class Frontend implements SubscriberInterface
 
         $this->checkSearchEngineRobot($view);
 
-        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_one_click_system.plugin_dir') . '/Resources/views');
+        $view->addTemplateDir(Shopware()->Container()->getParameter('blauband_tsg.plugin_dir') . '/Resources/views');
     }
 
     /**
@@ -32,10 +32,10 @@ class Frontend implements SubscriberInterface
      */
     private function checkSearchEngineRobot($view){
         /** @var ConfigService $config */
-        $config = Shopware()->Container()->get('blauband_one_click_system.config_php_service');
-        $view->assign('blaubandOcsIsGuest', $config->get('blauband.ocs.isGuest'));
+        $config = Shopware()->Container()->get('blauband_tsg.config_php_service');
+        $view->assign('blaubandTsgIsGuest', $config->get('blauband.tsg.isGuest'));
 
-        if($config->get('blauband.ocs.noIndex') == 'true'){
+        if($config->get('blauband.tsg.noIndex') == 'true'){
             header("X-Robots-Tag: noindex, nofollow", true);
         }
 

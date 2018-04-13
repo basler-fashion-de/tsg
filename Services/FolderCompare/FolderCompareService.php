@@ -1,10 +1,10 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\FolderCompare;
+namespace BlaubandTSG\Services\FolderCompare;
 
-use BlaubandOneClickSystem\Exceptions\MissingFolderException;
-use BlaubandOneClickSystem\Exceptions\MissingParameterException;
-use BlaubandOneClickSystem\Services\ConfigService;
+use BlaubandTSG\Exceptions\MissingFolderException;
+use BlaubandTSG\Exceptions\MissingParameterException;
+use BlaubandTSG\Services\ConfigService;
 
 class FolderCompareService
 {
@@ -98,7 +98,7 @@ class FolderCompareService
         //Sind die Parameter vorhanden
         if (empty($sourcePaths) || empty($destinationPaths)) {
             throw new MissingParameterException(
-                $this->snippets->getNamespace('blauband/ocs')->get('missingParameter')
+                $this->snippets->getNamespace('blauband/tsg')->get('missingParameter')
             );
         }
 
@@ -106,7 +106,7 @@ class FolderCompareService
         foreach ($sourcePaths as $sourcePath) {
             if (!is_dir($sourcePath)) {
                 throw new MissingFolderException(
-                    sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathNotFound'), $sourcePath)
+                    sprintf($this->snippets->getNamespace('blauband/tsg')->get('pathNotFound'), $sourcePath)
                 );
             }
         }
@@ -115,7 +115,7 @@ class FolderCompareService
         foreach ($destinationPaths as $destinationPath) {
             if (!is_dir($destinationPath)) {
                 throw new MissingFolderException(
-                    sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathNotFound'), $destinationPath)
+                    sprintf($this->snippets->getNamespace('blauband/tsg')->get('pathNotFound'), $destinationPath)
                 );
             }
         }

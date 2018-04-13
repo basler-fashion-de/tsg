@@ -1,5 +1,5 @@
-# BlaubandOneClickSystem
-## About BlaubandOneClickSystem
+# BlaubandTSG
+## About BlaubandTSG
 This skeleton contains a License file, fileheader and a basic README.
 
 ## License

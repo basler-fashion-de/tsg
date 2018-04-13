@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Controllers\Backend;
+namespace BlaubandTSG\Controllers\Backend;
 
-use BlaubandOneClickSystem\Services\SystemServiceInterface;
+use BlaubandTSG\Services\SystemServiceInterface;
 
 class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
 {
@@ -11,7 +11,7 @@ class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
      */
     public function preDispatch()
     {
-        $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
+        $pluginPath = $this->container->getParameter('blauband_tsg.plugin_dir');
         $this->View()->addTemplateDir($pluginPath . '/Resources/views/');
     }
 
@@ -20,7 +20,7 @@ class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
      */
     public function postDispatch()
     {
-        $pluginPath = $this->container->getParameter('blauband_one_click_system.plugin_dir');
+        $pluginPath = $this->container->getParameter('blauband_tsg.plugin_dir');
         $this->View()->assign('publicFilePath', $pluginPath . '/Resources/views/backend/_public/');
     }
 

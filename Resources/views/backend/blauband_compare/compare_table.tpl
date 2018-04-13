@@ -4,11 +4,11 @@
     <table>
         <tr>
             <th colspan="{count($compare.diffs)}" style="width: 49%">
-                <h3>{s name="hostSystem" namespace="blauband/ocs"}{/s}<h3/>
+                <h3>{s name="hostSystem" namespace="blauband/tsg"}{/s}<h3/>
             </th>
             <th></th>
             <th colspan="{count($compare.diffs)}" style="width: 49%">
-                <h3>{s name="testSystem" namespace="blauband/ocs"}{/s}</h3>
+                <h3>{s name="testSystem" namespace="blauband/tsg"}{/s}</h3>
             </th>
         </tr>
         <tr>

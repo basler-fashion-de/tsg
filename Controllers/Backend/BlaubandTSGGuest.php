@@ -1,16 +1,16 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandOneClickSystem\Services\System\SystemService;
-use BlaubandOneClickSystem\Services\System\SystemServiceInterface;
+use BlaubandTSG\Services\System\SystemService;
+use BlaubandTSG\Services\System\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System;
-use BlaubandOneClickSystem\Services\System\Local\SystemValidation;
-use BlaubandOneClickSystem\Services\ConfigService;
-use BlaubandOneClickSystem\Controllers\Backend\BlaubandEnlightControllerAction;
-use BlaubandOneClickSystem\Services\System\Local\SetUpSystemService;
+use BlaubandTSG\Models\System;
+use BlaubandTSG\Services\System\Local\SystemValidation;
+use BlaubandTSG\Services\ConfigService;
+use BlaubandTSG\Controllers\Backend\BlaubandEnlightControllerAction;
+use BlaubandTSG\Services\System\Local\SetUpSystemService;
 
-class Shopware_Controllers_Backend_BlaubandOneClickSystemGuest extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
+class Shopware_Controllers_Backend_BlaubandTSGGuest extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
     public function getWhitelistedCSRFActions()
     {
@@ -33,8 +33,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystemGuest extends BlaubandE
      */
     public function indexAction()
     {
-        /** @var \BlaubandOneClickSystem\Services\System\Local\MailService $mailService */
-        $mailService = $this->container->get('blauband_one_click_system.mail_service');
+        /** @var \BlaubandTSG\Services\System\Local\MailService $mailService */
+        $mailService = $this->container->get('blauband_tsg.mail_service');
         $this->View()->assign('mails', $mailService->loadMails());
         $this->View()->assign('mailsAllow', $mailService->isMailAllowed($this->container->getParameter('kernel.root_dir')));
 
@@ -45,8 +45,8 @@ class Shopware_Controllers_Backend_BlaubandOneClickSystemGuest extends BlaubandE
         $allow = $this->Request()->getParam('allow') == 'radio-yes';
         $dorRoot = $this->container->getParameter('kernel.root_dir');
 
-        /** @var \BlaubandOneClickSystem\Services\System\Local\MailService $mailService */
-        $mailService = $this->container->get('blauband_one_click_system.mail_service');
+        /** @var \BlaubandTSG\Services\System\Local\MailService $mailService */
+        $mailService = $this->container->get('blauband_tsg.mail_service');
 
         try {
             if ($allow) {

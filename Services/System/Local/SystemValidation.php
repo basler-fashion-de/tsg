@@ -1,19 +1,19 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Local;
+namespace BlaubandTSG\Services\System\Local;
 
-use BlaubandOneClickSystem\Exceptions\EMailAddressInvalidException;
-use BlaubandOneClickSystem\Exceptions\SystemFileSystemException;
-use BlaubandOneClickSystem\Exceptions\SystemNotFoundException;
-use BlaubandOneClickSystem\Exceptions\SystemNotReadyException;
-use BlaubandOneClickSystem\Exceptions\SystemDBException;
-use BlaubandOneClickSystem\Exceptions\SystemDBAlreadyExists;
-use BlaubandOneClickSystem\Exceptions\SystemNameException;
-use BlaubandOneClickSystem\Exceptions\SystemProcessException;
-use BlaubandOneClickSystem\Services\System\SystemService;
+use BlaubandTSG\Exceptions\EMailAddressInvalidException;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
+use BlaubandTSG\Exceptions\SystemNotFoundException;
+use BlaubandTSG\Exceptions\SystemNotReadyException;
+use BlaubandTSG\Exceptions\SystemDBException;
+use BlaubandTSG\Exceptions\SystemDBAlreadyExists;
+use BlaubandTSG\Exceptions\SystemNameException;
+use BlaubandTSG\Exceptions\SystemProcessException;
+use BlaubandTSG\Services\System\SystemService;
 use Doctrine\Common\Collections\Criteria;
 use Shopware\Components\Model\ModelManager;
-use BlaubandOneClickSystem\Models\System;
+use BlaubandTSG\Models\System;
 use Doctrine\DBAL\Connection;
 
 class SystemValidation
@@ -60,7 +60,7 @@ class SystemValidation
 
         if(count($runningSystems) >= $this->maxProcess){
             throw new SystemProcessException(
-                $this->snippets->getNamespace('blauband/ocs')->get('tooManyProcesses')
+                $this->snippets->getNamespace('blauband/tsg')->get('tooManyProcesses')
             );
         }
     }
@@ -72,13 +72,13 @@ class SystemValidation
 
         if (empty($matches)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blauband/ocs')->get('invalidName')
+                $this->snippets->getNamespace('blauband/tsg')->get('invalidName')
             );
         }
 
         if (in_array($name, $this->systemNameBlackList)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blauband/ocs')->get('blackListedName')
+                $this->snippets->getNamespace('blauband/tsg')->get('blackListedName')
             );
         }
 
@@ -88,7 +88,7 @@ class SystemValidation
 
         if (!empty($system)) {
             throw new SystemNameException(
-                $this->snippets->getNamespace('blauband/ocs')->get('nameAlreadyInUse')
+                $this->snippets->getNamespace('blauband/tsg')->get('nameAlreadyInUse')
             );
         }
 
@@ -102,13 +102,13 @@ class SystemValidation
 
         if(empty($eMailAddress)){
             throw new EMailAddressInvalidException(
-                $this->snippets->getNamespace('blauband/ocs')->get('invalidEMailAddress')
+                $this->snippets->getNamespace('blauband/tsg')->get('invalidEMailAddress')
             );
         }
 
         if (!filter_var($eMailAddress, FILTER_VALIDATE_EMAIL)) {
             throw new EMailAddressInvalidException(
-                $this->snippets->getNamespace('blauband/ocs')->get('invalidEMailAddress')
+                $this->snippets->getNamespace('blauband/tsg')->get('invalidEMailAddress')
             );
         }
     }
@@ -123,7 +123,7 @@ class SystemValidation
                 $hostConnection->getHost() == $guestConnection->getHost()
             ){
                 throw new SystemDBException(
-                    $this->snippets->getNamespace('blauband/ocs')->get('identicalDB')
+                    $this->snippets->getNamespace('blauband/tsg')->get('identicalDB')
                 );
             }
 
@@ -139,7 +139,7 @@ class SystemValidation
 
         if ($isEmpty !== '0' && !$overwrite) {
             throw new SystemDBAlreadyExists(
-                $this->snippets->getNamespace('blauband/ocs')->get('dbAlreadyExists')
+                $this->snippets->getNamespace('blauband/tsg')->get('dbAlreadyExists')
             );
         }
 
@@ -152,13 +152,13 @@ class SystemValidation
 
         if (is_dir($path)) {
             throw new SystemFileSystemException(
-                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathExists'), $path)
+                sprintf($this->snippets->getNamespace('blauband/tsg')->get('pathExists'), $path)
             );
         }
 
         if (!is_writable($rootPath)) {
             throw new SystemFileSystemException(
-                sprintf($this->snippets->getNamespace('blauband/ocs')->get('pathNotWritable'), $path)
+                sprintf($this->snippets->getNamespace('blauband/tsg')->get('pathNotWritable'), $path)
             );
         }
     }
@@ -166,7 +166,7 @@ class SystemValidation
     public function validateDeleting(System $system){
         if($system == null){
             throw new SystemNotFoundException(
-                $this->snippets->getNamespace('blauband/ocs')->get('systemNotFound')
+                $this->snippets->getNamespace('blauband/tsg')->get('systemNotFound')
             );
         }
 
@@ -176,7 +176,7 @@ class SystemValidation
             $system->getState() == SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY
         ){
             throw new SystemNotReadyException(
-                $this->snippets->getNamespace('blauband/ocs')->get('systemNotDeletable')
+                $this->snippets->getNamespace('blauband/tsg')->get('systemNotDeletable')
             );
         }
     }

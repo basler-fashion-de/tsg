@@ -5,110 +5,110 @@
 
     <services>
         <!-- configs -->
-        <service id="blauband_one_click_system.config_php_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
+        <service id="blauband_tsg.config_php_service"
+                 class="BlaubandTSG\Services\ConfigService">
             <argument>%kernel.root_dir%/config.php</argument>
         </service>
 
-        <service id="blauband_one_click_system.compare_config_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/compare.xml</argument>
+        <service id="blauband_tsg.compare_config_service"
+                 class="BlaubandTSG\Services\ConfigService">
+            <argument>%blauband_tsg.plugin_dir%/Resources/compare.xml</argument>
         </service>
 
-        <service id="blauband_one_click_system.file_config_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/files.xml</argument>
+        <service id="blauband_tsg.file_config_service"
+                 class="BlaubandTSG\Services\ConfigService">
+            <argument>%blauband_tsg.plugin_dir%/Resources/files.xml</argument>
         </service>
 
-        <service id="blauband_one_click_system.mail_config_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/mails.xml</argument>
+        <service id="blauband_tsg.mail_config_service"
+                 class="BlaubandTSG\Services\ConfigService">
+            <argument>%blauband_tsg.plugin_dir%/Resources/mails.xml</argument>
         </service>
 
-        <service id="blauband_one_click_system.cron_job_config_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/cronjob.xml</argument>
+        <service id="blauband_tsg.cron_job_config_service"
+                 class="BlaubandTSG\Services\ConfigService">
+            <argument>%blauband_tsg.plugin_dir%/Resources/cronjob.xml</argument>
         </service>
 
-        <service id="blauband_one_click_system.parameter_config_service"
-                 class="BlaubandOneClickSystem\Services\ConfigService">
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/parameter.xml</argument>
+        <service id="blauband_tsg.parameter_config_service"
+                 class="BlaubandTSG\Services\ConfigService">
+            <argument>%blauband_tsg.plugin_dir%/Resources/parameter.xml</argument>
         </service>
         <!-- -->
 
-        <service id="blauband_one_click_system.system_validation"
-                 class="BlaubandOneClickSystem\Services\System\Local\SystemValidation">
+        <service id="blauband_tsg.system_validation"
+                 class="BlaubandTSG\Services\System\Local\SystemValidation">
             <argument type="service" id="snippets"/>
             <argument type="service" id="models"/>
         </service>
 
-        <service id="blauband_one_click_system.cron_job_helper_service"
-                 class="BlaubandOneClickSystem\Services\CronJobHelperService">
-            <argument type="service" id="blauband_one_click_system.cron_job_config_service"/>
+        <service id="blauband_tsg.cron_job_helper_service"
+                 class="BlaubandTSG\Services\CronJobHelperService">
+            <argument type="service" id="blauband_tsg.cron_job_config_service"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 
         <!-- common -->
-        <service id="blauband_one_click_system.ocs_api_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\OCSApiService">
+        <service id="blauband_tsg.tsg_api_service"
+                 class="BlaubandTSG\Services\System\Common\TSGApiService">
             <argument type="service" id="snippets"/>
-            <argument type="service" id="blauband_one_click_system.db_connection_service"/>
+            <argument type="service" id="blauband_tsg.db_connection_service"/>
             <argument type="service" id="dbal_connection"/>
-            <argument>%blauband_one_click_system.plugin_dir%/Resources/token.lock</argument>
+            <argument>%blauband_tsg.plugin_dir%/Resources/token.lock</argument>
         </service>
 
-        <service id="blauband_one_click_system.db_connection_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\DBConnectionService">
+        <service id="blauband_tsg.db_connection_service"
+                 class="BlaubandTSG\Services\System\Common\DBConnectionService">
             <argument type="service" id="snippets"/>
-            <argument type="service" id="blauband_one_click_system.db_duplication_service"/>
+            <argument type="service" id="blauband_tsg.db_duplication_service"/>
         </service>
 
         <!-- local -->
-        <service id="blauband_one_click_system.mail_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\MailService">
+        <service id="blauband_tsg.mail_service"
+                 class="BlaubandTSG\Services\System\Local\MailService">
             <argument type="service" id="snippets"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 
-        <service id="blauband_one_click_system.ht_access_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\HtAccessService">
+        <service id="blauband_tsg.ht_access_service"
+                 class="BlaubandTSG\Services\System\Local\HtAccessService">
             <argument type="service" id="snippets"/>
         </service>
 
-        <service id="blauband_one_click_system.set_up_system_service"
-                 class="BlaubandOneClickSystem\Services\System\Local\SetUpSystemService">
+        <service id="blauband_tsg.set_up_system_service"
+                 class="BlaubandTSG\Services\System\Local\SetUpSystemService">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="snippets"/>
             <argument type="service" id="config"/>
         </service>
 
-        <service id="blauband_one_click_system.db_duplication_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\DBDuplicationService">
+        <service id="blauband_tsg.db_duplication_service"
+                 class="BlaubandTSG\Services\System\Common\DBDuplicationService">
             <argument type="service" id="snippets"/>
             <argument type="service" id="pluginlogger"/>
-            <argument>%blauband_one_click_system.plugin_dir%</argument>
+            <argument>%blauband_tsg.plugin_dir%</argument>
         </service>
 
-        <service id="blauband_one_click_system.codebase_duplication_service"
-                 class="BlaubandOneClickSystem\Services\System\Common\CodebaseDuplicationService">
+        <service id="blauband_tsg.codebase_duplication_service"
+                 class="BlaubandTSG\Services\System\Common\CodebaseDuplicationService">
             <argument type="service" id="snippets"/>
-            <argument type="service" id="blauband_one_click_system.file_config_service"/>
+            <argument type="service" id="blauband_tsg.file_config_service"/>
         </service>
 
-        <service id="blauband_one_click_system.local_system_service"
-                 class="BlaubandOneClickSystem\Services\System\Local">
+        <service id="blauband_tsg.local_system_service"
+                 class="BlaubandTSG\Services\System\Local">
             <argument type="service" id="dbal_connection"/>
-            <argument type="service" id="blauband_one_click_system.db_connection_service"/>
+            <argument type="service" id="blauband_tsg.db_connection_service"/>
             <argument type="service" id="models"/>
-            <argument type="service" id="blauband_one_click_system.system_validation"/>
-            <argument type="service" id="blauband_one_click_system.db_duplication_service"/>
-            <argument type="service" id="blauband_one_click_system.codebase_duplication_service"/>
-            <argument type="service" id="blauband_one_click_system.set_up_system_service"/>
-            <argument type="service" id="blauband_one_click_system.ht_access_service"/>
-            <argument type="service" id="blauband_one_click_system.mail_service"/>
-            <argument type="service" id="blauband_one_click_system.ocs_api_service"/>
+            <argument type="service" id="blauband_tsg.system_validation"/>
+            <argument type="service" id="blauband_tsg.db_duplication_service"/>
+            <argument type="service" id="blauband_tsg.codebase_duplication_service"/>
+            <argument type="service" id="blauband_tsg.set_up_system_service"/>
+            <argument type="service" id="blauband_tsg.ht_access_service"/>
+            <argument type="service" id="blauband_tsg.mail_service"/>
+            <argument type="service" id="blauband_tsg.tsg_api_service"/>
             <argument type="service" id="TemplateMail"/>
-            <argument type="service" id="blauband_one_click_system.mail_config_service"/>
+            <argument type="service" id="blauband_tsg.mail_config_service"/>
             <argument type="service" id="config"/>
             <argument type="service" id="pluginlogger"/>
             <argument>%kernel.root_dir%</argument>
@@ -116,27 +116,27 @@
 
 
         <!-- compare db -->
-        <service id="blauband_one_click_system.db_compare_service"
-                 class="BlaubandOneClickSystem\Services\DBCompare\DBCompareService">
+        <service id="blauband_tsg.db_compare_service"
+                 class="BlaubandTSG\Services\DBCompare\DBCompareService">
         </service>
 
         <!-- compare folder -->
-        <service id="blauband_one_click_system.folder_compare_service"
-                 class="BlaubandOneClickSystem\Services\FolderCompare\FolderCompareService">
+        <service id="blauband_tsg.folder_compare_service"
+                 class="BlaubandTSG\Services\FolderCompare\FolderCompareService">
             <argument type="service" id="snippets"/>
-            <argument type="service" id="blauband_one_click_system.file_config_service"/>
+            <argument type="service" id="blauband_tsg.file_config_service"/>
         </service>
 
         <!-- event subscriber -->
-        <service id="blauband_one_click_system.subscriber.frontend" class="BlaubandOneClickSystem\Subscriber\Frontend">
+        <service id="blauband_tsg.subscriber.frontend" class="BlaubandTSG\Subscriber\Frontend">
             <tag name="shopware.event_subscriber"/>
         </service>
 
-        <service id="blauband_one_click_system.subscriber.backend" class="BlaubandOneClickSystem\Subscriber\Backend">
+        <service id="blauband_tsg.subscriber.backend" class="BlaubandTSG\Subscriber\Backend">
             <tag name="shopware.event_subscriber"/>
         </service>
 
-        <service id="blauband_one_click_system.subscriber.cron_job" class="BlaubandOneClickSystem\Subscriber\CronJob">
+        <service id="blauband_tsg.subscriber.cron_job" class="BlaubandTSG\Subscriber\CronJob">
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
         </service>

@@ -1,6 +1,6 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\FolderCompare;
+namespace BlaubandTSG\Services\FolderCompare;
 
 class FolderCompareResult
 {

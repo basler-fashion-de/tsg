@@ -1,17 +1,17 @@
 <?php
 
-namespace BlaubandOneClickSystem\Installers;
+namespace BlaubandTSG\Installers;
 
-use BlaubandOneClickSystem\Services\System\Common\OCSApiService;
+use BlaubandTSG\Services\System\Common\TSGApiService;
 
 class Api
 {
     /**
-     * @var OCSApiService
+     * @var TSGApiService
      */
     private $apiService;
 
-    public function __construct(OCSApiService $apiService)
+    public function __construct(TSGApiService $apiService)
     {
         $this->apiService = $apiService;
     }

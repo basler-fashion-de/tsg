@@ -1,9 +1,9 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System\Common;
+namespace BlaubandTSG\Services\System\Common;
 
 use Doctrine\DBAL\Connection;
-use BlaubandOneClickSystem\Exceptions\SystemDBException;
+use BlaubandTSG\Exceptions\SystemDBException;
 use Shopware\Components\Logger;
 
 class DBDuplicationService
@@ -26,7 +26,7 @@ class DBDuplicationService
     /**
      * @var string
      */
-    private $dumpPrefix = "BlaubandOneClickSystemDBDump";
+    private $dumpPrefix = "BlaubandTSGDBDump";
 
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, Logger $pluginLogger, $pluginPath)
     {
@@ -46,7 +46,7 @@ class DBDuplicationService
             }
         }catch (\Exception $e){
             throw new SystemDBException(
-                $this->snippets->getNamespace('blauband/ocs')->get('missingDBGrantsCreate')
+                $this->snippets->getNamespace('blauband/tsg')->get('missingDBGrantsCreate')
             );
         }
 

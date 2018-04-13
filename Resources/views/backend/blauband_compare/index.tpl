@@ -20,7 +20,7 @@
 
         <div id="compare">
             {if $dbResult}
-                <h3>{s name="dbChanges" namespace="blauband/ocs"}{/s}</h3>
+                <h3>{s name="dbChanges" namespace="blauband/tsg"}{/s}</h3>
                 {foreach $dbResult as $compare}
                     {if !$compare.empty_table && $compare.state != 2}
                         {assign 'notEmptyResult' true}
@@ -31,7 +31,7 @@
 
 
             {if $folderResult}
-                <h3>{s name="folderChanges" namespace="blauband/ocs"}{/s}</h3>
+                <h3>{s name="folderChanges" namespace="blauband/tsg"}{/s}</h3>
                 {foreach $folderResult as $compare}
                     {if $compare.state != 2}
                         {assign 'notEmptyResult' true}
@@ -45,13 +45,13 @@
             <div class="commit-button-wrapper">
                 <button class="commit-button ui-button ui-corner-all"
                         data-url="{url controller="BlaubandCompare" action="commit" id=$id group=$group}">
-                    {s name="commitToLive" namespace="blauband/ocs"}{/s}
+                    {s name="commitToLive" namespace="blauband/tsg"}{/s}
                 </button>
             </div>
         {/if}
 
         {if $notEmptyResult == 'false'}
-            {s name="systemsItendical" namespace="blauband/ocs"}{/s}
+            {s name="systemsItendical" namespace="blauband/tsg"}{/s}
         {/if}
     {/if}
 </div>

@@ -1,8 +1,8 @@
 <?php
 
-namespace BlaubandOneClickSystem\Services\System;
+namespace BlaubandTSG\Services\System;
 
-use BlaubandOneClickSystem\Models\System;
+use BlaubandTSG\Models\System;
 
 interface SystemServiceInterface
 {
@@ -10,7 +10,7 @@ interface SystemServiceInterface
      * Hier muss der Type des System zurückgegeben werden.
      * Dieser muss ausserdem zum Servicenamen in der service.xml passen.
      *
-     * blauband_one_click_system.{type}_system_service
+     * blauband_tsg.{type}_system_service
      *
      * @return mixed
      */
