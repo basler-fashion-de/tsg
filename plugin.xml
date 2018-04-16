@@ -9,7 +9,7 @@
     <link>http://www.blauband.com</link>
     <author>Blauband</author>
 
-    <compatibility minVersion="5.2.0" />
+    <compatibility minVersion="5.2.1" />
 
     <changelog version="1.0.0">
         <changes lang="de">Erste Veröffentlichung</changes>

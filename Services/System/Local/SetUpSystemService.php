@@ -4,6 +4,7 @@ namespace BlaubandTSG\Services\System\Local;
 
 use BlaubandTSG\Models\System;
 use Doctrine\DBAL\Connection;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
 
 class SetUpSystemService
 {

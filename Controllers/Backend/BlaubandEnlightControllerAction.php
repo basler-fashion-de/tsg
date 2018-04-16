@@ -2,8 +2,6 @@
 
 namespace BlaubandTSG\Controllers\Backend;
 
-use BlaubandTSG\Services\SystemServiceInterface;
-
 class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
 {
     /**
@@ -24,6 +22,9 @@ class BlaubandEnlightControllerAction extends \Enlight_Controller_Action
         $this->View()->assign('publicFilePath', $pluginPath . '/Resources/views/backend/_public/');
     }
 
+    /**
+     * @param $data
+     */
     protected function sendJsonResponse($data)
     {
         $this->Front()->Plugins()->ViewRenderer()->setNoRender();

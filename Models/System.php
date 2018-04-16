@@ -2,7 +2,7 @@
 
 namespace BlaubandTSG\Models;
 
-use BlaubandTSG\Services\SystemServiceInterface;
+use BlaubandTSG\Services\System\SystemServiceInterface;
 use Shopware\Components\Model\ModelEntity;
 use Doctrine\ORM\Mapping as ORM;
 

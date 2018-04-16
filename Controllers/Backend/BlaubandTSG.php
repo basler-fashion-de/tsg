@@ -47,7 +47,7 @@ class Shopware_Controllers_Backend_BlaubandTSG extends BlaubandEnlightController
         $systemList = $modelManager->getRepository(System::class)->findAll();
         $systemListArray = $modelManager->toArray($systemList);
 
-        $this->View()->assign("systems", $systemListArray);
+        $this->View()->assign('systems', $systemListArray);
 
         /** @var ConfigService $connection */
         $parameters = $this->container->get('blauband_tsg.parameter_config_service');
@@ -68,7 +68,9 @@ class Shopware_Controllers_Backend_BlaubandTSG extends BlaubandEnlightController
                     $parameter['default'] = $connection->getPassword();
                 }
             }
+            unset($parameter);
         }
+        unset($group);
 
         $this->View()->assign('actionFields', $groups);
 

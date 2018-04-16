@@ -1,14 +1,7 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandTSG\Services\System\SystemService;
-use BlaubandTSG\Services\System\SystemServiceInterface;
-use Shopware\Components\Model\ModelManager;
-use BlaubandTSG\Models\System;
-use BlaubandTSG\Services\System\Local\SystemValidation;
-use BlaubandTSG\Services\ConfigService;
 use BlaubandTSG\Controllers\Backend\BlaubandEnlightControllerAction;
-use BlaubandTSG\Services\System\Local\SetUpSystemService;
 
 class Shopware_Controllers_Backend_BlaubandTSGGuest extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {

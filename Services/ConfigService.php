@@ -6,6 +6,10 @@ class ConfigService
 {
     private $data;
 
+    /**
+     * ConfigService constructor.
+     * @param $path
+     */
     public function __construct($path)
     {
         if(strpos($path, '/config.php') !== false){
@@ -16,6 +20,11 @@ class ConfigService
         }
     }
 
+    /**
+     * @param $string
+     * @param bool $asArray
+     * @return array|mixed|null
+     */
     public function get($string, $asArray = false){
         try{
             $result = $this->data;

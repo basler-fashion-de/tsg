@@ -5,17 +5,22 @@ use BlaubandTSG\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandTSG\Models\System;
 use BlaubandTSG\Services\DBCompare\DBCompareService;
+use BlaubandTSG\Services\DBCompare\DBCompareGroupResult;
+use BlaubandTSG\Services\FolderCompare\FolderCompareResult;
 use BlaubandTSG\Services\FolderCompare\FolderCompareService;
 use BlaubandTSG\Services\System\Common\DBDuplicationService;
 use BlaubandTSG\Services\System\Common\CodebaseDuplicationService;
 use BlaubandTSG\Exceptions\MissingParameterException;
 use BlaubandTSG\Controllers\Backend\BlaubandEnlightControllerAction;
+use BlaubandTSG\Services\ConfigService;
+use BlaubandTSG\Services\System\Common\DBConnectionService;
 
 class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightControllerAction implements CSRFWhitelistAware
 {
     /** @var ModelManager $modelManager */
     private $modelManager;
-    /** @var  $snippets */
+
+    /** @var Shopware_Components_Snippet_Manager $snippets */
     private $snippets;
 
     /** @var \Doctrine\DBAL\Connection $hostConnection */
@@ -123,7 +128,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
             $this->View()->assign('id', $systemId);
             $this->View()->assign('group', $compareGroup);
             $this->View()->assign('commit', $commit);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->View()->assign('error', $e->getMessage());
         }
     }
@@ -154,7 +159,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
 
             $this->codebaseDuplicationService->duplicateCodeBase($guestPath, $hostPath);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->View()->assign('error', $e->getMessage());
         }
     }
