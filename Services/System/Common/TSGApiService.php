@@ -3,6 +3,7 @@
 namespace BlaubandTSG\Services\System\Common;
 
 use BlaubandTSG\Exceptions\SystemDBException;
+use BlaubandTSG\Exceptions\SystemFileSystemException;
 use BlaubandTSG\Exceptions\TokenException;
 use Doctrine\DBAL\Connection;
 
@@ -72,7 +73,7 @@ class TSGApiService
             );
         }
 
-        if($result['success'] === false){
+        if ($result['success'] === false) {
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/tsg')->get(trim($result['message'], '__'))
             );
@@ -135,10 +136,16 @@ class TSGApiService
                 throw new \Exception('Error');
             }
         } catch (\Exception $e) {
+            if($e instanceof SystemFileSystemException){
+                throw $e;
+            }
+
             // Alle Errors abfangen und ohne genauere Beschreibung ausgeben.
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/tsg')->get('unableToRegisterToApi')
             );
+
+
         }
 
         return true;
@@ -206,7 +213,15 @@ class TSGApiService
             );
         }
 
-        file_put_contents($this->tokenPath, $token);
+        if (file_put_contents($this->tokenPath, $token) === false) {
+            throw new SystemFileSystemException(
+                sprintf(
+                    $this->snippets->getNamespace('blauband/tsg')->get('cantSaveToken'),
+                    $this->tokenPath
+                )
+            );
+        }
+
     }
 
     private function deleteToken()

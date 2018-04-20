@@ -79,6 +79,7 @@
                  class="BlaubandTSG\Services\System\Local\SetUpSystemService">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="snippets"/>
+            <argument type="service" id="pluginlogger"/>
             <argument type="service" id="config"/>
         </service>
 
@@ -92,6 +93,7 @@
         <service id="blauband_tsg.codebase_duplication_service"
                  class="BlaubandTSG\Services\System\Common\CodebaseDuplicationService">
             <argument type="service" id="snippets"/>
+            <argument type="service" id="pluginlogger"/>
             <argument type="service" id="blauband_tsg.file_config_service"/>
         </service>
 

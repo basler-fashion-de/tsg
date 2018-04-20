@@ -4,6 +4,7 @@ namespace BlaubandTSG\Services\System\Common;
 
 use BlaubandTSG\Exceptions\SystemFileSystemException;
 use BlaubandTSG\Services\ConfigService;
+use Shopware\Components\Logger;
 
 class CodebaseDuplicationService
 {
@@ -12,15 +13,21 @@ class CodebaseDuplicationService
      */
     private $snippets;
 
+    /**
+     * @var Logger
+     */
+    private $pluginLogger;
+
     private $blackList;
 
     private $vcsFiles;
 
     private $skipHidden;
 
-    public function __construct(\Enlight_Components_Snippet_Manager $snippets, ConfigService $filesConfigService)
+    public function __construct(\Enlight_Components_Snippet_Manager $snippets, Logger $pluginLogger, ConfigService $filesConfigService)
     {
         $this->snippets = $snippets;
+        $this->pluginLogger = $pluginLogger;
         $this->blackList = $filesConfigService->get('files.blacklist.file', true);
         $this->vcsFiles = (
             isset($filesConfigService->get('files.blacklist.@attributes')['vcsFiles']) &&
@@ -72,6 +79,9 @@ class CodebaseDuplicationService
         $exceptionsString = str_replace($sourcePath . '/', '', $exceptionsString);
 
         $command = "(cd $sourcePath && tar cmf - $exceptionsString .) | (cd $destinationPath && tar xvmf - )";
+
+        $this->pluginLogger->addInfo('Blauband TSG: Copy codebase with command: '.$command);
+
         exec($command);
         exec("chmod 0755 $destinationPath");
     }

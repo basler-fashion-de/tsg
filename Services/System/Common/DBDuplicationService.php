@@ -35,46 +35,69 @@ class DBDuplicationService
         $this->pluginPath = $pluginPath;
     }
 
-    public function createDatabaseAndUse(Connection $connection, $dbName){
-        try{
+    public function createDatabaseAndUse(Connection $connection, $dbName)
+    {
+        try {
             $exists = $connection->fetchAll("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbName'");
             $this->pluginLogger->addInfo('Blauband TSG: Database ' . $dbName . (empty($exists) ? ' dosnt exists' : ' exists'));
-            
+
             if (empty($exists)) {
                 $createResult = $connection->exec("CREATE DATABASE `$dbName` DEFAULT CHARACTER SET = utf8 COLLATE = utf8_unicode_ci;");
-                $this->pluginLogger->addInfo('Blauband TSG: Database ' . $dbName . ' created with result ('.$createResult.')');
+                $this->pluginLogger->addInfo('Blauband TSG: Database ' . $dbName . ' created with result (' . $createResult . ')');
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new SystemDBException(
                 $this->snippets->getNamespace('blauband/tsg')->get('missingDBGrantsCreate')
             );
         }
 
-        try{
+        try {
             $connection->exec("USE `$dbName`");
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new SystemDBException($e->getMessage());
         }
     }
 
-    public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = []){
-        $sourceHost = $sourceConnection->getHost();
+    public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = [])
+    {
+        if (empty($tables)) {
+            $tables = $sourceConnection->fetchAll("SHOW TABLES FROM " . $sourceConnection->getDatabase());
+            $tables = array_map(function ($i) {
+                return array_shift($i);
+            }, $tables);
+        }
+
+        foreach ($tables as $table) {
+            $this->duplicateTable($table, $sourceConnection, $destinationConnection);
+        }
+
+        return true;
+    }
+
+    private function duplicateTable($table, Connection $sourceConnection, Connection $destinationConnection)
+    {
+        if ($table == 'magnalister_ebay_prepare' ||
+            $table == 'magnalister_cdiscount_prepare'
+        ){
+            return;
+        }
+
+
+            $sourceHost = $sourceConnection->getHost();
         $sourcePort = $sourceConnection->getPort();
         $sourceUser = $sourceConnection->getUsername();
         $sourcePass = $sourceConnection->getPassword();
         $sourceDb = $sourceConnection->getDatabase();
-        $sourceTables = implode(' ', $tables);
-        $dumpName = uniqid($this->dumpPrefix, false).".sql";
-        $dumpPath = $this->pluginPath.'/'.$dumpName;
+
+        $dumpName = uniqid($this->dumpPrefix, false) . "-$table.sql";
+        $dumpPath = $this->pluginPath . '/' . $dumpName;
         $passString = empty($sourcePass) ? '' : "-p$sourcePass";
 
-        $exportCommand = "mysqldump -h$sourceHost -P$sourcePort -u$sourceUser $passString --default-character-set=utf8 $sourceDb $sourceTables > $dumpPath";
-        $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will write with command: '.$exportCommand);
-
+        $exportCommand = "mysqldump -h$sourceHost -P$sourcePort -u$sourceUser $passString --default-character-set=utf8 $sourceDb $table > $dumpPath";
+        //$this->pluginLogger->addInfo("Blauband TSG: Dumpfile for table '$table' will write with command: $exportCommand");
         $output = shell_exec($exportCommand);
-        $this->pluginLogger->addInfo('Blauband TSG: Result: '.$output);
 
-        if($output !== null){
+        if ($output !== null) {
             @unlink($dumpName);
             throw new \SystemDBException($output);
         }
@@ -87,18 +110,15 @@ class DBDuplicationService
         $passString = empty($destinationPass) ? '' : "-p$destinationPass";
 
         $importCommand = "mysql -h$destinationHost -P$destinationPort -u$destinationUser $passString $destinationDb < $dumpPath";
-        $this->pluginLogger->addInfo('Blauband TSG: Dumpfile will read with command: '.$importCommand);
-
+        //$this->pluginLogger->addInfo("Blauband TSG: Dumpfile for table '$table' will read with command: $importCommand");
         $output = shell_exec($importCommand);
-        $this->pluginLogger->addInfo('Blauband TSG: Result: '.$output);
 
-        if($output !== null){
+        if ($output !== null) {
             @unlink($dumpName);
             throw new \SystemDBException($output);
         }
 
         @unlink($dumpPath);
 
-        return true;
     }
 }
