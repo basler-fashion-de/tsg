@@ -12,8 +12,8 @@
     <compatibility minVersion="5.2.1" />
 
     <changelog version="1.0.5">
-        <changes lang="de">Datenübertragung von größen Datenbanken optimiert</changes>
-        <changes lang="en">Optimize database duplication of huge databases</changes>
+        <changes lang="de">Bugfix: Problem von fehlerhaften URLs bei mehrsprachigen Shops behoben</changes>
+        <changes lang="en">Bugfix: Fixed a problem who lead to wrong URLs by multi languages shops</changes>
     </changelog>
 
     <changelog version="1.0.0">

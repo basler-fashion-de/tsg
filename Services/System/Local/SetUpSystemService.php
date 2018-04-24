@@ -61,7 +61,9 @@ class SetUpSystemService
         try {
             $urlPostfix = $system->getUrl();
             $guestConnection->exec("UPDATE s_core_shops SET base_path = CONCAT(IFNULL(base_path,''),'$urlPostfix')");
-            $guestConnection->exec("UPDATE s_core_shops SET base_url = CONCAT(IFNULL(base_url,''),'$urlPostfix')");
+
+            /* Bei der URL muss es davor stehen. Ansonsten klappen die mehrsprachigen Shops nicht */
+            $guestConnection->exec("UPDATE s_core_shops SET base_url = CONCAT('$urlPostfix', IFNULL(base_url,''))");
 
             if (version_compare($this->config->get('version'), '5.4.0', '<')) {
                 $guestConnection->exec("UPDATE s_core_shops SET secure_base_path = CONCAT(IFNULL(secure_base_path,''),'$urlPostfix')");
@@ -118,7 +120,7 @@ class SetUpSystemService
             $configData = "<?php\n\n return " . var_export($config, true) . ";";
 
             $result = file_put_contents($configPath, $configData);
-            
+
             if ($result === false) {
                 throw new SystemFileSystemException(
                     $this->snippets->getNamespace('blauband/tsg')->get('canNoWriteConfigPhp')
