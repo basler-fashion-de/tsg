@@ -38,6 +38,7 @@ class SetUpSystemService
     {
         try {
             $shopName = $this->shopConnection->fetchColumn('SELECT title FROM s_core_shops WHERE `default` = 1');
+            $shopName = preg_replace("/[^a-zA-Z0-9_|+ -]/", '', $shopName);
             return uniqid('Test-' . $shopName . '-', false);
         } catch (\Exception $e) {
             $this->pluginLogger->addError($e->getMessage());
