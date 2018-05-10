@@ -103,8 +103,6 @@ class SetUpSystemService
 
     public function setUpConfigPhp(Connection $guestConnection, System $system)
     {
-        $this->pluginLogger->addError('(' . __METHOD__ . ')');
-
         try {
             //config.php ändern
             $configPath = $system->getPath() . "/config.php";

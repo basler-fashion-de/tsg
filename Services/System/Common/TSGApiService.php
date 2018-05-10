@@ -194,6 +194,9 @@ class TSGApiService
 
     private function loadToken()
     {
+        return 'no-token';
+        //Temporär
+
         $token = file_get_contents($this->tokenPath);
 
         if (empty($token)) {

@@ -286,6 +286,8 @@ class Local extends SystemService implements SystemServiceInterface
         $this->setUpSystemService->setShopMode($guestConnection, $systemModel);
         $this->setUpSystemService->setUpConfigPhp($guestConnection, $systemModel);
 
+        $this->htAccessService->fixRewriteBase($systemModel->getPath(), $systemModel->getUrl());
+
         return true;
     }
 

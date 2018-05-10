@@ -16,6 +16,16 @@ class HtAccessService
         $this->snippets = $snippets;
     }
 
+    public function fixRewriteBase($path, $url){
+        $re = '/.*[^#](RewriteBase\s\/).*/m';
+        list($accessfile, $accessfileName) = $this->getHtAccessFile($path);
+        $content = file_get_contents($accessfileName);
+        $content = preg_replace($re, "\n#BlaubandTsg\nRewriteBase $url/\n", $content);
+
+        fwrite($accessfile, $content);
+        fclose($accessfile);
+    }
+
     public function createHtPass($path, $user)
     {
         list($accessfile, $accessfileName) = $this->getHtAccessFile($path);
