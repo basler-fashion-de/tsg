@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
     <label lang="de">Testsystem-Generator</label>
     <label lang="en">Testsystem-Generator</label>
-    <version>1.0.8</version>
+    <version>1.0.7</version>
     <copyright>(c) by Blauband GmbH</copyright>
     <license>proprietary</license>
     <link>http://www.blauband.com</link>
@@ -11,7 +11,7 @@
 
     <compatibility minVersion="5.2.1" />
 
-    <changelog version="1.0.8">
+    <changelog version="1.0.7">
         <changes lang="de">Bugfix: Problem mit RewriteBase Einstellungen in der HtAccess-Datei</changes>
         <changes lang="en">Bugfix: Fixed a problem with RewriteBase settings at the htAccess-file</changes>
     </changelog>
