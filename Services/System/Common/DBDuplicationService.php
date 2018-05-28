@@ -61,7 +61,7 @@ class DBDuplicationService
     public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = [])
     {
         if (empty($tables)) {
-            $tables = $sourceConnection->fetchAll("SHOW TABLES FROM " . $sourceConnection->getDatabase());
+            $tables = $sourceConnection->fetchAll("SHOW TABLES FROM `" . $sourceConnection->getDatabase().'`');
             $tables = array_map(function ($i) {
                 return array_shift($i);
             }, $tables);
@@ -83,7 +83,7 @@ class DBDuplicationService
         }
 
 
-            $sourceHost = $sourceConnection->getHost();
+        $sourceHost = $sourceConnection->getHost();
         $sourcePort = $sourceConnection->getPort();
         $sourceUser = $sourceConnection->getUsername();
         $sourcePass = $sourceConnection->getPassword();
