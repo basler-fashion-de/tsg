@@ -112,6 +112,7 @@ class DBDuplicationService
         $importCommand = "mysql -h$destinationHost -P$destinationPort -u$destinationUser $passString $destinationDb < $dumpPath";
         //$this->pluginLogger->addInfo("Blauband TSG: Dumpfile for table '$table' will read with command: $importCommand");
         $output = shell_exec($importCommand);
+        $this->pluginLogger->addInfo("Blauband TSG: Table '$table' duplicated");
 
         if ($output !== null) {
             @unlink($dumpName);

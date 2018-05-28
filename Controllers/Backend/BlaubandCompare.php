@@ -1,7 +1,6 @@
 <?php
 
 use Shopware\Components\CSRFWhitelistAware;
-use BlaubandTSG\Services\SystemServiceInterface;
 use Shopware\Components\Model\ModelManager;
 use BlaubandTSG\Models\System;
 use BlaubandTSG\Services\DBCompare\DBCompareService;
@@ -92,7 +91,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
             $system = $this->modelManager->getRepository(System::class)->find($systemId);
 
             /** @var \Doctrine\DBAL\Connection $guestConnection */
-            $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName());
+            $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
 
             /** @var DBCompareGroupResult $groupResult */
             $dbResult = $this->dbCompareService->compareTables($this->pluginConfig->get("compare.$compareGroup.tables"), $this->hostConnection, $guestConnection);

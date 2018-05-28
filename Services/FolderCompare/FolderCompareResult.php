@@ -86,7 +86,7 @@ class FolderCompareResultItem
         }
 
         $this->title = empty($this->left) ? $this->right['path'] : $this->left['path'];
-        $this->title = str_replace(Shopware()->Container->get('kernel.root_dir'), '', $this->title);
+        $this->title = str_replace(Shopware()->Container()->getParameter('kernel.root_dir'), '', $this->title);
     }
 
     public function __toArray()

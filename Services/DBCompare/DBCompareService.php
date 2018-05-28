@@ -53,23 +53,37 @@ class DBCompareService
 
     private function getTable($tableName, Connection $connection, $primaryKey = null)
     {
-        $sql = "SELECT * FROM $tableName";
-        $data = $connection->fetchAll($sql);
         $return = [];
+        $run = true;
+        $limit = 100;
+        $offset = 0;
 
-        if (empty($data)) {
-            return [];
-        }
+        while($run){
+            $sql = "SELECT * FROM `$tableName` LIMIT $limit OFFSET $offset";
+            $data = $connection->fetchAll($sql);
 
-        if (empty($primaryKey)) {
-            foreach ($data as $d) {
-                $return[md5(json_encode($d))] = $d;
+            if (empty($data)) {
+                $data = [];
             }
-        } else {
-            $return = array_combine(array_column($data, $primaryKey), $data);
+
+            if (empty($primaryKey)) {
+                foreach ($data as $d) {
+                    $return[md5(json_encode($d))] = $d;
+                }
+            } else {
+                $r = array_combine(array_column($data, $primaryKey), $data);
+                $return = array_merge($r, $return);
+            }
+
+            if(count($data) < $limit){
+                $run = false;
+            }else{
+                $offset += $limit;
+            }
         }
 
         ksort($return);
+
         return $return;
     }
 }
