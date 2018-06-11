@@ -29,7 +29,7 @@
     </div>
 
     <div id="compare">
-        <h3 class="identical-title">{s name="systemsItendical" namespace="blauband/tsg"}{/s}</h3>
+        <h3 style="display: none; overflow: hidden" class="identical-title">{s name="systemsItendical" namespace="blauband/tsg"}{/s}</h3>
 
         <h3 style="display: none" class="db-title">{s name="dbChanges" namespace="blauband/tsg"}{/s}</h3>
         <div class="db-results">

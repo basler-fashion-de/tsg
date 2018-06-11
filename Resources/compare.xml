@@ -7,8 +7,6 @@
             <tables>s_articles_details</tables>
 
             <tables>s_articles_categories</tables>
-            <tables>s_articles_img</tables>
-            <tables>s_articles_img_attributes</tables>
 
             <tables>s_article_configurator_dependencies</tables>
             <tables>s_article_configurator_groups</tables>
@@ -46,6 +44,9 @@
 
             <tables>s_articles_avoid_customergroups</tables>
             <tables>s_addon_premiums</tables>
+
+            <!--<tables>s_articles_img</tables>-->
+            <!--<tables>s_articles_img_attributes</tables>-->
             <!--<tables>s_articles_also_bought_ro</tables>-->
             <!--<tables>s_articles_categories_ro</tables>-->
             <!--<tables>s_articles_categories_seo</tables>-->

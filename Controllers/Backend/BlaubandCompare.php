@@ -124,9 +124,15 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
             $paths = $this->pluginConfig->get("compare.$compareGroup.folders", true);
 
             if($count <= count($tables)){
+                $table = $tables[$count-1];
+
+                if(empty($table)){
+                    $this->sendJsonResponse(['success' => false]);
+                }
+
                 /** @var \Doctrine\DBAL\Connection $guestConnection */
                 $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
-                $dbResult = $this->dbCompareService->compareTable($tables[$count-1], $this->hostConnection, $guestConnection);
+                $dbResult = $this->dbCompareService->compareTable($table, $this->hostConnection, $guestConnection);
                 $dbResult = $dbResult->__toArray();
 
                 $this->View()->assign('compare', $dbResult);
@@ -141,6 +147,10 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
                 );
             } elseif($count > count($tables) && $count <= count($tables)+count($paths)){
                 $path = $paths[$count-count($tables)-1];
+
+                if(empty($path)){
+                    $this->sendJsonResponse(['success' => false]);
+                }
 
                 $hostPath = $this->docRoot.'/'.$path;
                 $guestPath = $system->getPath().'/'.$path;
@@ -189,17 +199,19 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
 
             /** @var System $system */
             $system = $this->modelManager->getRepository(System::class)->find($systemId);
+            $tables = $this->pluginConfig->get("compare.$compareGroup.tables", true);
+            $paths = $this->pluginConfig->get("compare.$compareGroup.folders", true);
 
             /** @var \Doctrine\DBAL\Connection $guestConnection */
             $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
-            $tables = $this->pluginConfig->get("compare.$compareGroup.tables");
             $this->dbDuplicationService->duplicateData($guestConnection, $this->hostConnection, $tables);
 
-            $path = $this->pluginConfig->get("compare.$compareGroup.folders");
-            $hostPath = $this->docRoot.'/'.$path;
-            $guestPath = $system->getPath().'/'.$path;
+            foreach ($paths as $path){
+                $hostPath = $this->docRoot.'/'.$path;
+                $guestPath = $system->getPath().'/'.$path;
 
-            $this->codebaseDuplicationService->duplicateCodeBase($guestPath, $hostPath);
+                $this->codebaseDuplicationService->duplicateCodeBase($guestPath, $hostPath);
+            }
 
         } catch (\Exception $e) {
             $this->View()->assign('error', $e->getMessage());

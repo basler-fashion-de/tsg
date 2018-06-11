@@ -19,14 +19,14 @@ function loadCount (url, count, max) {
         if(response.type == 'table' && response.html != ''){
           $('.db-results').append(response.html);
           $('.db-title').show();
-          $('.identical-title').hide();
+          $('.identical-title').height('0');
           $('.commit-button-wrapper').show();
         }
 
         if(response.type == 'folder' && response.html != ''){
           $('.folder-results').append(response.html);
           $('.folder-title').show();
-          $('.identical-title').hide();
+          $('.identical-title').height('0');
           $('.commit-button-wrapper').show();
         }
 
@@ -34,6 +34,7 @@ function loadCount (url, count, max) {
           loadCount(url, count + 1, max)
         }else{
           $('.loading-info-box').remove();
+          $('.identical-title').show();
           $('.commit-button').button({disabled: false});
         }
       } else {
