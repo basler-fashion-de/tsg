@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <compare>
-        <article commit="false">
-            <tables>s_addon_premiums</tables>
+        <article commit="true">
             <tables>s_articles</tables>
-            <tables>s_articles_also_bought_ro</tables>
             <tables>s_articles_attributes</tables>
-            <tables>s_articles_avoid_customergroups</tables>
-            <tables>s_articles_categories</tables>
-            <tables>s_articles_categories_ro</tables>
-            <tables>s_articles_categories_seo</tables>
             <tables>s_articles_details</tables>
-            <tables>s_articles_downloads</tables>
-            <tables>s_articles_downloads_attributes</tables>
-            <tables>s_articles_esd</tables>
-            <tables>s_articles_esd_attributes</tables>
-            <tables>s_articles_esd_serials</tables>
+
+            <tables>s_articles_categories</tables>
             <tables>s_articles_img</tables>
             <tables>s_articles_img_attributes</tables>
-            <tables>s_articles_information</tables>
-            <tables>s_articles_information_attributes</tables>
-            <tables>s_articles_notification</tables>
-            <tables>s_articles_prices</tables>
-            <tables>s_articles_prices_attributes</tables>
-            <tables>s_articles_relationships</tables>
-            <tables>s_articles_similar</tables>
-            <tables>s_articles_similar_shown_ro</tables>
-            <tables>s_articles_supplier</tables>
-            <tables>s_articles_supplier_attributes</tables>
-            <tables>s_articles_top_seller_ro</tables>
-            <tables>s_articles_translations</tables>
-            <tables>s_articles_vote</tables>
+
             <tables>s_article_configurator_dependencies</tables>
             <tables>s_article_configurator_groups</tables>
             <tables>s_article_configurator_options</tables>
@@ -43,12 +22,42 @@
             <tables>s_article_configurator_templates_attributes</tables>
             <tables>s_article_configurator_template_prices</tables>
             <tables>s_article_configurator_template_prices_attributes</tables>
-            <tables>s_article_img_mappings</tables>
-            <tables>s_article_img_mapping_rules</tables>
-            <tables>s_filter_articles</tables>
+
+            <tables>s_articles_prices</tables>
+            <tables>s_articles_prices_attributes</tables>
+            <tables>s_articles_relationships</tables>
+            <tables>s_articles_similar</tables>
+
+            <tables>s_articles_supplier</tables>
+            <tables>s_articles_supplier_attributes</tables>
+
+            <tables>s_articles_downloads</tables>
+            <tables>s_articles_downloads_attributes</tables>
+            <tables>s_articles_esd</tables>
+            <tables>s_articles_esd_attributes</tables>
+            <tables>s_articles_esd_serials</tables>
+
+            <tables>s_articles_information</tables>
+            <tables>s_articles_information_attributes</tables>
+            <tables>s_articles_notification</tables>
+
+            <tables>s_articles_translations</tables>
+            <tables>s_articles_vote</tables>
+
+            <tables>s_articles_avoid_customergroups</tables>
+            <tables>s_addon_premiums</tables>
+            <!--<tables>s_articles_also_bought_ro</tables>-->
+            <!--<tables>s_articles_categories_ro</tables>-->
+            <!--<tables>s_articles_categories_seo</tables>-->
+            <!--<tables>s_articles_similar_shown_ro</tables>-->
+            <!--<tables>s_articles_top_seller_ro</tables>-->
+            <!--<tables>s_article_img_mappings</tables>-->
+            <!--<tables>s_article_img_mapping_rules</tables>-->
+            <!--<tables>s_filter_articles</tables>-->
+
         </article>
 
-        <emotion commit="false">
+        <emotion commit="true">
             <tables>s_emotion</tables>
             <tables>s_emotion_attributes</tables>
             <tables>s_emotion_categories</tables>
@@ -56,11 +65,11 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
-        <snippets commit="false">
+        <snippets commit="true">
             <tables>s_core_snippets</tables>
         </snippets>
 
-        <theme commit="false">
+        <theme commit="true">
             <folders>themes</folders>
             <tables>s_core_templates</tables>
             <tables>s_core_templates_config_elements</tables>

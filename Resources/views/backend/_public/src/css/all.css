@@ -272,11 +272,14 @@ progress {
 
 #compare h3 {
     text-align: center;
+    /*display: none;*/
 }
 
 .commit-button-wrapper {
     margin-top: 20px;
+    display: none;
 }
+
 
 /* Folder */
 #compare .file_compare table.diff {

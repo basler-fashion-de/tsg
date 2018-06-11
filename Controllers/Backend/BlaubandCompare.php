@@ -49,6 +49,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
     {
         return [
             'index',
+            'loadCompare',
             'commit'
         ];
     }
@@ -87,48 +88,90 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
                 );
             }
 
-            /** @var System $system */
-            $system = $this->modelManager->getRepository(System::class)->find($systemId);
-
-            /** @var \Doctrine\DBAL\Connection $guestConnection */
-            $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
-
-            /** @var DBCompareGroupResult $groupResult */
-            $dbResult = $this->dbCompareService->compareTables($this->pluginConfig->get("compare.$compareGroup.tables"), $this->hostConnection, $guestConnection);
-            $dbResult = $dbResult->__toArray();
-
+            $tables = $this->pluginConfig->get("compare.$compareGroup.tables");
             $paths = $this->pluginConfig->get("compare.$compareGroup.folders");
-
-            //Wenn Folder in der Config angegeben sind soll diese bearbeitet werden ansonsten leeres Ergebnis
-            if(!empty($paths)){
-                if(!is_array($paths)){
-                    $paths = [$paths];
-                }
-
-                $hostPaths = $guestPaths = [];
-                foreach ($paths as $path){
-                    $hostPaths[] = $this->docRoot.'/'.$path;
-                    $guestPaths[] = $system->getPath().'/'.$path;
-                }
-
-                /** @var FolderCompareResult $result */
-                $folderResult = $this->folderCompareService->compareFolder($hostPaths, $guestPaths);
-                $folderResult = $folderResult->__toArray();
-            }else{
-                $folderResult = [];
-            }
-
 
             $attributes = $this->pluginConfig->get("compare.$compareGroup.@attributes");
             $commit = !(isset($attributes['commit']) && $attributes['commit'] === "false"); //Default true
 
-            $this->View()->assign('dbResult', $dbResult);
-            $this->View()->assign('folderResult', $folderResult);
             $this->View()->assign('id', $systemId);
             $this->View()->assign('group', $compareGroup);
             $this->View()->assign('commit', $commit);
+            $this->View()->assign('maxCount', count($tables) + count($paths));
+
         } catch (\Exception $e) {
             $this->View()->assign('error', $e->getMessage());
+        }
+    }
+
+    public function loadCompareAction()
+    {
+        try {
+            $systemId = $this->Request()->getParam('id');
+            $compareGroup = $this->Request()->getParam('group');
+            $count = $this->Request()->getParam('count');
+
+            if (empty($systemId) || empty($compareGroup)) {
+                throw new MissingParameterException(
+                    $this->snippets->getNamespace('blauband/tsg')->get('missingParameter')
+                );
+            }
+
+            /** @var System $system */
+            $system = $this->modelManager->getRepository(System::class)->find($systemId);
+
+            $tables = $this->pluginConfig->get("compare.$compareGroup.tables", true);
+            $paths = $this->pluginConfig->get("compare.$compareGroup.folders", true);
+
+            if($count <= count($tables)){
+                /** @var \Doctrine\DBAL\Connection $guestConnection */
+                $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
+                $dbResult = $this->dbCompareService->compareTable($tables[$count-1], $this->hostConnection, $guestConnection);
+                $dbResult = $dbResult->__toArray();
+
+                $this->View()->assign('compare', $dbResult);
+                $html = $this->View()->fetch('backend/blauband_compare/compare_table.tpl');
+
+                $this->sendJsonResponse(
+                    [
+                        'success' => true,
+                        'type' => 'table',
+                        'html' => trim($html)
+                    ]
+                );
+            } elseif($count > count($tables) && $count <= count($tables)+count($paths)){
+                $path = $paths[$count-count($tables)-1];
+
+                $hostPath = $this->docRoot.'/'.$path;
+                $guestPath = $system->getPath().'/'.$path;
+
+                /** @var FolderCompareResult $result */
+                $folderResult = $this->folderCompareService->compareFolder([$hostPath], [$guestPath]);
+                $folderResult = $folderResult->__toArray();
+
+                $this->View()->assign('compare', $folderResult);
+                $html = $this->View()->fetch('backend/blauband_compare/compare_folder.tpl');
+
+                $this->sendJsonResponse(
+                    [
+                        'success' => true,
+                        'type' => 'folder',
+                        'html' => trim($html)
+                    ]
+                );
+            } else{
+                die($count);
+
+                //Parameter passt nicht mehr
+                return;
+            }
+        } catch (\Exception $e) {
+            $this->sendJsonResponse(
+                [
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]
+            );
         }
     }
 
@@ -148,7 +191,7 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
             $system = $this->modelManager->getRepository(System::class)->find($systemId);
 
             /** @var \Doctrine\DBAL\Connection $guestConnection */
-            $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName());
+            $guestConnection = $this->connectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbName(), $system->getDbPort());
             $tables = $this->pluginConfig->get("compare.$compareGroup.tables");
             $this->dbDuplicationService->duplicateData($guestConnection, $this->hostConnection, $tables);
 

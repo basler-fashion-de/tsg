@@ -42,7 +42,7 @@ class FolderCompareService
                     )
                 );
             } else {
-                new \RecursiveIteratorIterator(
+                $sourceIterator = new \RecursiveIteratorIterator(
                     new \RecursiveDirectoryIterator($sourcePath, \RecursiveDirectoryIterator::SKIP_DOTS)
                 );
             }
@@ -68,7 +68,7 @@ class FolderCompareService
                     )
                 );
             } else {
-                new \RecursiveIteratorIterator(
+                $destinationIterator = new \RecursiveIteratorIterator(
                     new \RecursiveDirectoryIterator($destinationPath, \RecursiveDirectoryIterator::SKIP_DOTS)
                 );
             }

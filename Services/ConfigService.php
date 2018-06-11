@@ -33,7 +33,7 @@ class ConfigService
                 $result = $result[$step];
             }
 
-            if($asArray && !empty($result) && !isset($result[0])){
+            if($asArray && !empty($result) && !is_array($result)){
                 $result = [$result];
             }
 
