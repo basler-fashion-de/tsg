@@ -119,7 +119,6 @@ class Shopware_Controllers_Backend_BlaubandCompare extends BlaubandEnlightContro
 
             /** @var System $system */
             $system = $this->modelManager->getRepository(System::class)->find($systemId);
-
             $tables = $this->pluginConfig->get("compare.$compareGroup.tables", true);
             $paths = $this->pluginConfig->get("compare.$compareGroup.folders", true);
 

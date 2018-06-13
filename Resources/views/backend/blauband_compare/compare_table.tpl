@@ -29,7 +29,13 @@
                     <tr>
                         {foreach $compare.diffs as $key}
                             {if $d.left}
-                                <td class="{if $d.state == 1}green{/if}{if $d.state == 3 && $d.left.$key != $d.right.$key}yellow{/if}">{$d.left.$key}</td>
+                                <td class="{if $d.state == 1}green{/if}{if $d.state == 3 && $d.left.$key !== $d.right.$key}yellow{/if}">
+                                    {if $d.left.$key === NULL}
+                                        NULL
+                                    {else}
+                                        {$d.left.$key|escape:"htmlall"}
+                                    {/if}
+                                </td>
                             {else}
                                 <td class="red"></td>
                             {/if}
@@ -39,7 +45,13 @@
 
                         {foreach $compare.diffs as $key}
                             {if $d.right}
-                                <td class="{if $d.state == 1}green{/if}{if $d.state == 3 && $d.left.$key != $d.right.$key}yellow{/if}">{$d.right.$key}</td>
+                                <td class="{if $d.state == 1}green{/if}{if $d.state == 3 && $d.left.$key !== $d.right.$key}yellow{/if}">
+                                    {if $d.right.$key === NULL}
+                                        NULL
+                                    {else}
+                                        {$d.right.$key|escape:"htmlall"}
+                                    {/if}
+                                </td>
                             {else}
                                 <td class="red"></td>
                             {/if}

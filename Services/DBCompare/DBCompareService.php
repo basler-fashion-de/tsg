@@ -72,7 +72,7 @@ class DBCompareService
                 }
             } else {
                 $r = array_combine(array_column($data, $primaryKey), $data);
-                $return = array_merge($r, $return);
+                $return = $r + $return;
             }
 
             if(count($data) < $limit){
