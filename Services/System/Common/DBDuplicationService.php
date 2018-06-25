@@ -26,7 +26,17 @@ class DBDuplicationService
     /**
      * @var string
      */
-    private $dumpPrefix = "BlaubandTSGDBDump";
+    private $dumpPrefix = "BlaubandTSGDBDump-";
+
+    private $mysqlCommands = [
+        'mysql',
+        '/usr/local/mysql5/bin/mysql' //Profihost
+    ];
+
+    private $mysqlDumpCommands = [
+        'mysqldump',
+        '/usr/local/mysql5/bin/mysqldump' //Profihost
+    ];
 
     public function __construct(\Enlight_Components_Snippet_Manager $snippets, Logger $pluginLogger, $pluginPath)
     {
@@ -61,7 +71,7 @@ class DBDuplicationService
     public function duplicateData(Connection $sourceConnection, Connection $destinationConnection, array $tables = [])
     {
         if (empty($tables)) {
-            $tables = $sourceConnection->fetchAll("SHOW TABLES FROM `" . $sourceConnection->getDatabase().'`');
+            $tables = $sourceConnection->fetchAll("SHOW TABLES FROM `" . $sourceConnection->getDatabase() . '`');
             $tables = array_map(function ($i) {
                 return array_shift($i);
             }, $tables);
@@ -78,7 +88,7 @@ class DBDuplicationService
     {
         if ($table == 'magnalister_ebay_prepare' ||
             $table == 'magnalister_cdiscount_prepare'
-        ){
+        ) {
             return;
         }
 
@@ -93,13 +103,16 @@ class DBDuplicationService
         $dumpPath = $this->pluginPath . '/' . $dumpName;
         $passString = empty($sourcePass) ? '' : "--password='$sourcePass'";
 
-        $exportCommand = "mysqldump -h$sourceHost -P$sourcePort -u$sourceUser $passString --default-character-set=utf8 $sourceDb $table > $dumpPath";
-        //$this->pluginLogger->addInfo("Blauband TSG: Dumpfile for table '$table' will write with command: $exportCommand");
+        if(!$dumpCommand = $this->findCommand($this->mysqlDumpCommands)){
+            throw new SystemDBException("No dump command found");
+        }
+
+        $exportCommand = "$dumpCommand -h$sourceHost -P$sourcePort -u$sourceUser $passString --default-character-set=utf8 $sourceDb $table > $dumpPath";
         $output = shell_exec($exportCommand);
 
         if ($output !== null) {
             @unlink($dumpName);
-            throw new \SystemDBException($output);
+            throw new SystemDBException($output);
         }
 
         $destinationHost = $destinationConnection->getHost();
@@ -109,17 +122,30 @@ class DBDuplicationService
         $destinationDb = $destinationConnection->getDatabase();
         $passString = empty($destinationPass) ? '' : "--password='$destinationPass'";
 
-        $importCommand = "mysql -h$destinationHost -P$destinationPort -u$destinationUser $passString $destinationDb < $dumpPath";
-        //$this->pluginLogger->addInfo("Blauband TSG: Dumpfile for table '$table' will read with command: $importCommand");
+        if(!$mysqlCommand = $this->findCommand($this->mysqlCommands)){
+            throw new SystemDBException("No mysql command found");
+        }
+
+        $importCommand = "$mysqlCommand -h$destinationHost -P$destinationPort -u$destinationUser $passString $destinationDb < $dumpPath";
         $output = shell_exec($importCommand);
         $this->pluginLogger->addInfo("Blauband TSG: Table '$table' duplicated");
 
         if ($output !== null) {
             @unlink($dumpName);
-            throw new \SystemDBException($output);
+            throw new SystemDBException($output);
         }
 
         @unlink($dumpPath);
+    }
 
+    private function findCommand($list)
+    {
+        foreach ($list as $cmd) {
+            if (!empty(shell_exec("which $cmd"))) {
+                return $cmd;
+            }
+        }
+
+        return false;
     }
 }

@@ -158,7 +158,9 @@ class Local extends SystemService implements SystemServiceInterface
         }
         $dbPort = $guestConnection->getPort();
 
-        $destinationPath = $this->docRoot . '/' . $systemNameUrl;
+        $destinationPath = $_SERVER["DOCUMENT_ROOT"] . '/' . $systemNameUrl;
+        //$destinationPath = $this->docRoot . '/' . $systemNameUrl;
+
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
         $this->systemValidation->validateSystemName($systemName);
         $this->systemValidation->validatePath($destinationPath);
@@ -188,12 +190,13 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validateDeleting($system);
 
         $dbName = $system->getDbName();
-        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword());
+        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbPort());
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
         try {
             $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
         } catch (\Exception $e) {
+            $this->pluginLogger->addError("Blauband TSG: Delete database $dbName failed. ".$e->getMessage());
         }
 
         //Verzeichniss löschen
@@ -201,6 +204,7 @@ class Local extends SystemService implements SystemServiceInterface
         try {
             $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
         } catch (\Exception $e) {
+            $this->pluginLogger->addError("Blauband TSG: Delete path $system->getPath() failed. ".$e->getMessage());
         }
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
@@ -210,8 +214,6 @@ class Local extends SystemService implements SystemServiceInterface
     /**
      * Helfer Funktionen
      */
-
-
     private function createDBEntry($systemName, $systemNameUrl, $destinationPath, $dbHost, $dbPort, $dbUser, $dbPass, $dbName, $htpasswordName, $htpasswordPass, $startParameters)
     {
         $systemModel = new System();
@@ -255,7 +257,7 @@ class Local extends SystemService implements SystemServiceInterface
             $exceptions[] = $system->getPath();
         }
 
-        $mediaFolders = glob($this->docRoot . '/media/*/*', GLOB_ONLYDIR);
+        $mediaFolders = glob($sourcePath . '/media/*/*', GLOB_ONLYDIR);
         if (!empty($mediaFolders)) {
             $exceptions = array_merge($exceptions, $mediaFolders);
         }
@@ -375,9 +377,9 @@ class Local extends SystemService implements SystemServiceInterface
 
                     $this->changeSystemState($systemModel, SystemService::SYSTEM_STATE_READY);
 
-                    if ($systemModel->getSummeryMail()) {
-                        $this->sendMail($systemModel, 'blaubandTSGFinished');
-                    }
+//                    if ($systemModel->getSummeryMail()) {
+//                        $this->sendMail($systemModel, 'blaubandTSGFinished');
+//                    }
                 } catch (\Exception $e) {
                     $this->modelManager->remove($systemModel);
                     $this->modelManager->flush($systemModel);
