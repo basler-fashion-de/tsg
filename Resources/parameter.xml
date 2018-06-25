@@ -11,7 +11,7 @@
             <snippet>name</snippet>
             <type>text</type>
             <default></default>
-            <hidden>true</hidden>
+            <hidden>false</hidden>
         </parameters>
 
         <parameters>
