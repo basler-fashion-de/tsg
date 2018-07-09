@@ -122,6 +122,14 @@
         </parameters>
 
         <parameters>
+            <title>dbPort</title>
+            <snippet>dbport</snippet>
+            <type>text</type>
+            <class>dblocal</class>
+            <default>3306</default>
+        </parameters>
+
+        <parameters>
             <title>dbUser</title>
             <snippet>dbuser</snippet>
             <type>text</type>

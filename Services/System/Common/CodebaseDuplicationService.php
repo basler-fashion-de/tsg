@@ -76,8 +76,6 @@ class CodebaseDuplicationService
             $exceptionsString .= ' --exclude-vcs ';
         }
 
-        $exceptionsString = str_replace($sourcePath . '/', '', $exceptionsString);
-
         $command = "(cd $sourcePath && tar cmf - $exceptionsString .) | (cd $destinationPath && tar xvmf - )";
 
         $this->pluginLogger->addInfo('Blauband TSG: Copy codebase with command: '.$command);

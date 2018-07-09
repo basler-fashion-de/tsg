@@ -3,13 +3,18 @@
         xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
     <label lang="de">Testsystem-Generator</label>
     <label lang="en">Testsystem-Generator</label>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <copyright>(c) by Blauband GmbH</copyright>
     <license>proprietary</license>
     <link>http://www.blauband.com</link>
     <author>Blauband</author>
 
     <compatibility minVersion="5.2.1" />
+
+    <changelog version="1.0.9">
+        <changes lang="de">Nun kann auch der Port für die eigene Datenbank angegeben werden</changes>
+        <changes lang="en">Now you can set your port for your own database</changes>
+    </changelog>
 
     <changelog version="1.0.8">
         <changes lang="de">Systeme können nun benennt werden</changes>

@@ -136,6 +136,7 @@ class Local extends SystemService implements SystemServiceInterface
     public function createSystem($systemName, $parameters)
     {
         $dbHost = $parameters['dbHost'];
+        $dbPort = $parameters['dbPort'];
         $dbUser = $parameters['dbUser'];
         $dbPass = $parameters['dbPass'];
         $dbName = $parameters['dbName'];
@@ -145,20 +146,20 @@ class Local extends SystemService implements SystemServiceInterface
         $htpasswordPass = $parameters['htpasswdPassword'];
         $sendSummery = $parameters['sendSummery'];
 
-        $systemNameUrl = strtolower(str_replace([' '], ['-'], $systemName));
+        $systemNameUrl = $this->getUrlBySystemName($systemName);
 
         if ($dbRemote) {
             $guestConnection = $this->tsgApiService->createDatabase();
             $dbHost = $guestConnection->getHost();
+            $dbPort = $guestConnection->getPort();
             $dbUser = $guestConnection->getUsername();
             $dbPass = $guestConnection->getPassword();
             $dbName = $guestConnection->getDatabase();
         } else {
-            $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass);
+            $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass, null, $dbPort);
         }
-        $dbPort = $guestConnection->getPort();
 
-        $destinationPath = $_SERVER["DOCUMENT_ROOT"] . '/' . $systemNameUrl;
+        $destinationPath = $_SERVER["DOCUMENT_ROOT"] . $systemNameUrl;
         //$destinationPath = $this->docRoot . '/' . $systemNameUrl;
 
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
@@ -190,13 +191,13 @@ class Local extends SystemService implements SystemServiceInterface
         $this->systemValidation->validateDeleting($system);
 
         $dbName = $system->getDbName();
-        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $system->getDbPort());
+        $dbConnection = $this->dbConnectionService->createConnection($system->getDbHost(), $system->getDbUsername(), $system->getDbPassword(), $dbName, $system->getDbPort());
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_GUEST_DB);
         try {
             $dbConnection->exec("DROP DATABASE IF EXISTS `$dbName`");
         } catch (\Exception $e) {
-            $this->pluginLogger->addError("Blauband TSG: Delete database $dbName failed. ".$e->getMessage());
+            $this->pluginLogger->addError("Blauband TSG: Delete database $dbName failed. " . $e->getMessage());
         }
 
         //Verzeichniss löschen
@@ -204,7 +205,7 @@ class Local extends SystemService implements SystemServiceInterface
         try {
             $this->codebaseDuplicationService->removeDuplicatedCodebase($system->getPath());
         } catch (\Exception $e) {
-            $this->pluginLogger->addError("Blauband TSG: Delete path $system->getPath() failed. ".$e->getMessage());
+            $this->pluginLogger->addError("Blauband TSG: Delete path $system->getPath() failed. " . $e->getMessage());
         }
 
         $this->changeSystemState($system, SystemService::SYSTEM_STATE_DELETING_HOST_DB_ENTRY);
@@ -255,10 +256,15 @@ class Local extends SystemService implements SystemServiceInterface
         $systems = $this->modelManager->getRepository(System::class)->findAll();
         foreach ($systems as $system) {
             $exceptions[] = $system->getPath();
+            $exceptions[] = $this->getUrlBySystemName($system->getName());
         }
 
         $mediaFolders = glob($sourcePath . '/media/*/*', GLOB_ONLYDIR);
         if (!empty($mediaFolders)) {
+            foreach ($mediaFolders as &$folder) {
+                $folder = str_replace($sourcePath . '/', '', $folder);
+            }
+
             $exceptions = array_merge($exceptions, $mediaFolders);
         }
 
@@ -338,7 +344,7 @@ class Local extends SystemService implements SystemServiceInterface
         $systemModel->setState($state);
         $this->modelManager->flush($systemModel);
 
-        $this->pluginLogger->addInfo('Blauband TSG: System ' . $systemModel->getName(). ' changed state '.$state);
+        $this->pluginLogger->addInfo('Blauband TSG: System ' . $systemModel->getName() . ' changed state ' . $state);
     }
 
     /**
@@ -418,5 +424,10 @@ class Local extends SystemService implements SystemServiceInterface
         }
 
         $this->modelManager->flush();
+    }
+
+    private function getUrlBySystemName($systemName)
+    {
+        return strtolower(str_replace([' '], ['-'], $systemName));
     }
 }
