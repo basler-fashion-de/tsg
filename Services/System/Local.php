@@ -159,7 +159,7 @@ class Local extends SystemService implements SystemServiceInterface
             $guestConnection = $this->dbConnectionService->createConnection($dbHost, $dbUser, $dbPass, null, $dbPort);
         }
 
-        $destinationPath = $_SERVER["DOCUMENT_ROOT"] . $systemNameUrl;
+        $destinationPath = $_SERVER["DOCUMENT_ROOT"] . '/' . $systemNameUrl;
         //$destinationPath = $this->docRoot . '/' . $systemNameUrl;
 
         $this->systemValidation->validateCurrentProcesses($this->hostConnection);
