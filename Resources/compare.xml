@@ -66,9 +66,9 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
-        <snippets commit="false">
-            <tables>s_core_snippets</tables>
-        </snippets>
+        <!--<snippets commit="false">-->
+            <!--<tables>s_core_snippets</tables>-->
+        <!--</snippets>-->
 
         <theme commit="false">
             <folders>themes</folders>
