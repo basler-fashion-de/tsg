@@ -33,7 +33,7 @@
                 <div>{$system.htPasswdPassword}</div>
             {/if}
 
-            {if $system.state == 'ready' && false}
+            {if $system.state == 'ready'}
                 <br/>
                 <br/>
                 <label style="width: auto; padding-top: 8px">{s name="compareTitle" namespace="blauband/tsg"}{/s}
