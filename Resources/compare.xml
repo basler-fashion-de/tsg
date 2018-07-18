@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <compare>
-        <article commit="true">
+        <article commit="false">
             <tables>s_articles</tables>
             <tables>s_articles_attributes</tables>
             <tables>s_articles_details</tables>
@@ -58,7 +58,7 @@
 
         </article>
 
-        <emotion commit="true">
+        <emotion commit="false">
             <tables>s_emotion</tables>
             <tables>s_emotion_attributes</tables>
             <tables>s_emotion_categories</tables>
@@ -66,11 +66,11 @@
             <tables>s_emotion_element_value</tables>
         </emotion>
 
-        <snippets commit="true">
+        <snippets commit="false">
             <tables>s_core_snippets</tables>
         </snippets>
 
-        <theme commit="true">
+        <theme commit="false">
             <folders>themes</folders>
             <tables>s_core_templates</tables>
             <tables>s_core_templates_config_elements</tables>
