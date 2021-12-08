@@ -6,51 +6,60 @@
     <services>
         <!-- configs -->
         <service id="blauband_tsg.config_php_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%kernel.root_dir%/config.php</argument>
         </service>
 
         <service id="blauband_tsg.compare_config_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%blauband_tsg.plugin_dir%/Resources/compare.xml</argument>
         </service>
 
         <service id="blauband_tsg.file_config_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%blauband_tsg.plugin_dir%/Resources/files.xml</argument>
         </service>
 
         <service id="blauband_tsg.mail_config_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%blauband_tsg.plugin_dir%/Resources/mails.xml</argument>
         </service>
 
         <service id="blauband_tsg.cron_job_config_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%blauband_tsg.plugin_dir%/Resources/cronjob.xml</argument>
         </service>
 
         <service id="blauband_tsg.parameter_config_service"
-                 class="BlaubandTSG\Services\ConfigService">
+                 class="BlaubandTSG\Services\ConfigService"
+                 public="true">
             <argument>%blauband_tsg.plugin_dir%/Resources/parameter.xml</argument>
         </service>
         <!-- -->
 
         <service id="blauband_tsg.system_validation"
-                 class="BlaubandTSG\Services\System\Local\SystemValidation">
+                 class="BlaubandTSG\Services\System\Local\SystemValidation"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="models"/>
         </service>
 
         <service id="blauband_tsg.cron_job_helper_service"
-                 class="BlaubandTSG\Services\CronJobHelperService">
+                 class="BlaubandTSG\Services\CronJobHelperService"
+                 public="true">
             <argument type="service" id="blauband_tsg.cron_job_config_service"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 
         <!-- common -->
         <service id="blauband_tsg.tsg_api_service"
-                 class="BlaubandTSG\Services\System\Common\TSGApiService">
+                 class="BlaubandTSG\Services\System\Common\TSGApiService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="blauband_tsg.db_connection_service"/>
             <argument type="service" id="dbal_connection"/>
@@ -58,25 +67,29 @@
         </service>
 
         <service id="blauband_tsg.db_connection_service"
-                 class="BlaubandTSG\Services\System\Common\DBConnectionService">
+                 class="BlaubandTSG\Services\System\Common\DBConnectionService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="blauband_tsg.db_duplication_service"/>
         </service>
 
         <!-- local -->
         <service id="blauband_tsg.mail_service"
-                 class="BlaubandTSG\Services\System\Local\MailService">
+                 class="BlaubandTSG\Services\System\Local\MailService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument>%kernel.root_dir%</argument>
         </service>
 
         <service id="blauband_tsg.ht_access_service"
-                 class="BlaubandTSG\Services\System\Local\HtAccessService">
+                 class="BlaubandTSG\Services\System\Local\HtAccessService"
+                 public="true">
             <argument type="service" id="snippets"/>
         </service>
 
         <service id="blauband_tsg.set_up_system_service"
-                 class="BlaubandTSG\Services\System\Local\SetUpSystemService">
+                 class="BlaubandTSG\Services\System\Local\SetUpSystemService"
+                 public="true">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="snippets"/>
             <argument type="service" id="pluginlogger"/>
@@ -84,21 +97,24 @@
         </service>
 
         <service id="blauband_tsg.db_duplication_service"
-                 class="BlaubandTSG\Services\System\Common\DBDuplicationService">
+                 class="BlaubandTSG\Services\System\Common\DBDuplicationService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="pluginlogger"/>
             <argument>%blauband_tsg.plugin_dir%</argument>
         </service>
 
         <service id="blauband_tsg.codebase_duplication_service"
-                 class="BlaubandTSG\Services\System\Common\CodebaseDuplicationService">
+                 class="BlaubandTSG\Services\System\Common\CodebaseDuplicationService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="pluginlogger"/>
             <argument type="service" id="blauband_tsg.file_config_service"/>
         </service>
 
         <service id="blauband_tsg.local_system_service"
-                 class="BlaubandTSG\Services\System\Local">
+                 class="BlaubandTSG\Services\System\Local"
+                 public="true">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="blauband_tsg.db_connection_service"/>
             <argument type="service" id="models"/>
@@ -109,7 +125,7 @@
             <argument type="service" id="blauband_tsg.ht_access_service"/>
             <argument type="service" id="blauband_tsg.mail_service"/>
             <argument type="service" id="blauband_tsg.tsg_api_service"/>
-            <argument type="service" id="TemplateMail"/>
+            <argument type="service" id="templatemail"/>
             <argument type="service" id="blauband_tsg.mail_config_service"/>
             <argument type="service" id="config"/>
             <argument type="service" id="pluginlogger"/>
@@ -119,26 +135,34 @@
 
         <!-- compare db -->
         <service id="blauband_tsg.db_compare_service"
-                 class="BlaubandTSG\Services\DBCompare\DBCompareService">
+                 class="BlaubandTSG\Services\DBCompare\DBCompareService"
+                 public="true">
         </service>
 
         <!-- compare folder -->
         <service id="blauband_tsg.folder_compare_service"
-                 class="BlaubandTSG\Services\FolderCompare\FolderCompareService">
+                 class="BlaubandTSG\Services\FolderCompare\FolderCompareService"
+                 public="true">
             <argument type="service" id="snippets"/>
             <argument type="service" id="blauband_tsg.file_config_service"/>
         </service>
 
         <!-- event subscriber -->
-        <service id="blauband_tsg.subscriber.frontend" class="BlaubandTSG\Subscriber\Frontend">
+        <service id="blauband_tsg.subscriber.frontend"
+                 class="BlaubandTSG\Subscriber\Frontend"
+                 public="true">
             <tag name="shopware.event_subscriber"/>
         </service>
 
-        <service id="blauband_tsg.subscriber.backend" class="BlaubandTSG\Subscriber\Backend">
+        <service id="blauband_tsg.subscriber.backend"
+                 class="BlaubandTSG\Subscriber\Backend"
+                 public="true">
             <tag name="shopware.event_subscriber"/>
         </service>
 
-        <service id="blauband_tsg.subscriber.cron_job" class="BlaubandTSG\Subscriber\CronJob">
+        <service id="blauband_tsg.subscriber.cron_job"
+                 class="BlaubandTSG\Subscriber\CronJob"
+                 public="true">
             <argument type="service" id="service_container"/>
             <tag name="shopware.event_subscriber"/>
         </service>
